@@ -714,6 +714,22 @@
         <p class="footer-text">San Francisco, 2025</p>
     </footer>
 
+    <!-- Waitlist Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h3>One quick question</h3>
+            <p class="modal-question">Are you an athlete, artist, or professional creator?</p>
+            <div class="modal-options">
+                <button class="modal-option" data-value="athlete">Athlete</button>
+                <button class="modal-option" data-value="artist">Artist</button>
+                <button class="modal-option" data-value="professional_creator">Professional Creator</button>
+                <button class="modal-option" data-value="other">Other</button>
+            </div>
+            <button class="modal-submit" id="modal-submit-btn" disabled>Continue</button>
+        </div>
+    </div>
+
     <script>
         // Scene definitions for dynamic landscape
         const scenes = {
@@ -1303,21 +1319,5 @@
             });
         }
     </script>
-
-    <!-- Waitlist Modal -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal" id="modal-content">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <h3>One quick question</h3>
-            <p class="modal-question">Are you an athlete, artist, or professional creator?</p>
-            <div class="modal-options">
-                <button class="modal-option" data-value="athlete">Athlete</button>
-                <button class="modal-option" data-value="artist">Artist</button>
-                <button class="modal-option" data-value="professional_creator">Professional Creator</button>
-                <button class="modal-option" data-value="other">Other</button>
-            </div>
-            <button class="modal-submit" id="modal-submit-btn" disabled>Continue</button>
-        </div>
-    </div>
 </body>
 </html>
