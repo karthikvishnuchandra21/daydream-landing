@@ -575,6 +575,7 @@
             height: 108px;
             top: 0;
             left: 0;
+            opacity: 0;
         }
 
         .scroll-butterfly svg {
@@ -1193,6 +1194,9 @@
             }
         });
 
+        // Track butterfly width via GSAP onUpdate (avoids getBoundingClientRect)
+        let bfCurrentWidth = logoW;
+
         // Segment 1: LIFT-OFF — grow from logo-size to full size
         bfTimeline.to(butterfly, {
             x: flightPath[1].x,
@@ -1201,6 +1205,7 @@
             height: FULL_H,
             duration: 1.2,
             ease: 'power2.out',
+            onUpdate() { bfCurrentWidth = gsap.getProperty(butterfly, 'width'); },
         });
 
         // Remaining segments: gentle drift
@@ -1225,7 +1230,8 @@
         let lastScrollY = 0;
         let scrollVelocity = 0;
         let smoothVelocity = 0;
-        let prevButterflyX = logoX;
+        let prevBfX = gsap.getProperty(butterfly, 'x');
+        const bfSvg = butterfly.querySelector('svg');
 
         function butterflyMainLoop() {
             wobbleTime += 0.006;
@@ -1249,26 +1255,23 @@
             butterfly.style.opacity = bfCurrentOpacity;
 
             // Gentle wobble (only when not at logo size)
-            const currentWidth = butterfly.getBoundingClientRect().width;
-            const wobbleStrength = Math.min(1, Math.max(0, (currentWidth - logoW) / (FULL_W - logoW)));
+            const wobbleStrength = Math.min(1, Math.max(0, (bfCurrentWidth - logoW) / (FULL_W - logoW)));
 
             const wobbleX = (Math.sin(wobbleTime * 1.0) * 6 + Math.sin(wobbleTime * 2.3) * 2) * wobbleStrength;
             const wobbleY = (Math.cos(wobbleTime * 0.7) * 5 + Math.sin(wobbleTime * 1.8) * 2) * wobbleStrength;
 
-            butterfly.style.marginLeft = wobbleX + 'px';
-            butterfly.style.marginTop = wobbleY + 'px';
+            butterfly.style.translate = `${wobbleX}px ${wobbleY}px`;
 
             // Gentle tilt toward direction of travel
-            const rect = butterfly.getBoundingClientRect();
-            const currentX = rect.left + rect.width / 2;
-            const dx = currentX - prevButterflyX;
-            prevButterflyX = currentX;
+            const currentBfX = gsap.getProperty(butterfly, 'x');
+            const dx = currentBfX - prevBfX;
+            prevBfX = currentBfX;
 
             const targetTilt = Math.max(-15, Math.min(15, dx * 1.5)) * wobbleStrength;
             const currentTilt = parseFloat(butterfly.style.getPropertyValue('--tilt') || '0');
             const smoothedTilt = currentTilt + (targetTilt - currentTilt) * 0.06;
             butterfly.style.setProperty('--tilt', smoothedTilt);
-            butterfly.querySelector('svg').style.transform = `rotate(${smoothedTilt}deg)`;
+            bfSvg.style.transform = `rotate(${smoothedTilt}deg)`;
 
             requestAnimationFrame(butterflyMainLoop);
         }
@@ -1338,16 +1341,20 @@
 
         particleLoop();
 
-        // Dynamic flap speed
+        // Dynamic flap speed (throttled — every ~10 frames)
         const flapStyle = document.createElement('style');
         document.head.appendChild(flapStyle);
+        let flapFrame = 0;
 
         function updateFlapSpeed() {
-            const flapSpeed = Math.max(3.0, 4.0 - smoothVelocity * 0.005);
-            flapStyle.textContent = `
-                .butterfly-wing-left { animation-duration: ${flapSpeed}s !important; }
-                .butterfly-wing-right { animation-duration: ${flapSpeed}s !important; }
-            `;
+            flapFrame++;
+            if (flapFrame % 10 === 0) {
+                const flapSpeed = Math.max(3.0, 4.0 - smoothVelocity * 0.005);
+                flapStyle.textContent = `
+                    .butterfly-wing-left { animation-duration: ${flapSpeed}s !important; }
+                    .butterfly-wing-right { animation-duration: ${flapSpeed}s !important; }
+                `;
+            }
             requestAnimationFrame(updateFlapSpeed);
         }
         updateFlapSpeed();
