@@ -566,6 +566,65 @@
             transform: translateY(0);
         }
 
+        /* Scroll Butterfly */
+        .scroll-butterfly {
+            position: fixed;
+            z-index: 50;
+            pointer-events: none;
+            width: 120px;
+            height: 108px;
+            top: 0;
+            left: 0;
+        }
+
+        .scroll-butterfly svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            shape-rendering: geometricPrecision;
+        }
+
+        .butterfly-wing-left {
+            animation: flapLeft 4s ease-in-out infinite;
+            transform-origin: 50px 45px;
+        }
+
+        .butterfly-wing-right {
+            animation: flapRight 4s ease-in-out infinite;
+            transform-origin: 50px 45px;
+        }
+
+        @keyframes flapLeft {
+            0%, 100% { transform: perspective(200px) rotateY(18deg) rotateX(0deg); }
+            50% { transform: perspective(200px) rotateY(40deg) rotateX(-3deg); }
+        }
+
+        @keyframes flapRight {
+            0%, 100% { transform: perspective(200px) rotateY(-18deg) rotateX(0deg); }
+            50% { transform: perspective(200px) rotateY(-40deg) rotateX(-3deg); }
+        }
+
+        .butterfly-glow {
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .butterfly-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 49;
+            background: radial-gradient(circle, rgba(168, 212, 168, 0.8), rgba(143, 191, 143, 0.4), transparent);
+            filter: blur(1px);
+            will-change: transform, opacity;
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             section.content-section { padding: 5rem 1.5rem; }
@@ -574,6 +633,11 @@
             .final-cta { padding: 4rem 1.5rem 3rem; }
             .science-grid { grid-template-columns: 1fr; }
             .science-item { gap: 1rem; }
+            .scroll-butterfly { width: 80px; height: 72px; }
+        }
+
+        @media (max-width: 480px) {
+            .scroll-butterfly { width: 60px; height: 54px; }
         }
     </style>
 </head>
@@ -634,6 +698,67 @@
             <a href="https://exp.daydreamers.app/" class="try-btn">Try it out :)</a>
         </div>
     </header>
+
+    <!-- Scroll-driven butterfly -->
+    <div class="scroll-butterfly" id="scrollButterfly">
+        <svg viewBox="0 0 100 90" fill="none">
+            <defs>
+                <linearGradient id="bfWingL" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#A8D4A8"/>
+                    <stop offset="60%" stop-color="#8FBF8F"/>
+                    <stop offset="100%" stop-color="#3D5C3D"/>
+                </linearGradient>
+                <linearGradient id="bfWingR" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#A8D4A8"/>
+                    <stop offset="60%" stop-color="#8FBF8F"/>
+                    <stop offset="100%" stop-color="#3D5C3D"/>
+                </linearGradient>
+                <radialGradient id="bfGlow" cx="50%" cy="40%" r="50%">
+                    <stop offset="0%" stop-color="#A8D4A8" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#8FBF8F" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="bfAmbient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#A8D4A8" stop-opacity="0.25"/>
+                    <stop offset="60%" stop-color="#8FBF8F" stop-opacity="0.1"/>
+                    <stop offset="100%" stop-color="#8FBF8F" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <circle class="butterfly-glow" cx="50" cy="45" r="45" fill="url(#bfAmbient)"/>
+            <g class="butterfly-wing-left">
+                <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#bfWingL)" stroke="#1A1A1A" stroke-width="0.8"/>
+                <path d="M44 28 C40 20,30 14,20 14 C14 14,10 18,10 24 C10 30,16 36,28 40 C38 43,44 38,44 32Z" fill="url(#bfGlow)"/>
+                <path d="M46 30 C38 26,28 22,18 20" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <path d="M46 34 C36 32,24 32,14 34" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <circle cx="6" cy="12" r="2.5" fill="#1A1A1A" opacity="0.85"/>
+                <circle cx="4" cy="20" r="2.2" fill="#1A1A1A" opacity="0.8"/>
+                <circle cx="3" cy="28" r="2" fill="#1A1A1A" opacity="0.75"/>
+                <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#bfWingL)" stroke="#1A1A1A" stroke-width="0.8"/>
+                <path d="M48 46 C42 54,34 62,28 70" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <circle cx="16" cy="72" r="2" fill="#1A1A1A" opacity="0.8"/>
+                <circle cx="16" cy="80" r="1.8" fill="#1A1A1A" opacity="0.75"/>
+            </g>
+            <g class="butterfly-wing-right">
+                <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#bfWingR)" stroke="#1A1A1A" stroke-width="0.8"/>
+                <path d="M56 28 C60 20,70 14,80 14 C86 14,90 18,90 24 C90 30,84 36,72 40 C62 43,56 38,56 32Z" fill="url(#bfGlow)"/>
+                <path d="M54 30 C62 26,72 22,82 20" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <path d="M54 34 C64 32,76 32,86 34" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <circle cx="94" cy="12" r="2.5" fill="#1A1A1A" opacity="0.85"/>
+                <circle cx="96" cy="20" r="2.2" fill="#1A1A1A" opacity="0.8"/>
+                <circle cx="97" cy="28" r="2" fill="#1A1A1A" opacity="0.75"/>
+                <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#bfWingR)" stroke="#1A1A1A" stroke-width="0.8"/>
+                <path d="M52 46 C58 54,66 62,72 70" stroke="#1A1A1A" stroke-width="0.4" fill="none" opacity="0.6"/>
+                <circle cx="84" cy="72" r="2" fill="#1A1A1A" opacity="0.8"/>
+                <circle cx="84" cy="80" r="1.8" fill="#1A1A1A" opacity="0.75"/>
+            </g>
+            <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/>
+            <ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/>
+            <circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
+            <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <circle cx="34" cy="6" r="2" fill="#1A1A1A"/>
+            <circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
+        </svg>
+    </div>
 
     <!-- Hero -->
     <section class="hero">
@@ -861,6 +986,10 @@
         </div>
     </footer>
 
+    <!-- GSAP for scroll-driven butterfly animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
     <script>
         // Scene definitions for dynamic landscape
         const scenes = {
@@ -1009,6 +1138,225 @@
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
             header.classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // ==========================================
+        // SCROLL-DRIVEN BUTTERFLY ANIMATION
+        // ==========================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        const butterfly = document.getElementById('scrollButterfly');
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        // Logo position — butterfly starts here
+        const logoRect = document.querySelector('.header-logo svg').getBoundingClientRect();
+        const logoX = logoRect.left + logoRect.width / 2;
+        const logoY = logoRect.top + logoRect.height / 2;
+        const logoW = logoRect.width;
+        const logoH = logoRect.height;
+        const FULL_W = 120;
+        const FULL_H = 108;
+
+        // Flight path — logo → lift-off → gentle drift down
+        const flightPath = [
+            { x: logoX, y: logoY },
+            { x: vw * 0.12, y: vh * 0.35 },
+            { x: vw * 0.08, y: vh * 0.50 },
+            { x: vw * 0.15, y: vh * 0.60 },
+            { x: vw * 0.06, y: vh * 0.45 },
+            { x: vw * 0.18, y: vh * 0.55 },
+            { x: vw * 0.10, y: vh * 0.65 },
+            { x: vw * 0.20, y: vh * 0.50 },
+            { x: vw * 0.08, y: vh * 0.60 },
+            { x: vw * 0.14, y: vh * 0.75 },
+        ];
+
+        // Initial state — sitting on top of the logo
+        gsap.set(butterfly, {
+            x: flightPath[0].x,
+            y: flightPath[0].y,
+            xPercent: -50,
+            yPercent: -50,
+            width: logoW,
+            height: logoH,
+            opacity: 1,
+        });
+
+        // Scroll-driven timeline
+        const bfTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 2.5,
+            }
+        });
+
+        // Segment 1: LIFT-OFF — grow from logo-size to full size
+        bfTimeline.to(butterfly, {
+            x: flightPath[1].x,
+            y: flightPath[1].y,
+            width: FULL_W,
+            height: FULL_H,
+            duration: 1.2,
+            ease: 'power2.out',
+        });
+
+        // Remaining segments: gentle drift
+        for (let i = 2; i < flightPath.length; i++) {
+            bfTimeline.to(butterfly, {
+                x: flightPath[i].x,
+                y: flightPath[i].y,
+                duration: 1,
+                ease: 'sine.inOut',
+            });
+        }
+
+        // Hyper-scroll detection + fade
+        const HYPER_THRESHOLD = 50;
+        const FADE_OUT_SPEED = 0.18;
+        const FADE_IN_SPEED = 0.03;
+        let bfTargetOpacity = 1;
+        let bfCurrentOpacity = 1;
+
+        // Wobble + tilt
+        let wobbleTime = 0;
+        let lastScrollY = 0;
+        let scrollVelocity = 0;
+        let smoothVelocity = 0;
+        let prevButterflyX = logoX;
+
+        function butterflyMainLoop() {
+            wobbleTime += 0.006;
+
+            const currentScroll = window.scrollY;
+            const rawVelocity = Math.abs(currentScroll - lastScrollY);
+            smoothVelocity += (rawVelocity - smoothVelocity) * 0.12;
+            scrollVelocity = rawVelocity;
+            lastScrollY = currentScroll;
+
+            // Hyper-scroll fade
+            if (smoothVelocity > HYPER_THRESHOLD) {
+                bfTargetOpacity = 0;
+            } else if (smoothVelocity < HYPER_THRESHOLD * 0.25) {
+                bfTargetOpacity = 1;
+            }
+
+            const speed = bfTargetOpacity < bfCurrentOpacity ? FADE_OUT_SPEED : FADE_IN_SPEED;
+            bfCurrentOpacity += (bfTargetOpacity - bfCurrentOpacity) * speed;
+            bfCurrentOpacity = Math.max(0, Math.min(1, bfCurrentOpacity));
+            butterfly.style.opacity = bfCurrentOpacity;
+
+            // Gentle wobble (only when not at logo size)
+            const currentWidth = butterfly.getBoundingClientRect().width;
+            const wobbleStrength = Math.min(1, Math.max(0, (currentWidth - logoW) / (FULL_W - logoW)));
+
+            const wobbleX = (Math.sin(wobbleTime * 1.0) * 6 + Math.sin(wobbleTime * 2.3) * 2) * wobbleStrength;
+            const wobbleY = (Math.cos(wobbleTime * 0.7) * 5 + Math.sin(wobbleTime * 1.8) * 2) * wobbleStrength;
+
+            butterfly.style.marginLeft = wobbleX + 'px';
+            butterfly.style.marginTop = wobbleY + 'px';
+
+            // Gentle tilt toward direction of travel
+            const rect = butterfly.getBoundingClientRect();
+            const currentX = rect.left + rect.width / 2;
+            const dx = currentX - prevButterflyX;
+            prevButterflyX = currentX;
+
+            const targetTilt = Math.max(-15, Math.min(15, dx * 1.5)) * wobbleStrength;
+            const currentTilt = parseFloat(butterfly.style.getPropertyValue('--tilt') || '0');
+            const smoothedTilt = currentTilt + (targetTilt - currentTilt) * 0.06;
+            butterfly.style.setProperty('--tilt', smoothedTilt);
+            butterfly.querySelector('svg').style.transform = `rotate(${smoothedTilt}deg)`;
+
+            requestAnimationFrame(butterflyMainLoop);
+        }
+
+        butterflyMainLoop();
+
+        // Particle trail
+        const particlePool = [];
+        const MAX_PARTICLES = 20;
+        let particleTimer = 0;
+
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = document.createElement('div');
+            p.className = 'butterfly-particle';
+            p.style.opacity = '0';
+            document.body.appendChild(p);
+            particlePool.push({ el: p, active: false });
+        }
+
+        function emitParticle() {
+            if (bfCurrentOpacity < 0.5) return;
+            if (window.scrollY < 100) return;
+
+            const rect = butterfly.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+
+            const particle = particlePool.find(p => !p.active);
+            if (!particle) return;
+
+            particle.active = true;
+            const el = particle.el;
+
+            const offsetX = (Math.random() - 0.5) * 30;
+            const offsetY = (Math.random() - 0.5) * 20;
+            const size = 3 + Math.random() * 4;
+
+            el.style.left = (cx + offsetX) + 'px';
+            el.style.top = (cy + offsetY) + 'px';
+            el.style.width = size + 'px';
+            el.style.height = size + 'px';
+            el.style.opacity = String(0.4 * bfCurrentOpacity);
+
+            gsap.to(el, {
+                opacity: 0,
+                scale: 0.2,
+                y: '+=' + (10 + Math.random() * 20),
+                x: '+=' + (Math.random() - 0.5) * 15,
+                duration: 1.5 + Math.random(),
+                ease: 'power2.out',
+                onComplete: () => {
+                    particle.active = false;
+                    el.style.opacity = '0';
+                    gsap.set(el, { scale: 1 });
+                }
+            });
+        }
+
+        function particleLoop() {
+            particleTimer++;
+            const interval = scrollVelocity > 1.5 ? 4 : 12;
+            if (particleTimer % interval === 0 && scrollVelocity > 0.3) {
+                emitParticle();
+            }
+            requestAnimationFrame(particleLoop);
+        }
+
+        particleLoop();
+
+        // Dynamic flap speed
+        const flapStyle = document.createElement('style');
+        document.head.appendChild(flapStyle);
+
+        function updateFlapSpeed() {
+            const flapSpeed = Math.max(3.0, 4.0 - smoothVelocity * 0.005);
+            flapStyle.textContent = `
+                .butterfly-wing-left { animation-duration: ${flapSpeed}s !important; }
+                .butterfly-wing-right { animation-duration: ${flapSpeed}s !important; }
+            `;
+            requestAnimationFrame(updateFlapSpeed);
+        }
+        updateFlapSpeed();
+
+        // Butterfly resize handler
+        let bfResizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(bfResizeTimer);
+            bfResizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
         });
     </script>
 </body>
