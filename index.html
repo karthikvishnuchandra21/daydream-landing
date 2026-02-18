@@ -586,23 +586,23 @@
         }
 
         .butterfly-wing-left {
-            animation: flapLeft 4s ease-in-out infinite;
+            animation: flapLeft 5s ease-in-out infinite;
             transform-origin: 50px 45px;
         }
 
         .butterfly-wing-right {
-            animation: flapRight 4s ease-in-out infinite;
+            animation: flapRight 5s ease-in-out infinite;
             transform-origin: 50px 45px;
         }
 
         @keyframes flapLeft {
-            0%, 100% { transform: perspective(200px) rotateY(18deg) rotateX(0deg); }
-            50% { transform: perspective(200px) rotateY(40deg) rotateX(-3deg); }
+            0%, 100% { transform: perspective(200px) rotateY(10deg); }
+            50% { transform: perspective(200px) rotateY(38deg); }
         }
 
         @keyframes flapRight {
-            0%, 100% { transform: perspective(200px) rotateY(-18deg) rotateX(0deg); }
-            50% { transform: perspective(200px) rotateY(-40deg) rotateX(-3deg); }
+            0%, 100% { transform: perspective(200px) rotateY(-10deg); }
+            50% { transform: perspective(200px) rotateY(-38deg); }
         }
 
         .butterfly-glow {
@@ -1159,19 +1159,18 @@
         const FULL_W = 120;
         const FULL_H = 108;
 
-        // Flight path — logo → lift-off → gentle drift down
-        const flightPath = [
-            { x: logoX, y: logoY },
-            { x: vw * 0.12, y: vh * 0.35 },
-            { x: vw * 0.08, y: vh * 0.50 },
-            { x: vw * 0.15, y: vh * 0.60 },
-            { x: vw * 0.06, y: vh * 0.45 },
-            { x: vw * 0.18, y: vh * 0.55 },
-            { x: vw * 0.10, y: vh * 0.65 },
-            { x: vw * 0.20, y: vh * 0.50 },
-            { x: vw * 0.08, y: vh * 0.60 },
-            { x: vw * 0.14, y: vh * 0.75 },
-        ];
+        // Flight path — logo → smooth cylindrical drift down (sine wave)
+        const flightPath = [{ x: logoX, y: logoY }];
+        const NUM_DRIFT_POINTS = 20;
+        for (let i = 0; i < NUM_DRIFT_POINTS; i++) {
+            const t = i / (NUM_DRIFT_POINTS - 1);
+            const centerX = vw * 0.12;
+            const radius = vw * 0.05;
+            const angle = t * Math.PI * 4;  // 2 full sine cycles
+            const x = centerX + Math.sin(angle) * radius;
+            const y = vh * 0.35 + t * (vh * 0.45);  // descend from 35% to 80%
+            flightPath.push({ x, y });
+        }
 
         // Initial state — sitting on top of the logo
         gsap.set(butterfly, {
@@ -1349,7 +1348,7 @@
         function updateFlapSpeed() {
             flapFrame++;
             if (flapFrame % 10 === 0) {
-                const flapSpeed = Math.max(3.0, 4.0 - smoothVelocity * 0.005);
+                const flapSpeed = Math.max(4.5, 5.0 - smoothVelocity * 0.005);
                 flapStyle.textContent = `
                     .butterfly-wing-left { animation-duration: ${flapSpeed}s !important; }
                     .butterfly-wing-right { animation-duration: ${flapSpeed}s !important; }
