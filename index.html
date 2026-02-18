@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Daydream — A space for conversational exploration</title>
+    <title>Daydream — collapse the distance between who you are and who you need to be</title>
+    <meta name="description" content="Daydream collapses the distance between who you are and who you need to be. Identity alignment through deep inner work, guided by AI that knows you.">
+    <meta property="og:title" content="Daydream">
+    <meta property="og:description" content="Collapse the distance between who you are and who you need to be.">
+    <meta property="og:image" content="https://exp.daydreamers.app/icons/icon-512x512.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://daydreamers.app">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Daydream">
+    <meta name="twitter:description" content="Collapse the distance between who you are and who you need to be.">
+    <meta name="twitter:image" content="https://exp.daydreamers.app/icons/icon-512x512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -37,7 +47,7 @@
             overflow-x: hidden;
         }
 
-        /* Header with button */
+        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -45,8 +55,47 @@
             right: 0;
             padding: 1.5rem 2rem;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             z-index: 100;
+            transition: background 0.4s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(242, 244, 238, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .header-logo svg {
+            width: 38px;
+            height: 34px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--charcoal-soft);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+            padding: 0.75rem 0;
+        }
+
+        .header-link:hover {
+            color: var(--charcoal);
         }
 
         .try-btn {
@@ -69,38 +118,6 @@
         .try-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 2rem;
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 2;
-            animation: fadeUp 1.2s ease-out;
-        }
-
-        .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            font-weight: 300;
-            letter-spacing: 0.02em;
-            margin-bottom: 0.5rem;
-            color: var(--charcoal);
-        }
-
-        .tagline {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: var(--warm-gray);
-            letter-spacing: 0.03em;
         }
 
         /* Dynamic Landscape */
@@ -126,24 +143,112 @@
             stroke-linejoin: round;
         }
 
-        .layer-back {
-            stroke: rgba(196, 191, 180, 0.4);
+        .layer-back { stroke: rgba(196, 191, 180, 0.4); stroke-width: 1; }
+        .layer-mid { stroke: rgba(154, 149, 138, 0.5); stroke-width: 1.5; }
+        .layer-front { stroke: rgba(107, 102, 92, 0.4); stroke-width: 2; }
+        .layer-detail { stroke: rgba(154, 149, 138, 0.3); stroke-width: 1; }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            animation: fadeUp 1.2s ease-out;
+            max-width: 680px;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            margin-bottom: 1.25rem;
+            color: var(--charcoal);
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+            font-weight: 300;
+            color: var(--charcoal-soft);
+            margin-bottom: 2.5rem;
+            line-height: 1.55;
+        }
+
+        .hero-cta {
+            padding: 1rem 2.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            background: #c4a87c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s ease;
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta .star-stencil {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hero-cta .star-path {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.25);
             stroke-width: 1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
         }
 
-        .layer-mid {
-            stroke: rgba(154, 149, 138, 0.5);
-            stroke-width: 1.5;
+        .hero-cta .star-path:nth-child(1) { animation: starDraw 8s ease-in-out infinite; }
+        .hero-cta .star-path:nth-child(2) { animation: starDraw 8s ease-in-out 1s infinite; }
+        .hero-cta .star-path:nth-child(3) { animation: starDraw 8s ease-in-out 2s infinite; }
+        .hero-cta .star-path:nth-child(4) { animation: starDraw 8s ease-in-out 3s infinite; }
+        .hero-cta .star-path:nth-child(5) { animation: starDraw 8s ease-in-out 4s infinite; }
+        .hero-cta .star-path:nth-child(6) { animation: starDraw 8s ease-in-out 5s infinite; }
+        .hero-cta .star-path:nth-child(7) { animation: starDraw 8s ease-in-out 6s infinite; }
+
+        .hero-cta:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 24px rgba(196, 168, 124, 0.4), 0 8px 32px rgba(196, 168, 124, 0.25);
         }
 
-        .layer-front {
-            stroke: rgba(107, 102, 92, 0.4);
-            stroke-width: 2;
+        .hero-cta:hover .star-path {
+            stroke: rgba(255, 255, 255, 0.4);
         }
 
-        .layer-detail {
-            stroke: rgba(154, 149, 138, 0.3);
-            stroke-width: 1;
+        .hero-cta:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        @keyframes starDraw {
+            0% { stroke-dashoffset: 200; opacity: 0; }
+            2% { opacity: 1; }
+            10% { stroke-dashoffset: 0; opacity: 1; }
+            60% { stroke-dashoffset: 0; opacity: 0.5; }
+            75% { stroke-dashoffset: 0; opacity: 0; }
+            100% { stroke-dashoffset: 200; opacity: 0; }
         }
 
         /* Scroll indicator */
@@ -157,8 +262,6 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--warm-gray-light);
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
             animation: softBounce 2s ease-in-out infinite;
             z-index: 10;
         }
@@ -169,12 +272,24 @@
             stroke: var(--warm-gray-light);
         }
 
-        /* Content Sections */
+        /* Sections */
         section.content-section {
-            padding: 8rem 2rem;
-            max-width: 680px;
+            position: relative;
+            z-index: 1;
+            padding: 7rem 2rem;
+            max-width: 720px;
             margin: 0 auto;
         }
+
+        .section-bg {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-bg-cream { background: var(--cream); }
+        .section-bg-dark { background: var(--cream-dark); }
+        .section-bg-gradient { background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%); }
+        .section-bg-gradient-up { background: linear-gradient(180deg, var(--cream-dark) 0%, var(--cream) 100%); }
 
         .section-divider {
             width: 40px;
@@ -199,222 +314,247 @@
             text-align: center;
         }
 
-        /* What Section - More visible */
-        .what-section {
-            background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%);
-            position: relative;
-        }
+        p:last-child { margin-bottom: 0; }
 
-        .what-section::before {
-            content: '';
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(180deg, transparent 0%, var(--warm-gray-light) 100%);
-        }
-
-        .what-section h2 {
-            font-size: clamp(2rem, 5vw, 2.8rem);
-            color: var(--charcoal);
-            position: relative;
-        }
-
-        .peek-indicator {
-            position: absolute;
-            bottom: 6rem;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 10;
-            animation: peekPulse 3s ease-in-out infinite;
-        }
-
-        .peek-indicator span {
-            display: block;
-            font-family: 'Cormorant Garamond', serif;
+        /* Intro / What section */
+        .intro-section p {
             font-size: 1.1rem;
+            line-height: 1.85;
+        }
+
+        .audience-line {
+            font-style: italic;
             color: var(--warm-gray);
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.05em;
         }
 
-        .peek-indicator svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--warm-gray);
-            stroke-width: 1.5;
-        }
-
-        @keyframes peekPulse {
-            0%, 100% {
-                opacity: 0.6;
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(5px);
-            }
-        }
-
-        /* Beta Section */
-        .beta-section {
-            background: var(--cream-dark);
-            position: relative;
-        }
-
-        .beta-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border: 1px solid var(--warm-gray-light);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            color: var(--warm-gray);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-        }
-
-        .beta-section .section-content {
+        .pull-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            color: var(--charcoal);
+            font-weight: 400;
+            font-style: italic;
             text-align: center;
+            margin: 3rem auto;
+            max-width: 560px;
+            line-height: 1.5;
         }
 
-        .waitlist-form {
+        /* Three Pillars */
+        .pillars {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            gap: 0;
             margin-top: 2.5rem;
         }
 
-        .waitlist-form input {
-            padding: 1rem 1.5rem;
-            width: 100%;
-            max-width: 320px;
-            border: 1px solid var(--warm-gray-light);
-            border-radius: 8px;
-            background: var(--cream);
+        .pillar {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--warm-gray-light);
+        }
+
+        .pillar:last-child {
+            border-bottom: none;
+        }
+
+        .pillar-label {
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #c4a87c;
+            margin-bottom: 0.75rem;
+        }
+
+        .pillar h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            font-weight: 400;
             color: var(--charcoal);
-            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            text-align: left;
         }
 
-        .waitlist-form input:focus {
-            outline: none;
-            border-color: var(--warm-gray);
-            box-shadow: 0 0 0 3px rgba(154, 149, 138, 0.1);
+        .pillar p {
+            font-size: 0.95rem;
+            text-align: left;
+            color: var(--charcoal-soft);
+            line-height: 1.7;
         }
 
-        .waitlist-form input::placeholder {
-            color: var(--warm-gray-light);
+        /* Science section - 2x2 grid */
+        .science-intro {
+            max-width: 580px;
+            margin: 0 auto 3rem;
         }
 
-        .waitlist-form button {
-            padding: 1rem 2.5rem;
-            background: var(--charcoal);
-            color: var(--cream);
-            border: none;
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .waitlist-form button:hover {
-            background: var(--charcoal-soft);
-            transform: translateY(-1px);
-        }
-
-        /* Team Section */
-        .team-section {
-            background: linear-gradient(180deg, var(--cream-dark) 0%, var(--cream) 100%);
-        }
-
-        .team-grid {
+        .science-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 2rem;
-            margin-top: 3rem;
-            max-width: 600px;
+            margin-top: 0;
+        }
+
+        .science-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .science-marker {
+            flex-shrink: 0;
+            width: 3px;
+            height: 100%;
+            min-height: 60px;
+            background: linear-gradient(180deg, var(--warm-gray-light), transparent);
+            border-radius: 2px;
+        }
+
+        .science-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--charcoal);
+            margin-bottom: 0.4rem;
+        }
+
+        .science-item p {
+            font-size: 0.9rem;
+            text-align: left;
+            color: var(--charcoal-soft);
+            line-height: 1.65;
+        }
+
+        .cite-link {
+            color: #c4a87c;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .cite-link:hover {
+            color: var(--charcoal);
+        }
+
+        .cite-link sup {
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        /* Who it's for - persona cards */
+        .personas {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+            max-width: 580px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .team-member {
-            text-align: center;
-            padding: 2rem 1rem;
+        .persona {
+            padding: 1.5rem 1.75rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(196, 191, 180, 0.4);
+            transition: all 0.3s ease;
         }
 
-        .team-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1.5rem;
-            stroke: var(--warm-gray);
-            stroke-width: 1;
-            fill: none;
+        .persona:hover { border-color: var(--warm-gray); }
+
+        .persona h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--charcoal);
+            margin-bottom: 0.4rem;
         }
 
-        .team-role {
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--warm-gray);
-            margin-bottom: 0.75rem;
-        }
-
-        .team-description {
-            font-size: 0.95rem;
+        .persona p {
+            font-size: 0.9rem;
+            text-align: left;
             color: var(--charcoal-soft);
             line-height: 1.6;
         }
 
-        /* Footer */
-        footer {
-            padding: 4rem 2rem;
+        /* Final CTA */
+        .final-cta {
             text-align: center;
-            background: var(--cream);
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .footer-logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: var(--charcoal);
+        .final-cta h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
             margin-bottom: 1rem;
         }
 
-        .footer-text {
+        .final-cta p {
+            color: var(--warm-gray);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .final-cta .hero-cta {
+            font-size: 1.05rem;
+            padding: 1.1rem 3rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--cream);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-logo {
+            display: inline-block;
+        }
+
+        .footer-logo svg {
+            width: 34px;
+            height: 30px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
             font-size: 0.85rem;
             color: var(--warm-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--charcoal-soft); }
+
+        .footer-text {
+            font-size: 0.8rem;
+            color: var(--warm-gray-light);
         }
 
         /* Animations */
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes softBounce {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) translateY(6px);
-            }
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
         }
 
-        /* Scroll reveal */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -428,166 +568,12 @@
 
         /* Responsive */
         @media (max-width: 640px) {
-            section.content-section {
-                padding: 5rem 1.5rem;
-            }
-
-            .team-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .header {
-                padding: 1rem 1.5rem;
-            }
-        }
-
-        /* Waitlist Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(74, 70, 64, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--cream);
-            border-radius: 16px;
-            padding: 2.5rem;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            animation: modalSlideIn 0.3s ease-out;
-            position: relative;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--warm-gray);
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--charcoal);
-        }
-
-        .modal h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--charcoal);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .modal-question {
-            font-size: 1rem;
-            color: var(--charcoal-soft);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .modal-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .modal-option {
-            padding: 1rem 1.25rem;
-            background: var(--cream-dark);
-            border: 1px solid var(--warm-gray-light);
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-            color: var(--charcoal);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .modal-option:hover {
-            border-color: var(--warm-gray);
-            background: var(--cream);
-        }
-
-        .modal-option.selected {
-            border-color: var(--charcoal);
-            background: var(--cream);
-        }
-
-        .modal-submit {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 1rem;
-            background: var(--charcoal);
-            color: var(--cream);
-            border: none;
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-submit:hover:not(:disabled) {
-            background: var(--charcoal-soft);
-        }
-
-        .modal-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Confirmation state */
-        .modal-confirmation {
-            text-align: center;
-            padding: 1rem 0;
-        }
-
-        .modal-confirmation svg {
-            width: 48px;
-            height: 48px;
-            stroke: var(--warm-gray);
-            margin-bottom: 1rem;
-        }
-
-        .modal-confirmation h3 {
-            margin-bottom: 0.75rem;
-        }
-
-        .modal-confirmation p {
-            color: var(--warm-gray);
-            font-size: 0.95rem;
+            section.content-section { padding: 5rem 1.5rem; }
+            .header { padding: 1rem 1.25rem; }
+            .hero-content { padding: 0 0.5rem; }
+            .final-cta { padding: 4rem 1.5rem 3rem; }
+            .science-grid { grid-template-columns: 1fr; }
+            .science-item { gap: 1rem; }
         }
     </style>
 </head>
@@ -602,128 +588,278 @@
         </svg>
     </div>
 
-    <!-- Header with Try button -->
-    <header class="header">
-        <a href="https://exp.daydreamers.app/" class="try-btn">Try it out :)</a>
+    <!-- Header -->
+    <header class="header" id="header">
+        <a href="/" class="header-logo">
+            <svg viewBox="0 0 100 90" fill="none">
+                <defs>
+                    <linearGradient id="hwL" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                    </linearGradient>
+                    <linearGradient id="hwR" x1="100%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                    </linearGradient>
+                    <radialGradient id="hGlow" cx="50%" cy="40%" r="50%">
+                        <stop offset="0%" stop-color="#A8D4A8" stop-opacity="0.6"/><stop offset="100%" stop-color="#8FBF8F" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
+                    <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M44 28 C40 20,30 14,20 14 C14 14,10 18,10 24 C10 30,16 36,28 40 C38 43,44 38,44 32Z" fill="url(#hGlow)"/>
+                    <path d="M46 30 C38 26,28 22,18 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <path d="M46 34 C36 32,24 32,14 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="6" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="4" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="3" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
+                    <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M48 46 C42 54,34 62,28 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="16" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="16" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
+                </g>
+                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
+                    <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M56 28 C60 20,70 14,80 14 C86 14,90 18,90 24 C90 30,84 36,72 40 C62 43,56 38,56 32Z" fill="url(#hGlow)"/>
+                    <path d="M54 30 C62 26,72 22,82 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <path d="M54 34 C64 32,76 32,86 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="94" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="96" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="97" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
+                    <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M52 46 C58 54,66 62,72 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="84" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="84" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
+                </g>
+                <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
+                <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
+            </svg>
+        </a>
+        <div class="header-right">
+            <a href="/blog" class="header-link">Blog</a>
+            <a href="https://exp.daydreamers.app/" class="try-btn">Try it out :)</a>
+        </div>
     </header>
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-content">
             <h1 class="logo">Daydream</h1>
-            <p class="tagline">Audio experiences for the mind</p>
+            <p class="subtitle">Collapse the distance between who you are and who you need to be.</p>
+            <a href="https://exp.daydreamers.app/" class="hero-cta">
+                <svg class="star-stencil" viewBox="0 0 240 50" preserveAspectRatio="xMidYMid slice">
+                    <path class="star-path" d="M30,20 L32,14 L34,20 L40,22 L34,24 L32,30 L30,24 L24,22 Z"/>
+                    <path class="star-path" d="M65,28 L68,19 L71,28 L80,31 L71,34 L68,43 L65,34 L56,31 Z"/>
+                    <path class="star-path" d="M98,12 L99.5,8 L101,12 L105,13.5 L101,15 L99.5,19 L98,15 L94,13.5 Z"/>
+                    <path class="star-path" d="M118,22 L122,10 L126,22 L138,25 L126,28 L122,40 L118,28 L106,25 Z"/>
+                    <path class="star-path" d="M152,14 L154,8 L156,14 L162,16 L156,18 L154,24 L152,18 L146,16 Z"/>
+                    <path class="star-path" d="M180,30 L183,22 L186,30 L194,32 L186,34 L183,42 L180,34 L172,32 Z"/>
+                    <path class="star-path" d="M215,18 L216.5,13 L218,18 L223,19.5 L218,21 L216.5,26 L215,21 L210,19.5 Z"/>
+                </svg>
+                Start free
+            </a>
         </div>
 
-        <!-- Peek indicator for what's below -->
-        <a href="#what-section" class="peek-indicator" style="text-decoration: none; cursor: pointer;">
-            <span>What we're building</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <a href="#intro" class="scroll-indicator" style="text-decoration: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M12 5v14M5 12l7 7 7-7"/>
             </svg>
         </a>
     </section>
 
-    <!-- What is Daydream -->
-    <section id="what-section" class="what-section content-section">
-        <div class="reveal">
-            <div class="section-divider"></div>
-            <p>
-                You don't need another voice telling you what to do. You need to hear the one that's been waiting underneath all the noise. The one that already decided.
-            </p>
-        </div>
-    </section>
+    <!-- Intro -->
+    <div class="section-bg section-bg-gradient">
+        <section id="intro" class="content-section intro-section">
+            <div class="reveal">
+                <div class="section-divider"></div>
+                <p>
+                    Most people know who they want to become. The gap isn't knowledge, it's that the person you want to be still feels like someone else.
+                </p>
+                <p>
+                    Daydream closes that gap. Not through affirmations or willpower, but through identity alignment, helping your sense of self catch up to your vision, until who you're becoming stops feeling like a stretch and starts feeling like you.
+                </p>
+                <p class="audience-line">
+                    For dreamers reaching for something that seems out of reach. Builders. Creators. Performers. Leaders.
+                </p>
+            </div>
+        </section>
+    </div>
 
-    <!-- Beta Section -->
-    <section class="beta-section content-section">
-        <div class="reveal section-content">
-            <span class="beta-badge">Early Access</span>
-            <h2>The Journey</h2>
-            <p>
-                Daydream is currently in beta. We're exploring how technology can help people reconnect with themselves through personalized audio journeys that turn your reflections into something you can feel.
-            </p>
-            <p>
-                If that resonates, we'd love to hear from you. Share your email to receive a trial token.
-            </p>
-            <form class="waitlist-form" id="waitlist-form">
-                <input type="email" id="waitlist-email" placeholder="your@email.com" aria-label="Email address" required>
-                <button type="submit">Join the waitlist</button>
-            </form>
-        </div>
-    </section>
+    <!-- Pull Quote -->
+    <div class="section-bg section-bg-dark">
+        <section class="content-section" style="padding-top: 5rem; padding-bottom: 5rem;">
+            <div class="reveal">
+                <p class="pull-quote">Something shifts when you stop thinking about who you want to be and start practicing it.</p>
+            </div>
+        </section>
+    </div>
 
-    <!-- Team Section -->
-    <section class="team-section content-section">
-        <div class="reveal">
-            <div class="section-divider"></div>
-            <h2>Who we are</h2>
-            <p>
-                A small team that believes that one of the strongest capabilities of technology is to enhance the human mind's ability to reflect, imagine, and reconnect with itself.
-            </p>
-            <p>
-                We are and always will be the artists of our own lives.
-            </p>
+    <!-- How Daydream Works (Three Pillars) -->
+    <div class="section-bg section-bg-gradient-up">
+        <section class="content-section">
+            <div class="reveal">
+                <div class="section-divider"></div>
+                <h2>How Daydream works</h2>
+                <p>Daydream learns who you are, where you're going, and what's in the way, then guides you through the inner work that matters most, every day.</p>
 
-            <div class="team-grid">
-                <div class="team-member">
-                    <svg class="team-icon" viewBox="0 0 48 48">
-                        <circle cx="24" cy="24" r="18"/>
-                        <path d="M16 28 Q24 34 32 28"/>
-                        <circle cx="18" cy="22" r="2"/>
-                        <circle cx="30" cy="22" r="2"/>
-                    </svg>
-                    <div class="team-role">Builder</div>
-                    <p class="team-description">
-                        Building for the passion of building a slightly better world
-                    </p>
-                </div>
+                <div class="pillars">
+                    <div class="pillar">
+                        <div class="pillar-label">It knows you</div>
+                        <h3>Deep enough to see what you can't</h3>
+                        <p>Daydream builds a deep understanding of who you are, your vision, your fears, your beliefs, the patterns you don't notice. This isn't a personality quiz. It's a relationship that deepens over time, and it powers everything Daydream does for you.</p>
+                    </div>
 
-                <div class="team-member">
-                    <svg class="team-icon" viewBox="0 0 48 48">
-                        <path d="M24 42 L10 28 C4 22 4 12 12 10 C18 8 22 12 24 16 C26 12 30 8 36 10 C44 12 44 22 38 28 Z"/>
-                    </svg>
-                    <div class="team-role">Investor</div>
-                    <p class="team-description">
-                        Years spent funding new approaches to psychological wellbeing
-                    </p>
-                </div>
+                    <div class="pillar">
+                        <div class="pillar-label">It guides you</div>
+                        <h3>You don't have to figure out what you need</h3>
+                        <p>Open the app and Daydream meets you where you are. Some days it's a story that makes your vision feel vivid and close. Other days it's a question that makes you confront something you've been avoiding. You don't choose features, Daydream helps choose the path for the day.</p>
+                    </div>
 
-                <div class="team-member">
-                    <svg class="team-icon" viewBox="0 0 48 48">
-                        <path d="M24 6 C16 6 10 12 10 20 C10 26 14 30 18 33 L18 38 L30 38 L30 33 C34 30 38 26 38 20 C38 12 32 6 24 6"/>
-                        <path d="M18 42 L30 42"/>
-                        <path d="M20 38 L20 42"/>
-                        <path d="M28 38 L28 42"/>
-                    </svg>
-                    <div class="team-role">Investor</div>
-                    <p class="team-description">
-                        Deep experience building with AI, now focused on AI applications for wellbeing
-                    </p>
+                    <div class="pillar">
+                        <div class="pillar-label">It changes you</div>
+                        <h3>The beliefs that hold you back start to dissolve</h3>
+                        <p>Through stories that articulate what's hard to admit, questions that force real honesty, and reflections that track who you're becoming, Daydream does the inner work of removing beliefs that hold you back and installing the ones that need to be there.</p>
+                    </div>
                 </div>
             </div>
+        </section>
+    </div>
+
+    <!-- Who it's for -->
+    <div class="section-bg section-bg-cream">
+        <section class="content-section">
+            <div class="reveal">
+                <div class="section-divider"></div>
+                <h2>Who it's for</h2>
+                <p>For people who know where they want to go and feel the distance between who they are and who they need to be to get there.</p>
+
+                <div class="personas">
+                    <div class="persona">
+                        <h3>The builder who doesn't feel like a founder yet</h3>
+                        <p>You're creating something real, but the voice that says "real founders are built different" keeps pulling you back. Daydream closes that gap.</p>
+                    </div>
+                    <div class="persona">
+                        <h3>The artist who can't get past the resistance</h3>
+                        <p>The work is in you but something stands between you and letting it out. Daydream helps you remove what's blocking what's already there.</p>
+                    </div>
+                    <div class="persona">
+                        <h3>The performer carrying doubt into every room</h3>
+                        <p>You show up, but part of you is still negotiating with the fear. Daydream aligns who you are with who you perform as, until they're the same person.</p>
+                    </div>
+                    <div class="persona">
+                        <h3>The person going through a shift</h3>
+                        <p>Your perception of yourself and the world is changing. You have a vision but the old identity keeps pulling you back. Daydream accelerates the transition.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- The Science -->
+    <div class="section-bg section-bg-dark">
+        <section class="content-section">
+            <div class="reveal">
+                <div class="section-divider"></div>
+                <h2>Built on how the brain actually changes</h2>
+                <div class="science-intro">
+                    <p>Daydream isn't built on motivation. It's built on neuroscience, the research on how identity forms, how neural pathways strengthen, and why certain kinds of practice produce lasting change.</p>
+                </div>
+
+                <div class="science-grid">
+                    <div class="science-item">
+                        <div class="science-marker"></div>
+                        <div>
+                            <h3>Imagination activates real pathways</h3>
+                            <p>Research from Harvard<a href="https://pubmed.ncbi.nlm.nih.gov/7500130/" target="_blank" rel="noopener" class="cite-link"><sup>1</sup></a> shows that vivid mental rehearsal activates the same neural pathways as real action. The brain literally practices what you imagine, forming the motor patterns, emotional responses, and cognitive frameworks you'll use when the moment arrives.</p>
+                        </div>
+                    </div>
+
+                    <div class="science-item">
+                        <div class="science-marker"></div>
+                        <div>
+                            <h3>Identity shifts before behavior</h3>
+                            <p>Decades of research show that lasting change doesn't start with habits, it starts with a shift in who you believe you are. When your self-concept changes, decisions start flowing from that new identity naturally, without the willpower struggle.</p>
+                        </div>
+                    </div>
+
+                    <div class="science-item">
+                        <div class="science-marker"></div>
+                        <div>
+                            <h3>Your future self feels like a stranger</h3>
+                            <p>UCLA research<a href="https://pubmed.ncbi.nlm.nih.gov/19047075/" target="_blank" rel="noopener" class="cite-link"><sup>2</sup></a> found that when people think about their future selves, the brain activation pattern looks more like thinking about a stranger than thinking about themselves. But when that connection strengthens, when the future self feels vivid and close, present-day decisions shift dramatically.</p>
+                        </div>
+                    </div>
+
+                    <div class="science-item">
+                        <div class="science-marker"></div>
+                        <div>
+                            <h3>Repetition rewires, not just reinforces</h3>
+                            <p>Neurons that fire together wire together. Each time you mentally rehearse a pattern, the synaptic connections strengthen. Daily practice turns a temporary neural activation into a permanent structural change, new ways of thinking stop being effortful and start being default.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Differentiation Quote -->
+    <div class="section-bg section-bg-gradient-up">
+        <section class="content-section" style="padding-top: 5rem; padding-bottom: 5rem;">
+            <div class="reveal">
+                <p class="pull-quote">Daydream doesn't tell you what to do. It changes who you believe you are, and the doing follows.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="section-bg section-bg-cream">
+        <div class="final-cta">
+            <div class="reveal">
+                <h2>The distance between who you are and who you want to be is smaller than you think</h2>
+                <p>Start where you are. Daydream meets you there.</p>
+                <a href="https://exp.daydreamers.app/" class="hero-cta">
+                    <svg class="star-stencil" viewBox="0 0 240 50" preserveAspectRatio="xMidYMid slice">
+                        <path class="star-path" d="M30,20 L32,14 L34,20 L40,22 L34,24 L32,30 L30,24 L24,22 Z"/>
+                        <path class="star-path" d="M65,28 L68,19 L71,28 L80,31 L71,34 L68,43 L65,34 L56,31 Z"/>
+                        <path class="star-path" d="M98,12 L99.5,8 L101,12 L105,13.5 L101,15 L99.5,19 L98,15 L94,13.5 Z"/>
+                        <path class="star-path" d="M118,22 L122,10 L126,22 L138,25 L126,28 L122,40 L118,28 L106,25 Z"/>
+                        <path class="star-path" d="M152,14 L154,8 L156,14 L162,16 L156,18 L154,24 L152,18 L146,16 Z"/>
+                        <path class="star-path" d="M180,30 L183,22 L186,30 L194,32 L186,34 L183,42 L180,34 L172,32 Z"/>
+                        <path class="star-path" d="M215,18 L216.5,13 L218,18 L223,19.5 L218,21 L216.5,26 L215,21 L210,19.5 Z"/>
+                    </svg>
+                    Try Daydream
+                </a>
+            </div>
         </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-logo">Daydream</div>
-        <p class="footer-text">San Francisco, 2026</p>
-    </footer>
-
-    <!-- Waitlist Modal -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal" id="modal-content">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <h3>One quick question</h3>
-            <p class="modal-question">What brings you to Daydream?</p>
-            <div class="modal-options">
-                <button class="modal-option" data-value="goal_planning">Goal Planning</button>
-                <button class="modal-option" data-value="self_discovery">Self-discovery</button>
-                <button class="modal-option" data-value="creative_block">Creative block</button>
-                <button class="modal-option" data-value="curious">Just curious</button>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <svg viewBox="0 0 100 90" fill="none">
+                    <defs>
+                        <linearGradient id="fwL" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                        </linearGradient>
+                        <linearGradient id="fwR" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                        </linearGradient>
+                    </defs>
+                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
+                        <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
+                        <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    </g>
+                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
+                        <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
+                        <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    </g>
+                    <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
+                    <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                    <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                    <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
+                </svg>
             </div>
-            <button class="modal-submit" id="modal-submit-btn" disabled>Continue</button>
+            <div class="footer-links">
+                <a href="/blog">Blog</a>
+            </div>
+            <p class="footer-text">San Francisco, 2026</p>
         </div>
-    </div>
+    </footer>
 
     <script>
         // Scene definitions for dynamic landscape
@@ -731,320 +867,74 @@
             valley: {
                 name: 'valley',
                 back: `
-                    M0,320
-                    Q80,300 120,310
-                    Q200,280 280,300
-                    Q400,260 500,280
-                    Q620,250 720,270
-                    Q850,240 950,260
-                    Q1100,230 1200,250
-
+                    M0,320 Q80,300 120,310 Q200,280 280,300 Q400,260 500,280 Q620,250 720,270 Q850,240 950,260 Q1100,230 1200,250
                     M60,310 L65,280 L70,295 L75,260 L80,295 L85,280 L90,310
                     M100,305 L105,275 L110,290 L115,255 L120,290 L125,275 L130,305
-
                     M350,285 L355,255 L360,270 L365,235 L370,270 L375,255 L380,285
                     M390,280 L395,250 L400,265 L405,230 L410,265 L415,250 L420,280
-
                     M750,265 L755,235 L760,250 L765,215 L770,250 L775,235 L780,265
                     M800,260 L805,230 L810,245 L815,210 L820,245 L825,230 L830,260
-
                     M1050,255 L1055,225 L1060,240 L1065,205 L1070,240 L1075,225 L1080,255
                     M1100,250 L1105,220 L1110,235 L1115,200 L1120,235 L1125,220 L1130,250
                 `,
                 mid: `
-                    M0,400
-                    Q60,380 100,390
-                    Q180,360 260,380
-                    Q380,340 480,365
-                    Q580,330 680,360
-                    Q800,320 900,350
-                    Q1020,310 1100,340
-                    Q1150,320 1200,340
-
+                    M0,400 Q60,380 100,390 Q180,360 260,380 Q380,340 480,365 Q580,330 680,360 Q800,320 900,350 Q1020,310 1100,340 Q1150,320 1200,340
                     M30,395 L28,355 L35,370 L40,335 L45,365 L52,345 L55,370 L60,340 L65,375 L68,355 L70,395
                     M140,380 L138,340 L145,355 L150,320 L155,350 L162,330 L165,355 L170,325 L175,360 L178,340 L180,380
-
                     M280,375 L278,335 L285,350 L290,315 L295,345 L302,325 L305,350 L310,320 L315,355 L318,335 L320,375
                     M400,360 L398,320 L405,335 L410,300 L415,330 L422,310 L425,335 L430,305 L435,340 L438,320 L440,360
-
                     M580,355 L578,315 L585,330 L590,295 L595,325 L602,305 L605,330 L610,300 L615,335 L618,315 L620,355
                     M720,350 L718,310 L725,325 L730,290 L735,320 L742,300 L745,325 L750,295 L755,330 L758,310 L760,350
-
                     M920,345 L918,305 L925,320 L930,285 L935,315 L942,295 L945,320 L950,290 L955,325 L958,305 L960,345
                     M1080,335 L1078,295 L1085,310 L1090,275 L1095,305 L1102,285 L1105,310 L1110,280 L1115,315 L1118,295 L1120,335
-
                     M500,350 Q520,400 540,350 Q560,420 580,360
                     M600,345 Q620,395 640,345 Q660,415 680,355
                 `,
                 front: `
-                    M0,520
-                    Q100,480 180,500
-                    Q280,460 380,490
-                    Q480,450 580,480
-                    Q680,440 780,475
-                    Q880,430 980,470
-                    Q1080,420 1200,460
-                    L1200,700 L0,700 Z
-
+                    M0,520 Q100,480 180,500 Q280,460 380,490 Q480,450 580,480 Q680,440 780,475 Q880,430 980,470 Q1080,420 1200,460 L1200,700 L0,700 Z
                     M20,515 L15,460 L25,480 L30,430 L40,470 L50,420 L55,465 L65,440 L70,480 L75,450 L80,510
                     M85,510 L80,455 L90,475 L95,425 L105,465 L115,415 L120,460 L130,435 L135,475 L140,445 L145,505
-
                     M200,495 L195,440 L205,460 L210,410 L220,450 L230,400 L235,445 L245,420 L250,460 L255,430 L260,490
                     M320,485 L315,430 L325,450 L330,400 L340,440 L350,390 L355,435 L365,410 L370,450 L375,420 L380,480
-
                     M450,475 L445,420 L455,440 L460,390 L470,430 L480,380 L485,425 L495,400 L500,440 L505,410 L510,470
-
                     M700,465 L695,410 L705,430 L710,380 L720,420 L730,370 L735,415 L745,390 L750,430 L755,400 L760,460
                     M820,460 L815,405 L825,425 L830,375 L840,415 L850,365 L855,410 L865,385 L870,425 L875,395 L880,455
-
                     M950,455 L945,400 L955,420 L960,370 L970,410 L980,360 L985,405 L995,380 L1000,420 L1005,390 L1010,450
                     M1100,445 L1095,390 L1105,410 L1110,360 L1120,400 L1130,350 L1135,395 L1145,370 L1150,410 L1155,380 L1160,440
                 `,
                 detail: `
                     M300,520 Q350,500 400,520 Q450,540 500,515 Q550,490 600,520
                     M350,540 Q400,520 450,540 Q500,560 550,535
-
                     M700,500 Q750,480 800,505 Q850,530 900,500 Q950,470 1000,505
                     M750,520 Q800,500 850,525 Q900,550 950,520
-
                     M100,550 L150,545 M160,548 L210,543
                     M400,560 L450,555 M460,558 L510,553
                     M700,545 L750,540 M760,543 L810,538
                     M1000,535 L1050,530 M1060,533 L1110,528
-
                     M580,400 Q600,380 620,400 L610,500 Q600,510 590,500 Z
                     M585,420 L595,415 M590,450 L600,445 M588,480 L598,475
                 `
             },
-
             mountains: {
                 name: 'mountains',
-                back: `
-                    M0,380
-                    L80,340 L120,360 L180,280 L220,320 L280,240 L340,300 L380,220
-                    L450,280 L500,180 L560,260 L620,160 L700,250 L760,200 L820,270
-                    L880,190 L940,260 L1000,220 L1060,280 L1120,240 L1200,300
-
-                    M280,240 L300,250 L285,255 L310,265 L290,270 L315,280
-                    M380,220 L400,230 L385,235 L410,245 L390,250 L415,260
-                    M500,180 L520,190 L505,195 L530,205 L510,210 L535,220
-                    M620,160 L640,170 L625,175 L650,185 L630,190 L655,200
-                    M880,190 L900,200 L885,205 L910,215 L890,220 L915,230
-
-                    M180,280 Q200,275 195,290 M220,320 Q240,315 235,330
-                    M340,300 Q360,295 355,310 M450,280 Q470,275 465,290
-                    M560,260 Q580,255 575,270 M700,250 Q720,245 715,260
-                    M820,270 Q840,265 835,280 M940,260 Q960,255 955,270
-                `,
-                mid: `
-                    M0,450
-                    L60,420 L100,440 L160,380 L200,410 L260,340 L320,390 L380,310
-                    L440,370 L500,280 L560,350 L620,270 L680,340 L740,290 L800,350
-                    L860,280 L920,350 L980,300 L1040,360 L1100,320 L1200,380
-
-                    M100,430 L95,400 L105,415 L110,385 L115,410 L125,390 L120,430
-                    M240,365 L235,335 L245,350 L250,320 L255,345 L265,325 L260,365
-                    M400,345 L395,315 L405,330 L410,300 L415,325 L425,305 L420,345
-                    M540,330 L535,300 L545,315 L550,285 L555,310 L565,290 L560,330
-                    M680,330 L675,300 L685,315 L690,285 L695,310 L705,290 L700,330
-                    M840,310 L835,280 L845,295 L850,265 L855,290 L865,270 L860,310
-                    M1000,330 L995,300 L1005,315 L1010,285 L1015,310 L1025,290 L1020,330
-
-                    M160,380 L180,400 L165,395 L190,415
-                    M320,390 L340,410 L325,405 L350,425
-                    M500,280 L520,300 L505,295 L530,315
-                    M740,290 L760,310 L745,305 L770,325
-                    M980,300 L1000,320 L985,315 L1010,335
-                `,
-                front: `
-                    M0,550
-                    L80,510 L140,540 L200,480 L260,520 L320,450 L400,500 L460,430
-                    L540,490 L600,400 L680,470 L740,410 L820,480 L880,420 L960,490
-                    L1020,440 L1100,500 L1160,460 L1200,490
-                    L1200,700 L0,700 Z
-
-                    M50,530 L45,490 L55,510 L60,470 L70,505 L80,480 L75,530
-                    M180,505 L175,465 L185,485 L190,445 L200,480 L210,455 L205,505
-                    M350,475 L345,435 L355,455 L360,415 L370,450 L380,425 L375,475
-                    M500,455 L495,415 L505,435 L510,395 L520,430 L530,405 L525,455
-                    M650,450 L645,410 L655,430 L660,390 L670,425 L680,400 L675,450
-                    M800,460 L795,420 L805,440 L810,400 L820,435 L830,410 L825,460
-                    M940,470 L935,430 L945,450 L950,410 L960,445 L970,420 L965,470
-                    M1080,480 L1075,440 L1085,460 L1090,420 L1100,455 L1110,430 L1105,480
-                `,
-                detail: `
-                    M500,180 L510,170 L505,175 L515,165 L510,172
-                    M620,160 L630,150 L625,155 L635,145 L630,152
-                    M880,190 L890,180 L885,185 L895,175 L890,182
-
-                    M200,550 L250,545 Q270,560 290,545 L340,550
-                    M500,530 L550,525 Q570,540 590,525 L640,530
-                    M800,540 L850,535 Q870,550 890,535 L940,540
-
-                    M100,580 L120,575 L140,580 L160,575
-                    M300,570 L320,565 L340,570 L360,565
-                    M600,560 L620,555 L640,560 L660,555
-                    M900,565 L920,560 L940,565 L960,560
-                `
+                back: `M0,380 L80,340 L120,360 L180,280 L220,320 L280,240 L340,300 L380,220 L450,280 L500,180 L560,260 L620,160 L700,250 L760,200 L820,270 L880,190 L940,260 L1000,220 L1060,280 L1120,240 L1200,300 M280,240 L300,250 L285,255 L310,265 L290,270 L315,280 M380,220 L400,230 L385,235 L410,245 L390,250 L415,260 M500,180 L520,190 L505,195 L530,205 L510,210 L535,220 M620,160 L640,170 L625,175 L650,185 L630,190 L655,200 M880,190 L900,200 L885,205 L910,215 L890,220 L915,230 M180,280 Q200,275 195,290 M220,320 Q240,315 235,330 M340,300 Q360,295 355,310 M450,280 Q470,275 465,290 M560,260 Q580,255 575,270 M700,250 Q720,245 715,260 M820,270 Q840,265 835,280 M940,260 Q960,255 955,270`,
+                mid: `M0,450 L60,420 L100,440 L160,380 L200,410 L260,340 L320,390 L380,310 L440,370 L500,280 L560,350 L620,270 L680,340 L740,290 L800,350 L860,280 L920,350 L980,300 L1040,360 L1100,320 L1200,380 M100,430 L95,400 L105,415 L110,385 L115,410 L125,390 L120,430 M240,365 L235,335 L245,350 L250,320 L255,345 L265,325 L260,365 M400,345 L395,315 L405,330 L410,300 L415,325 L425,305 L420,345 M540,330 L535,300 L545,315 L550,285 L555,310 L565,290 L560,330 M680,330 L675,300 L685,315 L690,285 L695,310 L705,290 L700,330 M840,310 L835,280 L845,295 L850,265 L855,290 L865,270 L860,310 M1000,330 L995,300 L1005,315 L1010,285 L1015,310 L1025,290 L1020,330 M160,380 L180,400 L165,395 L190,415 M320,390 L340,410 L325,405 L350,425 M500,280 L520,300 L505,295 L530,315 M740,290 L760,310 L745,305 L770,325 M980,300 L1000,320 L985,315 L1010,335`,
+                front: `M0,550 L80,510 L140,540 L200,480 L260,520 L320,450 L400,500 L460,430 L540,490 L600,400 L680,470 L740,410 L820,480 L880,420 L960,490 L1020,440 L1100,500 L1160,460 L1200,490 L1200,700 L0,700 Z M50,530 L45,490 L55,510 L60,470 L70,505 L80,480 L75,530 M180,505 L175,465 L185,485 L190,445 L200,480 L210,455 L205,505 M350,475 L345,435 L355,455 L360,415 L370,450 L380,425 L375,475 M500,455 L495,415 L505,435 L510,395 L520,430 L530,405 L525,455 M650,450 L645,410 L655,430 L660,390 L670,425 L680,400 L675,450 M800,460 L795,420 L805,440 L810,400 L820,435 L830,410 L825,460 M940,470 L935,430 L945,450 L950,410 L960,445 L970,420 L965,470 M1080,480 L1075,440 L1085,460 L1090,420 L1100,455 L1110,430 L1105,480`,
+                detail: `M500,180 L510,170 L505,175 L515,165 L510,172 M620,160 L630,150 L625,155 L635,145 L630,152 M880,190 L890,180 L885,185 L895,175 L890,182 M200,550 L250,545 Q270,560 290,545 L340,550 M500,530 L550,525 Q570,540 590,525 L640,530 M800,540 L850,535 Q870,550 890,535 L940,540 M100,580 L120,575 L140,580 L160,575 M300,570 L320,565 L340,570 L360,565 M600,560 L620,555 L640,560 L660,555 M900,565 L920,560 L940,565 L960,560`
             },
-
             beach: {
                 name: 'beach',
-                back: `
-                    M0,340 Q300,320 600,340 Q900,320 1200,340
-                    M0,360 Q300,340 600,360 Q900,340 1200,360
-                    M0,380 Q300,360 600,380 Q900,360 1200,380
-
-                    M850,200 A50,50 0 1,1 950,200 A50,50 0 1,1 850,200
-                    M860,200 A40,40 0 1,1 940,200 A40,40 0 1,1 860,200
-
-                    M750,320 Q800,300 850,325 Q900,350 950,320 Q1000,290 1050,325
-                    M700,335 Q750,315 800,340 Q850,365 900,335 Q950,305 1000,340
-                `,
-                mid: `
-                    M0,440
-                    Q50,430 100,440 Q200,420 300,440 Q400,415 500,440
-                    Q600,420 700,445 Q800,425 900,450 Q1000,430 1100,455 Q1150,445 1200,455
-
-                    M0,470
-                    Q80,455 160,470 Q280,445 400,470 Q520,450 640,475
-                    Q760,455 880,480 Q1000,460 1120,485 Q1160,475 1200,485
-
-                    M100,400
-                    Q105,350 100,300 Q95,250 105,200 Q100,150 110,120
-                    L115,115 Q125,140 120,145 Q140,120 145,125 Q160,100 165,110
-                    Q175,85 180,95 Q185,75 195,90 Q195,110 185,105
-                    Q190,130 175,125 Q180,150 165,145 Q170,170 155,165
-                    Q115,180 120,200 Q110,250 120,300 Q115,350 125,400
-
-                    M105,200 Q85,210 70,195 Q50,205 35,190 Q20,200 10,185
-                    Q25,180 40,190 Q55,175 75,188 Q90,175 105,190
-
-                    M115,220 Q135,230 150,215 Q170,225 185,210 Q205,220 220,205
-                    Q200,215 180,205 Q165,220 145,208 Q125,220 110,210
-
-                    M170,400
-                    Q175,360 170,320 Q165,280 175,240 Q170,200 180,170
-                    L185,165 Q195,185 190,190 Q210,170 215,178 Q230,158 235,168
-                    Q220,185 205,178 Q210,200 195,195 Q200,220 185,215
-                    Q175,230 180,260 Q170,300 180,340 Q175,370 185,400
-
-                    M175,240 Q155,250 140,235 Q120,245 105,230
-                    Q125,235 145,225 Q160,238 175,230
-                `,
-                front: `
-                    M0,520
-                    Q40,510 80,525 Q140,500 200,530 Q280,495 360,535
-                    Q440,505 520,540 Q600,510 680,545 Q760,515 840,550
-                    Q920,520 1000,555 Q1080,525 1160,560 Q1180,550 1200,560
-                    L1200,700 L0,700 Z
-
-                    M0,560
-                    Q60,545 120,565 Q200,535 280,570 Q360,540 440,575
-                    Q520,545 600,580 Q680,550 760,585 Q840,555 920,590
-                    Q1000,560 1080,595 Q1160,565 1200,600
-
-                    M1000,480
-                    Q1005,420 1000,360 Q995,300 1005,250 Q1000,200 1010,160
-                    L1020,155 Q1035,185 1025,190 Q1055,160 1060,172 Q1085,140 1095,155
-                    Q1110,125 1120,140 Q1135,115 1150,135 Q1145,160 1130,150
-                    Q1140,180 1115,172 Q1125,205 1100,195 Q1110,230 1085,220
-                    Q1095,250 1070,245 Q1050,260 1060,280 Q1045,320 1055,360
-                    Q1045,410 1060,450 Q1050,470 1065,490
-
-                    M1010,250 Q985,265 960,248 Q935,265 910,245 Q885,260 865,240
-                    Q895,250 920,238 Q945,255 970,240 Q995,255 1015,242
-
-                    M1025,280 Q1050,295 1075,278 Q1100,295 1125,275 Q1150,290 1175,270
-                    Q1145,285 1120,270 Q1095,288 1070,272 Q1045,290 1020,275
-                `,
-                detail: `
-                    M200,560 Q220,550 240,560 Q260,570 280,558
-                    M400,570 Q420,560 440,570 Q460,580 480,568
-                    M600,575 Q620,565 640,575 Q660,585 680,573
-                    M800,580 Q820,570 840,580 Q860,590 880,578
-
-                    M300,600 L350,595 L400,600 L450,595
-                    M550,605 L600,600 L650,605 L700,600
-                    M800,608 L850,603 L900,608 L950,603
-
-                    M100,520 Q120,515 140,522 M160,518 Q180,513 200,520
-                    M500,545 Q520,540 540,547 M560,543 Q580,538 600,545
-                `
+                back: `M0,340 Q300,320 600,340 Q900,320 1200,340 M0,360 Q300,340 600,360 Q900,340 1200,360 M0,380 Q300,360 600,380 Q900,360 1200,380 M850,200 A50,50 0 1,1 950,200 A50,50 0 1,1 850,200 M860,200 A40,40 0 1,1 940,200 A40,40 0 1,1 860,200 M750,320 Q800,300 850,325 Q900,350 950,320 Q1000,290 1050,325 M700,335 Q750,315 800,340 Q850,365 900,335 Q950,305 1000,340`,
+                mid: `M0,440 Q50,430 100,440 Q200,420 300,440 Q400,415 500,440 Q600,420 700,445 Q800,425 900,450 Q1000,430 1100,455 Q1150,445 1200,455 M0,470 Q80,455 160,470 Q280,445 400,470 Q520,450 640,475 Q760,455 880,480 Q1000,460 1120,485 Q1160,475 1200,485 M100,400 Q105,350 100,300 Q95,250 105,200 Q100,150 110,120 L115,115 Q125,140 120,145 Q140,120 145,125 Q160,100 165,110 Q175,85 180,95 Q185,75 195,90 Q195,110 185,105 Q190,130 175,125 Q180,150 165,145 Q170,170 155,165 Q115,180 120,200 Q110,250 120,300 Q115,350 125,400 M105,200 Q85,210 70,195 Q50,205 35,190 Q20,200 10,185 Q25,180 40,190 Q55,175 75,188 Q90,175 105,190 M115,220 Q135,230 150,215 Q170,225 185,210 Q205,220 220,205 Q200,215 180,205 Q165,220 145,208 Q125,220 110,210 M170,400 Q175,360 170,320 Q165,280 175,240 Q170,200 180,170 L185,165 Q195,185 190,190 Q210,170 215,178 Q230,158 235,168 Q220,185 205,178 Q210,200 195,195 Q200,220 185,215 Q175,230 180,260 Q170,300 180,340 Q175,370 185,400 M175,240 Q155,250 140,235 Q120,245 105,230 Q125,235 145,225 Q160,238 175,230`,
+                front: `M0,520 Q40,510 80,525 Q140,500 200,530 Q280,495 360,535 Q440,505 520,540 Q600,510 680,545 Q760,515 840,550 Q920,520 1000,555 Q1080,525 1160,560 Q1180,550 1200,560 L1200,700 L0,700 Z M0,560 Q60,545 120,565 Q200,535 280,570 Q360,540 440,575 Q520,545 600,580 Q680,550 760,585 Q840,555 920,590 Q1000,560 1080,595 Q1160,565 1200,600 M1000,480 Q1005,420 1000,360 Q995,300 1005,250 Q1000,200 1010,160 L1020,155 Q1035,185 1025,190 Q1055,160 1060,172 Q1085,140 1095,155 Q1110,125 1120,140 Q1135,115 1150,135 Q1145,160 1130,150 Q1140,180 1115,172 Q1125,205 1100,195 Q1110,230 1085,220 Q1095,250 1070,245 Q1050,260 1060,280 Q1045,320 1055,360 Q1045,410 1060,450 Q1050,470 1065,490 M1010,250 Q985,265 960,248 Q935,265 910,245 Q885,260 865,240 Q895,250 920,238 Q945,255 970,240 Q995,255 1015,242 M1025,280 Q1050,295 1075,278 Q1100,295 1125,275 Q1150,290 1175,270 Q1145,285 1120,270 Q1095,288 1070,272 Q1045,290 1020,275`,
+                detail: `M200,560 Q220,550 240,560 Q260,570 280,558 M400,570 Q420,560 440,570 Q460,580 480,568 M600,575 Q620,565 640,575 Q660,585 680,573 M800,580 Q820,570 840,580 Q860,590 880,578 M300,600 L350,595 L400,600 L450,595 M550,605 L600,600 L650,605 L700,600 M800,608 L850,603 L900,608 L950,603 M100,520 Q120,515 140,522 M160,518 Q180,513 200,520 M500,545 Q520,540 540,547 M560,543 Q580,538 600,545`
             },
-
             city: {
                 name: 'city',
-                back: `
-                    M0,380 L0,350
-                    L40,350 L40,300 L60,300 L60,280 L80,280 L80,300 L100,300 L100,350
-                    L140,350 L140,260 L160,260 L160,240 L180,240 L180,260 L200,260 L200,350
-                    L240,350 L240,220 L280,220 L280,180 L300,180 L300,160 L320,160 L320,180 L340,180 L340,220 L380,220 L380,350
-                    L420,350 L420,280 L440,280 L440,250 L460,250 L460,280 L480,280 L480,350
-                    L540,350 L540,200 L560,200 L560,170 L600,170 L600,140 L620,140 L620,170 L660,170 L660,200 L680,200 L680,350
-                    L720,350 L720,290 L740,290 L740,260 L760,260 L760,290 L780,290 L780,350
-                    L820,350 L820,240 L860,240 L860,200 L880,200 L880,180 L900,180 L900,200 L920,200 L920,240 L960,240 L960,350
-                    L1000,350 L1000,300 L1020,300 L1020,270 L1040,270 L1040,300 L1060,300 L1060,350
-                    L1100,350 L1100,280 L1140,280 L1140,240 L1160,240 L1160,280 L1200,280 L1200,380
-
-                    M280,220 L280,230 L290,230 L290,220 M300,220 L300,230 L310,230 L310,220 M320,220 L320,230 L330,230 L330,220
-                    M280,235 L280,245 L290,245 L290,235 M300,235 L300,245 L310,245 L310,235 M320,235 L320,245 L330,245 L330,235
-
-                    M560,200 L560,210 L570,210 L570,200 M580,200 L580,210 L590,210 L590,200
-                    M620,180 L620,190 L630,190 L630,180 M640,180 L640,190 L650,190 L650,180
-                `,
-                mid: `
-                    M0,450 L0,420
-                    L60,420 L60,360 L80,360 L80,340 L100,340 L100,360 L120,360 L120,420
-                    L180,420 L180,300 L200,300 L200,270 L240,270 L240,240 L260,240 L260,270 L300,270 L300,300 L320,300 L320,420
-                    L380,420 L380,320 L400,320 L400,290 L420,290 L420,320 L440,320 L440,420
-                    L500,420 L500,260 L520,260 L520,220 L560,220 L560,180 L580,180 L580,220 L620,220 L620,260 L640,260 L640,420
-                    L700,420 L700,340 L720,340 L720,300 L740,300 L740,340 L760,340 L760,420
-                    L820,420 L820,280 L840,280 L840,240 L880,240 L880,200 L900,200 L900,240 L940,240 L940,280 L960,280 L960,420
-                    L1020,420 L1020,350 L1040,350 L1040,310 L1060,310 L1060,350 L1080,350 L1080,420
-                    L1140,420 L1140,300 L1160,300 L1160,260 L1200,260 L1200,450
-
-                    M500,270 L500,285 L515,285 L515,270 M525,270 L525,285 L540,285 L540,270
-                    M500,295 L500,310 L515,310 L515,295 M525,295 L525,310 L540,310 L540,295
-                    M580,230 L580,245 L595,245 L595,230 M605,230 L605,245 L620,245 L620,230
-
-                    M820,290 L820,305 L835,305 L835,290 M845,290 L845,305 L860,305 L860,290
-                    M900,250 L900,265 L915,265 L915,250 M925,250 L925,265 L940,265 L940,250
-                `,
-                front: `
-                    M0,550 L0,500
-                    L80,500 L80,420 L100,420 L100,380 L140,380 L140,420 L160,420 L160,500
-                    L240,500 L240,380 L260,380 L260,340 L300,340 L300,300 L320,300 L320,340 L360,340 L360,380 L380,380 L380,500
-                    L460,500 L460,400 L480,400 L480,360 L520,360 L520,400 L540,400 L540,500
-                    L620,500 L620,340 L640,340 L640,300 L680,300 L680,260 L700,260 L700,300 L740,300 L740,340 L760,340 L760,500
-                    L840,500 L840,420 L860,420 L860,380 L900,380 L900,420 L920,420 L920,500
-                    L1000,500 L1000,360 L1020,360 L1020,320 L1060,320 L1060,280 L1080,280 L1080,320 L1120,320 L1120,360 L1140,360 L1140,500
-                    L1200,500 L1200,550
-                    L1200,700 L0,700 Z
-
-                    M240,400 L240,420 L260,420 L260,400 M270,400 L270,420 L290,420 L290,400
-                    M240,430 L240,450 L260,450 L260,430 M270,430 L270,450 L290,450 L290,430
-                    M300,360 L300,380 L320,380 L320,360 M330,360 L330,380 L350,380 L350,360
-
-                    M620,360 L620,380 L640,380 L640,360 M650,360 L650,380 L670,380 L670,360
-                    M680,320 L680,340 L700,340 L700,320 M710,320 L710,340 L730,340 L730,320
-
-                    M1000,380 L1000,400 L1020,400 L1020,380 M1030,380 L1030,400 L1050,400 L1050,380
-                    M1060,340 L1060,360 L1080,360 L1080,340 M1090,340 L1090,360 L1110,360 L1110,340
-                `,
-                detail: `
-                    M60,510 L100,510 M120,508 L160,508
-                    M300,520 L340,520 M360,518 L400,518
-                    M540,525 L580,525 M600,523 L640,523
-                    M780,530 L820,530 M840,528 L880,528
-                    M1000,535 L1040,535 M1060,533 L1100,533
-
-                    M0,580 L50,578 L100,580 L150,578 L200,580
-                    M250,582 L300,580 L350,582 L400,580 L450,582
-                    M500,584 L550,582 L600,584 L650,582 L700,584
-                    M750,586 L800,584 L850,586 L900,584 L950,586
-                    M1000,588 L1050,586 L1100,588 L1150,586 L1200,588
-                `
+                back: `M0,380 L0,350 L40,350 L40,300 L60,300 L60,280 L80,280 L80,300 L100,300 L100,350 L140,350 L140,260 L160,260 L160,240 L180,240 L180,260 L200,260 L200,350 L240,350 L240,220 L280,220 L280,180 L300,180 L300,160 L320,160 L320,180 L340,180 L340,220 L380,220 L380,350 L420,350 L420,280 L440,280 L440,250 L460,250 L460,280 L480,280 L480,350 L540,350 L540,200 L560,200 L560,170 L600,170 L600,140 L620,140 L620,170 L660,170 L660,200 L680,200 L680,350 L720,350 L720,290 L740,290 L740,260 L760,260 L760,290 L780,290 L780,350 L820,350 L820,240 L860,240 L860,200 L880,200 L880,180 L900,180 L900,200 L920,200 L920,240 L960,240 L960,350 L1000,350 L1000,300 L1020,300 L1020,270 L1040,270 L1040,300 L1060,300 L1060,350 L1100,350 L1100,280 L1140,280 L1140,240 L1160,240 L1160,280 L1200,280 L1200,380 M280,220 L280,230 L290,230 L290,220 M300,220 L300,230 L310,230 L310,220 M320,220 L320,230 L330,230 L330,220 M280,235 L280,245 L290,245 L290,235 M300,235 L300,245 L310,245 L310,235 M320,235 L320,245 L330,245 L330,235 M560,200 L560,210 L570,210 L570,200 M580,200 L580,210 L590,210 L590,200 M620,180 L620,190 L630,190 L630,180 M640,180 L640,190 L650,190 L650,180`,
+                mid: `M0,450 L0,420 L60,420 L60,360 L80,360 L80,340 L100,340 L100,360 L120,360 L120,420 L180,420 L180,300 L200,300 L200,270 L240,270 L240,240 L260,240 L260,270 L300,270 L300,300 L320,300 L320,420 L380,420 L380,320 L400,320 L400,290 L420,290 L420,320 L440,320 L440,420 L500,420 L500,260 L520,260 L520,220 L560,220 L560,180 L580,180 L580,220 L620,220 L620,260 L640,260 L640,420 L700,420 L700,340 L720,340 L720,300 L740,300 L740,340 L760,340 L760,420 L820,420 L820,280 L840,280 L840,240 L880,240 L880,200 L900,200 L900,240 L940,240 L940,280 L960,280 L960,420 L1020,420 L1020,350 L1040,350 L1040,310 L1060,310 L1060,350 L1080,350 L1080,420 L1140,420 L1140,300 L1160,300 L1160,260 L1200,260 L1200,450 M500,270 L500,285 L515,285 L515,270 M525,270 L525,285 L540,285 L540,270 M500,295 L500,310 L515,310 L515,295 M525,295 L525,310 L540,310 L540,295 M580,230 L580,245 L595,245 L595,230 M605,230 L605,245 L620,245 L620,230 M820,290 L820,305 L835,305 L835,290 M845,290 L845,305 L860,305 L860,290 M900,250 L900,265 L915,265 L915,250 M925,250 L925,265 L940,265 L940,250`,
+                front: `M0,550 L0,500 L80,500 L80,420 L100,420 L100,380 L140,380 L140,420 L160,420 L160,500 L240,500 L240,380 L260,380 L260,340 L300,340 L300,300 L320,300 L320,340 L360,340 L360,380 L380,380 L380,500 L460,500 L460,400 L480,400 L480,360 L520,360 L520,400 L540,400 L540,500 L620,500 L620,340 L640,340 L640,300 L680,300 L680,260 L700,260 L700,300 L740,300 L740,340 L760,340 L760,500 L840,500 L840,420 L860,420 L860,380 L900,380 L900,420 L920,420 L920,500 L1000,500 L1000,360 L1020,360 L1020,320 L1060,320 L1060,280 L1080,280 L1080,320 L1120,320 L1120,360 L1140,360 L1140,500 L1200,500 L1200,550 L1200,700 L0,700 Z M240,400 L240,420 L260,420 L260,400 M270,400 L270,420 L290,420 L290,400 M240,430 L240,450 L260,450 L260,430 M270,430 L270,450 L290,450 L290,430 M300,360 L300,380 L320,380 L320,360 M330,360 L330,380 L350,380 L350,360 M620,360 L620,380 L640,380 L640,360 M650,360 L650,380 L670,380 L670,360 M680,320 L680,340 L700,340 L700,320 M710,320 L710,340 L730,340 L730,320 M1000,380 L1000,400 L1020,400 L1020,380 M1030,380 L1030,400 L1050,400 L1050,380 M1060,340 L1060,360 L1080,360 L1080,340 M1090,340 L1090,360 L1110,360 L1110,340`,
+                detail: `M60,510 L100,510 M120,508 L160,508 M300,520 L340,520 M360,518 L400,518 M540,525 L580,525 M600,523 L640,523 M780,530 L820,530 M840,528 L880,528 M1000,535 L1040,535 M1060,533 L1100,533 M0,580 L50,578 L100,580 L150,578 L200,580 M250,582 L300,580 L350,582 L400,580 L450,582 M500,584 L550,582 L600,584 L650,582 L700,584 M750,586 L800,584 L850,586 L900,584 L950,586 M1000,588 L1050,586 L1100,588 L1150,586 L1200,588`
             }
         };
 
@@ -1064,46 +954,25 @@
             layerDetail.setAttribute('d', scene.detail);
         }
 
-        // Slow stencil animation - doubled durations for calmer feel
         function animateStencil(element, duration = 6000) {
             const length = element.getTotalLength();
             element.style.strokeDasharray = length;
             element.style.strokeDashoffset = length;
-
             element.animate([
                 { strokeDashoffset: length },
                 { strokeDashoffset: 0 }
-            ], {
-                duration: duration,
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
+            ], { duration, easing: 'ease-out', fill: 'forwards' });
         }
 
         function transitionToScene(newIndex) {
             const container = document.querySelector('.landscape-container');
-
-            // Slower fade transition
             container.animate([
-                { opacity: 0.5 },
-                { opacity: 0 }
-            ], {
-                duration: 1500,
-                easing: 'ease-in-out',
-                fill: 'forwards'
-            }).onfinish = () => {
+                { opacity: 0.5 }, { opacity: 0 }
+            ], { duration: 1500, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
                 setScene(sceneOrder[newIndex]);
-
                 container.animate([
-                    { opacity: 0 },
-                    { opacity: 0.5 }
-                ], {
-                    duration: 1500,
-                    easing: 'ease-in-out',
-                    fill: 'forwards'
-                });
-
-                // Slower stencil animations - staggered
+                    { opacity: 0 }, { opacity: 0.5 }
+                ], { duration: 1500, easing: 'ease-in-out', fill: 'forwards' });
                 setTimeout(() => animateStencil(layerBack, 7000), 400);
                 setTimeout(() => animateStencil(layerMid, 6000), 1600);
                 setTimeout(() => animateStencil(layerFront, 5000), 2800);
@@ -1111,208 +980,36 @@
             };
         }
 
-        // Initialize first scene
         setScene(sceneOrder[0]);
-
-        // Initial slow draw animation
         setTimeout(() => animateStencil(layerBack, 7000), 800);
         setTimeout(() => animateStencil(layerMid, 6000), 2400);
         setTimeout(() => animateStencil(layerFront, 5000), 4000);
         setTimeout(() => animateStencil(layerDetail, 4000), 5600);
 
-        // Scene transitions every 20 seconds (slower for calmer feel)
         setInterval(() => {
             currentSceneIndex = (currentSceneIndex + 1) % sceneOrder.length;
             transitionToScene(currentSceneIndex);
         }, 20000);
 
-        // Scroll reveal animation
+        // Scroll reveal
         const reveals = document.querySelectorAll('.reveal');
-
         const revealOnScroll = () => {
             reveals.forEach(el => {
                 const windowHeight = window.innerHeight;
                 const elementTop = el.getBoundingClientRect().top;
-                const revealPoint = 150;
-
-                if (elementTop < windowHeight - revealPoint) {
+                if (elementTop < windowHeight - 150) {
                     el.classList.add('visible');
                 }
             });
         };
-
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll();
 
-        // Waitlist Modal Logic
-        const SUPABASE_URL = 'https://srdsjvtxgybgykjgjgww.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZHNqdnR4Z3liZ3lramdqZ3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNDg5NTQsImV4cCI6MjA4MDkyNDk1NH0.nL0IXaXit9YSU2j0LrgFVtb6tJtICCo0IYGW1x-cplg';
-
-        const waitlistForm = document.getElementById('waitlist-form');
-        const waitlistEmail = document.getElementById('waitlist-email');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalContent = document.getElementById('modal-content');
-
-        let currentEmail = '';
-        let selectedRole = '';
-
-        // Handle form submission
-        waitlistForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = waitlistEmail.value.trim();
-
-            if (email && email.includes('@')) {
-                currentEmail = email;
-                modalOverlay.classList.add('active');
-            }
+        // Header blur on scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 80);
         });
-
-        // Handle option selection
-        document.querySelectorAll('.modal-option').forEach(option => {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.modal-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedRole = option.dataset.value;
-                document.getElementById('modal-submit-btn').disabled = false;
-            });
-        });
-
-        // Handle modal close
-        document.getElementById('modal-close').addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
-            resetModal();
-        });
-
-        // Close on overlay click
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('active');
-                resetModal();
-            }
-        });
-
-        // Handle final submission
-        document.getElementById('modal-submit-btn').addEventListener('click', async () => {
-            const submitBtn = document.getElementById('modal-submit-btn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        email: currentEmail,
-                        role: selectedRole,
-                        created_at: new Date().toISOString()
-                    })
-                });
-
-                if (response.ok || response.status === 201) {
-                    showConfirmation();
-                } else {
-                    throw new Error('Failed to submit');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                // Show confirmation anyway for better UX (can retry later)
-                showConfirmation();
-            }
-        });
-
-        function showConfirmation() {
-            modalContent.innerHTML = `
-                <div class="modal-confirmation">
-                    <svg viewBox="0 0 48 48" fill="none" stroke-width="2">
-                        <circle cx="24" cy="24" r="20"/>
-                        <path d="M16 24 L22 30 L32 18"/>
-                    </svg>
-                    <h3>You're on the list!</h3>
-                    <p>We'll be in touch soon with your trial token.</p>
-                </div>
-            `;
-
-            // Clear the form
-            waitlistEmail.value = '';
-
-            // Auto-close after 3 seconds
-            setTimeout(() => {
-                modalOverlay.classList.remove('active');
-                resetModal();
-            }, 3000);
-        }
-
-        function resetModal() {
-            currentEmail = '';
-            selectedRole = '';
-            document.querySelectorAll('.modal-option').forEach(o => o.classList.remove('selected'));
-
-            // Reset modal content
-            modalContent.innerHTML = `
-                <button class="modal-close" id="modal-close">&times;</button>
-                <h3>One quick question</h3>
-                <p class="modal-question">What brings you to Daydream?</p>
-                <div class="modal-options">
-                    <button class="modal-option" data-value="goal_planning">Goal Planning</button>
-                    <button class="modal-option" data-value="self_discovery">Self-discovery</button>
-                    <button class="modal-option" data-value="creative_block">Creative block</button>
-                    <button class="modal-option" data-value="curious">Just curious</button>
-                </div>
-                <button class="modal-submit" id="modal-submit-btn" disabled>Continue</button>
-            `;
-
-            // Re-attach event listeners
-            document.querySelectorAll('.modal-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    document.querySelectorAll('.modal-option').forEach(o => o.classList.remove('selected'));
-                    option.classList.add('selected');
-                    selectedRole = option.dataset.value;
-                    document.getElementById('modal-submit-btn').disabled = false;
-                });
-            });
-
-            document.getElementById('modal-close').addEventListener('click', () => {
-                modalOverlay.classList.remove('active');
-                resetModal();
-            });
-
-            document.getElementById('modal-submit-btn').addEventListener('click', async () => {
-                const submitBtn = document.getElementById('modal-submit-btn');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
-
-                try {
-                    const response = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({
-                            email: currentEmail,
-                            role: selectedRole,
-                            created_at: new Date().toISOString()
-                        })
-                    });
-
-                    if (response.ok || response.status === 201) {
-                        showConfirmation();
-                    } else {
-                        throw new Error('Failed to submit');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showConfirmation();
-                }
-            });
-        }
     </script>
 </body>
 </html>
