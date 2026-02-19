@@ -1161,12 +1161,12 @@
 
         // Flight path — logo → smooth cylindrical drift down (sine wave)
         const flightPath = [{ x: logoX, y: logoY }];
-        const NUM_DRIFT_POINTS = 20;
+        const NUM_DRIFT_POINTS = 40;
         for (let i = 0; i < NUM_DRIFT_POINTS; i++) {
             const t = i / (NUM_DRIFT_POINTS - 1);
             const centerX = vw * 0.12;
             const radius = vw * 0.05;
-            const angle = t * Math.PI * 4;  // 2 full sine cycles
+            const angle = t * Math.PI * 3;  // 1.5 sine cycles — lazier arcs
             const x = centerX + Math.sin(angle) * radius;
             const y = vh * 0.35 + t * (vh * 0.45);  // descend from 35% to 80%
             flightPath.push({ x, y });
@@ -1189,7 +1189,7 @@
                 trigger: document.body,
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 2.5,
+                scrub: 4,
             }
         });
 
@@ -1340,23 +1340,8 @@
 
         particleLoop();
 
-        // Dynamic flap speed (throttled — every ~10 frames)
-        const flapStyle = document.createElement('style');
-        document.head.appendChild(flapStyle);
-        let flapFrame = 0;
-
-        function updateFlapSpeed() {
-            flapFrame++;
-            if (flapFrame % 10 === 0) {
-                const flapSpeed = Math.max(4.5, 5.0 - smoothVelocity * 0.005);
-                flapStyle.textContent = `
-                    .butterfly-wing-left { animation-duration: ${flapSpeed}s !important; }
-                    .butterfly-wing-right { animation-duration: ${flapSpeed}s !important; }
-                `;
-            }
-            requestAnimationFrame(updateFlapSpeed);
-        }
-        updateFlapSpeed();
+        // Flap speed is now a constant 5s set in CSS — no dynamic override
+        // (Dynamic overrides caused animation restarts / choppy fluttering)
 
         // Butterfly resize handler
         let bfResizeTimer;
