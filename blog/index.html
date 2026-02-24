@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Blog — Daydream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F2F4EE;
+            --cream-dark: #EBE8E0;
+            --warm-gray: #9A958A;
+            --warm-gray-light: #C4BFB4;
+            --charcoal: #4A4640;
+            --charcoal-soft: #6B665C;
+            --gold: #c4a87c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+            font-weight: 300;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Header ── */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .header-logo svg { width: 38px; height: 34px; }
+
+        .header-right {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .header-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--charcoal-soft);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+            padding: 0.75rem 0;
+        }
+
+        .header-link:hover {
+            color: var(--charcoal);
+        }
+
+        .header-cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .login-link {
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+
+        .request-trial-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--charcoal-soft);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.3s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .request-trial-link:hover {
+            color: var(--charcoal);
+        }
+
+        /* ── Blog Content ── */
+        .blog-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeUp 1.2s ease-out;
+        }
+
+        .blog-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            margin-bottom: 1rem;
+            color: var(--charcoal);
+        }
+
+        .blog-subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--warm-gray);
+            letter-spacing: 0.03em;
+            max-width: 400px;
+        }
+
+        .back-link {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: var(--warm-gray-light);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--charcoal-soft);
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-logo { display: inline-block; }
+        .footer-logo svg { width: 34px; height: 30px; }
+
+        .footer-links { display: flex; gap: 1.5rem; }
+
+        .footer-links a {
+            font-size: 0.85rem;
+            color: var(--warm-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--charcoal); }
+
+        .footer-text {
+            font-size: 0.8rem;
+            color: var(--warm-gray-light);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="header-logo">
+            <svg viewBox="0 0 100 90" fill="none">
+                <defs>
+                    <linearGradient id="hwL" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                    </linearGradient>
+                    <linearGradient id="hwR" x1="100%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                    </linearGradient>
+                    <radialGradient id="hGlow" cx="50%" cy="40%" r="50%">
+                        <stop offset="0%" stop-color="#A8D4A8" stop-opacity="0.6"/><stop offset="100%" stop-color="#8FBF8F" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
+                    <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M44 28 C40 20,30 14,20 14 C14 14,10 18,10 24 C10 30,16 36,28 40 C38 43,44 38,44 32Z" fill="url(#hGlow)"/>
+                    <path d="M46 30 C38 26,28 22,18 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <path d="M46 34 C36 32,24 32,14 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="6" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="4" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="3" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
+                    <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M48 46 C42 54,34 62,28 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="16" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="16" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
+                </g>
+                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
+                    <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M56 28 C60 20,70 14,80 14 C86 14,90 18,90 24 C90 30,84 36,72 40 C62 43,56 38,56 32Z" fill="url(#hGlow)"/>
+                    <path d="M54 30 C62 26,72 22,82 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <path d="M54 34 C64 32,76 32,86 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="94" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="96" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="97" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
+                    <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    <path d="M52 46 C58 54,66 62,72 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
+                    <circle cx="84" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="84" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
+                </g>
+                <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
+                <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
+            </svg>
+        </a>
+        <div class="header-right">
+            <a href="/" class="header-link">Home</a>
+            <div class="header-cta-group">
+                <a href="https://exp.daydreamers.app/" class="header-link login-link">Log in</a>
+                <a href="/#trial-form" class="request-trial-link">Request trial</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="blog-container">
+        <h1 class="blog-title">Blog</h1>
+        <p class="blog-subtitle">Coming soon. We're working on something worth sharing.</p>
+        <a href="/" class="back-link">&larr; Back to Daydream</a>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <svg viewBox="0 0 100 90" fill="none">
+                    <defs>
+                        <linearGradient id="fwL" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                        </linearGradient>
+                        <linearGradient id="fwR" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
+                        </linearGradient>
+                    </defs>
+                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
+                        <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
+                        <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
+                    </g>
+                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
+                        <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
+                        <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
+                    </g>
+                    <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
+                    <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                    <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                    <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
+                </svg>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+            </div>
+            <p class="footer-text">San Francisco, 2026</p>
+        </div>
+    </footer>
+</body>
+</html>
