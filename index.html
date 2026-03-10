@@ -869,7 +869,155 @@
             border-color: rgba(0,0,0,0.2);
             color: var(--hero-text);
         }
+        /* ── Terrain Demo Section ── */
+        .terrain-demo-section {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            min-height: 600px;
+            max-height: 900px;
+            background: #0a0b0f;
+            overflow: hidden;
+        }
+        .terrain-demo-section canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .terrain-demo-header {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .terrain-demo-header h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+        }
+        .terrain-demo-header .terrain-sub {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 12px;
+            font-style: italic;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 1px;
+        }
+        .terrain-demo-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+            pointer-events: none;
+            z-index: 10;
+            transition: opacity 1s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            z-index: 20;
+            background: rgba(15,16,22,0.88);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        .terrain-detail-panel.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .terrain-detail-panel .td-belief {
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .terrain-detail-panel .td-badge {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel .td-badge.aligned { background: rgba(107,154,122,0.15); color: #6B9A7A; }
+        .terrain-detail-panel .td-badge.limiting { background: rgba(184,90,90,0.15); color: #B85A5A; }
+        .terrain-detail-panel .td-vrow {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+        }
+        .terrain-detail-panel .td-vbar {
+            flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+        }
+        .terrain-detail-panel .td-vfill { height: 100%; border-radius: 2px; }
+        .terrain-detail-panel .td-vlabel {
+            font-size: 10px; color: rgba(255,255,255,0.3); white-space: nowrap; font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel .td-jtitle {
+            font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(255,255,255,0.25); margin-bottom: 10px; font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel .td-step {
+            position: relative; padding-left: 18px; padding-bottom: 14px;
+        }
+        .terrain-detail-panel .td-step:last-child { padding-bottom: 0; }
+        .terrain-detail-panel .td-step::before {
+            content: ''; position: absolute; left: 3.5px; top: 7px; bottom: -4px;
+            width: 1px; background: rgba(255,255,255,0.08);
+        }
+        .terrain-detail-panel .td-step:last-child::before { display: none; }
+        .terrain-detail-panel .td-dot {
+            position: absolute; left: 0; top: 4px;
+            width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid;
+        }
+        .terrain-detail-panel .td-dot.current { background: currentColor; }
+        .terrain-detail-panel .td-label {
+            font-size: 12px; line-height: 1.35; color: rgba(255,255,255,0.7);
+        }
+        .terrain-detail-panel .td-when {
+            font-size: 9px; color: rgba(255,255,255,0.25); margin-top: 1px; font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel .td-stage {
+            font-size: 8px; letter-spacing: 0.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.2); margin-top: 1px; font-family: 'DM Sans', sans-serif;
+        }
+        .terrain-detail-panel .td-close {
+            position: absolute; top: 12px; right: 12px; width: 26px; height: 26px;
+            border: none; background: rgba(255,255,255,0.05); border-radius: 50%;
+            color: rgba(255,255,255,0.3); font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .terrain-detail-panel .td-close:hover { background: rgba(255,255,255,0.1); }
+        @media (max-width: 768px) {
+            .terrain-demo-section { height: 70vh; min-height: 500px; }
+            .terrain-detail-panel { width: 260px; right: 12px; padding: 18px; }
+            .terrain-detail-panel .td-belief { font-size: 15px; }
+        }
+        @media (max-width: 480px) {
+            .terrain-detail-panel {
+                right: 8px; left: 8px; width: auto; top: auto; bottom: 12px;
+                transform: none; max-height: 45vh; overflow-y: auto;
+            }
+        }
     </style>
+
 </head>
 <body>
 
@@ -944,51 +1092,8 @@
     <!-- Transition: sky → cream -->
     <div class="sky-fade-into-content"></div>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- 2. WHAT HAPPENS WHEN YOU OPEN DAYDREAM -->
-    <!-- ══════════════════════════════════════════ -->
-    <div class="section-bg section-bg-cream">
-        <section id="walkthrough" class="content-section">
-            <div class="reveal">
-                <div class="section-divider"></div>
-                <h2>What happens when you open Daydream</h2>
-                <p class="section-subheader">Daydream uses neuroscience-backed techniques to enhance your visualization practice.</p>
-                <div class="walkthrough-steps">
-                    <div class="walkthrough-step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>Share your goal.</h3>
-                            <p>Tell Daydream what you're working toward. It listens, remembers, and builds a deep understanding of who you are and where you want to go.</p>
-                        </div>
-                    </div>
-                    <div class="walkthrough-step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>Experience your first visualization.</h3>
-                            <p>Follow your guided visualizations where limiting beliefs become externalized so you can see and move past while activating the same neural pathways as real experience.</p>
-                        </div>
-                    </div>
-                    <div class="walkthrough-step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>Build daily rituals.</h3>
-                            <p>Decide what you want your morning ritual to be and Daydream adapts to what works best for you, whether that's doing visualization exercises or writing to go deeper inward or making a plan for the day.</p>
-                        </div>
-                    </div>
-                    <div class="walkthrough-step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3>Watch the distance shrink.</h3>
-                            <p>Watch the gap between who you are and who you're becoming narrow, not through willpower, but through shifts in what you believe about yourself. The person you want to become stops feeling like a stranger.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
     <!-- ══════════════════════════════════════════════ -->
-    <!-- 3. SCIENCE (moved up, right after walkthrough) -->
+    <!-- 2. SCIENCE (first section after hero) -->
     <!-- ══════════════════════════════════════════════ -->
     <div class="section-bg section-bg-dark">
         <section class="content-section">
@@ -1032,103 +1137,236 @@
         </section>
     </div>
 
-    <!-- ════════════════ -->
-    <!-- 4. PULL QUOTE -->
-    <!-- ════════════════ -->
-    <div class="section-bg section-bg-gradient-up">
-        <section class="content-section" style="padding-top: 4rem; padding-bottom: 4rem;">
-            <div class="reveal">
-                <p class="pull-quote">Daydream doesn't tell you what to do. It understands what you believe and helps you see what's holding you back and what's ready to change.</p>
-            </div>
-        </section>
-    </div>
-
-    <!-- ═══════════════════ -->
-    <!-- 5. WHAT'S INSIDE -->
-    <!-- ═══════════════════ -->
+    <!-- ══════════════════════════════════════════ -->
+    <!-- 3. WHAT HAPPENS WHEN YOU OPEN DAYDREAM -->
+    <!-- ══════════════════════════════════════════ -->
     <div class="section-bg section-bg-cream">
-        <section class="content-section">
+        <section id="walkthrough" class="content-section">
             <div class="reveal">
                 <div class="section-divider"></div>
-                <h2>What's inside</h2>
-                <p style="font-size: 0.85rem; color: var(--warm-gray); margin-bottom: 2rem;">Click a card to see why it matters.</p>
-                <div class="feature-grid">
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Conversations</h3>
-                                <p>Talk about what you're working toward. Daydream listens, remembers, and deepens its understanding of you over time.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Research shows that articulating your goals out loud strengthens neural commitment. Daydream's structured memory means every conversation compounds. The more it knows you, the more precisely it can guide your growth.</p>
-                            </div>
+                <h2>What happens when you open Daydream</h2>
+                <p class="section-subheader">Daydream builds a living map of what you believe and helps you change it through action.</p>
+                <div class="walkthrough-steps">
+                    <div class="walkthrough-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Tell your story.</h3>
+                            <p>Share what you're working through. Daydream listens deeply, remembers everything, and builds an understanding of who you are and what's standing in the way.</p>
                         </div>
                     </div>
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Daily Cards</h3>
-                                <p>A personalized reminder and audio reflection, every morning. Crafted around your current growth edge.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Repetition rewires the brain. Daily exposure to personalized identity cues turns temporary thoughts into permanent neural pathways. Morning is when the mind is most receptive to new patterns.</p>
-                            </div>
+                    <div class="walkthrough-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Surface what you believe.</h3>
+                            <p>Daydream identifies the beliefs underneath your goals. The ones pulling you forward and the ones quietly holding you back. Each one becomes a node on your personal terrain map.</p>
                         </div>
                     </div>
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Guided Experiences</h3>
-                                <p>Immersive, narrated stories that put you inside your own future. Built on neuroscience, personal to you.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Harvard research shows vivid mental rehearsal activates the same neural pathways as real experience. When you step into a story where you're already who you're becoming, your brain begins treating that identity as real.</p>
-                            </div>
+                    <div class="walkthrough-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Create plans and take action.</h3>
+                            <p>Turn beliefs into real-world action. Daydream helps you design small, meaningful steps. When you report back, your beliefs evolve based on what actually happened.</p>
                         </div>
                     </div>
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Stickies</h3>
-                                <p>Quick capture for thoughts, breakthroughs, and moments of clarity. Always accessible.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Growth moments are fleeting. Capturing an insight the moment it arrives locks it in. Stickies also feed back into Daydream's understanding of you, making every other feature more precise.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Journal</h3>
-                                <p>Reflect on where you've been and where you're going. Your growth story, in your own words.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Written reflection is one of the most effective ways to consolidate identity change. Seeing your own evolution in your own words makes the shift feel undeniable. It closes the loop between experience and self-awareness.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Community</h3>
-                                <p>Connect with other daydreamers on similar paths. Shared growth, not performance.</p>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="back-label">Why this matters</div>
-                                <p>Identity change accelerates in the presence of others doing the same work. Seeing someone else close the gap normalizes the process. Community makes the journey feel less solitary and more real.</p>
-                            </div>
+                    <div class="walkthrough-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Watch your terrain change.</h3>
+                            <p>Align your higher order beliefs, dismantle limiting beliefs and watch the inner landscape evolve. Your terrain becomes a living record of who you're becoming.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <!-- ════════════════ -->
+    <!-- 4. PULL QUOTE -->
+    <!-- ════════════════ -->
+    <div class="section-bg section-bg-gradient-up">
+        <section class="content-section" style="padding-top: 4rem; padding-bottom: 4rem;">
+            <div class="reveal">
+                <p class="pull-quote">You already know who you want to be. The distance isn't knowledge. It's what you believe about yourself underneath everything else. Daydream makes that visible, and then helps you change it.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- ══════════════════════════════════ -->
+    <!-- 5. TERRAIN DEMO (Interactive 3D) -->
+    <!-- ══════════════════════════════════ -->
+    <div class="terrain-demo-section" id="terrainDemo">
+        <iframe src="terrain-3d.html" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer" loading="lazy"></iframe>
+    </div>
+
+    <!-- Inline terrain module removed — using iframe to terrain-3d.html instead -->
+    <script type="text/plain" id="terrain-module-disabled">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // ── Colors & Names ──
+    const TC = { valley:'#6B9A7A', hillside:'#8B9B5A', plateau:'#C49545', ridge:'#9878B8', waters:'#4A9BA8', invisible:'#555555', surfaced:'#B85A5A', echo:'#997070', fossilized:'#887878', contour:'#8B7355' };
+    const SN = { sheltered_valley:'Sheltered Valley', rolling_hillside:'Rolling Hillside', sunlit_plateau:'Sunlit Plateau', high_ridge:'High Ridge', open_waters:'Open Waters', invisible:'Invisible', surfaced:'Surfaced', echo:'Echo', fossilized:'Fossilized' };
+    const SC = { sheltered_valley:TC.valley, rolling_hillside:TC.hillside, sunlit_plateau:TC.plateau, high_ridge:TC.ridge, open_waters:TC.waters, invisible:TC.invisible, surfaced:TC.surfaced, echo:TC.echo, fossilized:TC.fossilized };
+
+    // ── Noise ──
+    function seededRand(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+    function createNoise(seed){const R=seededRand(seed),p=[];for(let i=0;i<256;i++)p[i]=i;for(let i=255;i>0;i--){const j=Math.floor(R()*(i+1));[p[i],p[j]]=[p[j],p[i]];}for(let i=0;i<256;i++)p[256+i]=p[i];const fade=t=>t*t*t*(t*(t*6-15)+10),lerp=(a,b,t)=>a+t*(b-a),grad=(h,x,y)=>{const n=h&3,u=n<2?x:y,v=n<2?y:x;return((n&1)?-u:u)+((n&2)?-v:v);};return(x,y)=>{const X=Math.floor(x)&255,Y=Math.floor(y)&255,xf=x-Math.floor(x),yf=y-Math.floor(y),u=fade(xf),v=fade(yf);return lerp(lerp(grad(p[p[X]+Y],xf,yf),grad(p[p[X+1]+Y],xf-1,yf),u),lerp(grad(p[p[X]+Y+1],xf,yf-1),grad(p[p[X+1]+Y+1],xf-1,yf-1),u),v);};}
+    const noise=createNoise(42);
+    function fbm(x,y,o=4){let v=0,a=1,f=1,m=0;for(let i=0;i<o;i++){v+=noise(x*f,y*f)*a;m+=a;a*=0.5;f*=2;}return v/m;}
+
+    // ── Elevation ──
+    function elevation(x,z){
+      const hillL=Math.exp(-((x+2.5)**2)/1.5-((z-1.8)**2)/2)*0.45,hillR=Math.exp(-((x+0.2)**2)/1.2-((z-2.2)**2)/1.8)*0.4,valDip=-Math.exp(-((x+1.2)**2)/2-((z-2)**2)/1.5)*0.25;
+      const hs1=Math.exp(-((x+0.5)**2)/3-((z)**2)/2)*0.55,hs2=Math.exp(-((x-1)**2)/2-((z+0.5)**2)/2.5)*0.4;
+      const plRaw=Math.exp(-((x-0.5)**2)/5-((z+2)**2)/3)*1.1,pl=Math.min(plRaw,0.8);
+      const r1=Math.exp(-((x-1.5)**2)/1.5-((z+3.5)**2)/1.2)*2.2,r2=Math.exp(-((x-2.5)**2)/1.2-((z+4)**2)/1)*1.8,r3=Math.exp(-((x-0.5)**2)/2-((z+4.5)**2)/1.5)*1.4,rs=Math.exp(-((x-3.5)**2)/2-((z+3)**2)/2)*1;
+      const w=-Math.exp(-((x+3.5)**2)/2-((z+2)**2)/2.5)*0.3;
+      return(-z*0.06)+hillL+hillR+valDip+hs1+hs2+pl+r1+r2+r3+rs+w+fbm(x*0.5,z*0.5,4)*0.15+fbm(x*0.9+10,z*0.9,3)*0.06;
+    }
+
+    // ── Beliefs ──
+    const beliefs=[
+      {id:'val-writing',text:"My writing doesn't need to be perfect to be worth reading",type:'aligned',stage:'sheltered_valley',vitality:0.18,journey:[{stage:'sheltered_valley',label:'Realized during a late-night journaling session',when:'2 weeks ago',isCurrent:true}]},
+      {id:'val-stories',text:'The stories I carry deserve more than a private notebook',type:'aligned',stage:'sheltered_valley',vitality:0.25,journey:[{stage:'sheltered_valley',label:'Emerged after a visualization of her future self',when:'10 days ago',isCurrent:true}]},
+      {id:'val-scared',text:"I'm allowed to write about things that scare me",type:'aligned',stage:'sheltered_valley',vitality:0.12,journey:[{stage:'sheltered_valley',label:"Whispered it after reading someone else's brave essay",when:'1 week ago',isCurrent:true}]},
+      {id:'ow-something',text:'Something changes in me when people hear my actual voice',type:'aligned',stage:'open_waters',vitality:0.35,journey:[{stage:'open_waters',label:"Noticed this after a podcast. Not sure what it means yet",when:'4 days ago',isCurrent:true}]},
+      {id:'hill-connection',text:"Writing is how I connect. Not performing, connecting",type:'aligned',stage:'rolling_hillside',vitality:0.48,journey:[{stage:'sheltered_valley',label:'Felt it after a reader replied saying "me too"',when:'5 weeks ago'},{stage:'rolling_hillside',label:'Wrote a post as a letter to one person instead of an audience',when:'6 days ago',isCurrent:true}]},
+      {id:'a5',text:"My voice reaches people I'll never meet, and that matters",type:'aligned',stage:'sunlit_plateau',vitality:0.74,journey:[{stage:'sheltered_valley',label:"A stranger DM'd saying her essay helped them",when:'8 weeks ago'},{stage:'rolling_hillside',label:'Started a weekly writing habit',when:'5 weeks ago'},{stage:'sunlit_plateau',label:'Got republished by a publication she admires',when:'1 week ago',isCurrent:true}]},
+      {id:'a6',text:'I am a writer. Not becoming one. I already am.',type:'aligned',stage:'high_ridge',vitality:0.92,journey:[{stage:'sheltered_valley',label:'First whispered this to herself',when:'10 weeks ago'},{stage:'rolling_hillside',label:'Introduced herself as a writer at a dinner',when:'7 weeks ago'},{stage:'sunlit_plateau',label:'Strangers started calling her "the writer"',when:'4 weeks ago'},{stage:'high_ridge',label:"Doesn't question it anymore. This is who she is",when:'3 days ago',isCurrent:true}]},
+      {id:'lim-lose-people',text:"If I write what I really think, I'll lose the people I care about",type:'limiting',stage:'surfaced',vitality:0.68,journey:[{stage:'invisible',label:'Kept her real opinions out of every draft',when:'6 weeks ago'},{stage:'surfaced',label:'Named this fear after a conversation about self-censorship',when:'2 weeks ago',isCurrent:true}]},
+      {id:'lim-not-enough',text:"My best writing isn't good enough for real publications",type:'limiting',stage:'surfaced',vitality:0.55,journey:[{stage:'invisible',label:'Compared herself to published authors daily',when:'8 weeks ago'},{stage:'surfaced',label:'Recognized the pattern: she submits then withdraws',when:'3 weeks ago',isCurrent:true}]},
+      {id:'lim-selfish',text:'Wanting an audience for my writing is selfish',type:'limiting',stage:'surfaced',vitality:0.45,journey:[{stage:'invisible',label:'Confused ambition with selfishness her whole life',when:'5 weeks ago'},{stage:'surfaced',label:'Named it after noticing she apologizes every time she shares a link',when:'2 weeks ago',isCurrent:true}]},
+      {id:'l4',text:"Real writers don't need to promote their own work",type:'limiting',stage:'fossilized',vitality:0.04,journey:[{stage:'invisible',label:"Believed this was humility. It was hiding",when:'14 weeks ago'},{stage:'surfaced',label:'Realized every writer she admires shares their work',when:'10 weeks ago'},{stage:'echo',label:'Shared a thread about her writing process despite the cringe',when:'6 weeks ago'},{stage:'fossilized',label:'A relic. She promotes with pride now',when:'3 weeks ago',isCurrent:true}]},
+    ];
+
+    // ── Stage positions & spread ──
+    const S3D={sheltered_valley:{x:-1.2,z:2},rolling_hillside:{x:0,z:0},sunlit_plateau:{x:0.5,z:-2},high_ridge:{x:1.5,z:-3.8},open_waters:{x:-3.5,z:-2},invisible:{x:-3,z:4.5},surfaced:{x:-1,z:4.5},echo:{x:1,z:4.5},fossilized:{x:3,z:4.5}};
+    const SPR={sheltered_valley:{sx:1.6,sz:1},rolling_hillside:{sx:1.2,sz:0.8},sunlit_plateau:{sx:1.4,sz:0.8},high_ridge:{sx:1,sz:0.7},open_waters:{sx:1,sz:0.7},invisible:{sx:1,sz:0.5},surfaced:{sx:1,sz:0.5},echo:{sx:1,sz:0.5},fossilized:{sx:1,sz:0.5}};
+    function bPos(b){const base=S3D[b.stage]||{x:0,z:0},sp=SPR[b.stage]||{sx:1,sz:0.7};let h=0;for(let i=0;i<b.id.length;i++)h=((h<<5)-h+b.id.charCodeAt(i))|0;h=Math.abs(h);const x=base.x+((h%1000)/1000-0.5)*sp.sx,z=base.z+(((h*7)%1000)/1000-0.5)*sp.sz;const ug=['invisible','surfaced','echo','fossilized'].includes(b.stage);return{x,y:ug?0.05:elevation(x,z)+0.1,z};}
+
+    // ── Three.js setup ──
+    const container=document.getElementById('terrainDemo');
+    const scene=new THREE.Scene();
+    scene.fog=new THREE.FogExp2(0x0a0b0f,0.06);
+    const camera=new THREE.PerspectiveCamera(45,container.clientWidth/container.clientHeight,0.1,100);
+    camera.position.set(6,6,8);
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(container.clientWidth,container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure=1.2;
+    container.appendChild(renderer.domElement);
+
+    const controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;controls.dampingFactor=0.05;controls.maxPolarAngle=Math.PI*0.48;controls.minPolarAngle=Math.PI*0.1;controls.minDistance=4;controls.maxDistance=18;controls.autoRotate=true;controls.autoRotateSpeed=0.3;controls.target.set(0,0.5,0);
+
+    // Lighting
+    scene.add(new THREE.AmbientLight(0x2a2840,0.8));
+    const sun=new THREE.DirectionalLight(0xffeedd,1.2);sun.position.set(8,10,4);scene.add(sun);
+    scene.add(Object.assign(new THREE.PointLight(0xffaa66,0.6,20),{position:new THREE.Vector3(-4,5,-3)}));
+    scene.add(Object.assign(new THREE.PointLight(0x4488cc,0.3,20),{position:new THREE.Vector3(4,3,6)}));
+    scene.add(new THREE.HemisphereLight(0x8899bb,0x332211,0.4));
+    scene.add(Object.assign(new THREE.PointLight(0xaa7766,0.8,8),{position:new THREE.Vector3(0,1.5,4.5)}));
+
+    // ── Terrain mesh with vertex colors ──
+    const tColors={valley:new THREE.Color('#7a9a7a'),hillside:new THREE.Color('#6b8c4a'),plateau:new THREE.Color('#c8a855'),ridge:new THREE.Color('#8a8a90'),snow:new THREE.Color('#e8e8ef'),waters:new THREE.Color('#4a8898'),base:new THREE.Color('#b0a890')};
+    const zInf=[{cx:-1.2,cz:2,r:2.5,color:tColors.valley},{cx:0,cz:0,r:2.8,color:tColors.hillside},{cx:0.5,cz:-2,r:3,color:tColors.plateau},{cx:1.5,cz:-3.8,r:2.5,color:tColors.ridge},{cx:-3.5,cz:-2,r:2.2,color:tColors.waters}];
+    const tGeo=new THREE.PlaneGeometry(10,10,200,200);tGeo.rotateX(-Math.PI/2);
+    const pos=tGeo.attributes.position,cols=new Float32Array(pos.count*3);
+    for(let i=0;i<pos.count;i++){const x=pos.getX(i),z=pos.getZ(i),y=elevation(x,z);pos.setY(i,Math.max(y,-0.08));const vc=tColors.base.clone();for(const zi of zInf){const d=Math.sqrt((x-zi.cx)**2+(z-zi.cz)**2),inf=Math.max(0,1-d/zi.r);vc.lerp(zi.color,inf*inf*0.55);}if(y>1.2)vc.lerp(tColors.snow,Math.min(1,(y-1.2)/0.8)*0.85);else if(y>0.7)vc.lerp(tColors.ridge,(y-0.7)/0.5*0.3);if(y<0.05)vc.lerp(tColors.waters,Math.max(0,(0.05-y)/0.3)*0.4);const nv=fbm(x*2,z*2,2)*0.04;cols[i*3]=Math.max(0,Math.min(1,vc.r+nv));cols[i*3+1]=Math.max(0,Math.min(1,vc.g+nv*0.8));cols[i*3+2]=Math.max(0,Math.min(1,vc.b+nv*0.5));}
+    tGeo.setAttribute('color',new THREE.BufferAttribute(cols,3));tGeo.computeVertexNormals();
+    scene.add(new THREE.Mesh(tGeo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.9,metalness:0.02,side:THREE.DoubleSide})));
+
+    // Water
+    const wGeo=new THREE.CircleGeometry(1.6,48);wGeo.rotateX(-Math.PI/2);
+    scene.add(Object.assign(new THREE.Mesh(wGeo,new THREE.MeshStandardMaterial({color:new THREE.Color(TC.waters),roughness:0.1,metalness:0.35,transparent:true,opacity:0.55,side:THREE.DoubleSide})),{position:new THREE.Vector3(-3.5,0.03,-2)}));
+    const wRipples=[];for(let i=0;i<3;i++){const rg=new THREE.RingGeometry(0.5+i*0.45,0.55+i*0.45,48);rg.rotateX(-Math.PI/2);const rm=new THREE.Mesh(rg,new THREE.MeshBasicMaterial({color:new THREE.Color(TC.waters),transparent:true,opacity:0.15,side:THREE.DoubleSide}));rm.position.set(-3.5,0.04,-2);scene.add(rm);wRipples.push({mesh:rm,phase:i*2.1});}
+
+    // Contours
+    const cMat=new THREE.LineBasicMaterial({color:0x8B7355,transparent:true,opacity:0.18}),cMajMat=new THREE.LineBasicMaterial({color:0x8B7355,transparent:true,opacity:0.32});
+    for(let li=1;li<=25;li++){const tY=li*0.1-0.2,maj=li%5===0,pts=[];const res=80;for(let r=0;r<res;r++){const z=-5+(r/res)*10;let la=false;for(let c=0;c<res;c++){const x=-5+(c/res)*10,e=elevation(x,z),ab=e>=tY;if(c>0&&ab!==la){const px=-5+((c-1)/res)*10,pe=elevation(px,z),t=(tY-pe)/(e-pe);pts.push(new THREE.Vector3(px+t*(10/res),tY+0.01,z));}la=ab;}}for(let c=0;c<res;c++){const x=-5+(c/res)*10;let la=false;for(let r=0;r<res;r++){const z=-5+(r/res)*10,e=elevation(x,z),ab=e>=tY;if(r>0&&ab!==la){const pz=-5+((r-1)/res)*10,pe=elevation(x,pz),t=(tY-pe)/(e-pe);pts.push(new THREE.Vector3(x,tY+0.01,pz+t*(10/res)));}la=ab;}}if(pts.length>2){const so=[pts[0]],us=new Set([0]);for(let s=0;s<Math.min(pts.length,500);s++){const l=so[so.length-1];let bi=-1,bd=0.4;for(let j=0;j<pts.length;j++){if(us.has(j))continue;const d=l.distanceTo(pts[j]);if(d<bd){bd=d;bi=j;}}if(bi===-1)break;us.add(bi);so.push(pts[bi]);}if(so.length>3)scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(so),maj?cMajMat:cMat));}}
+
+    // Underground
+    const ugG=new THREE.PlaneGeometry(10,3);ugG.rotateX(-Math.PI/2);scene.add(Object.assign(new THREE.Mesh(ugG,new THREE.MeshStandardMaterial({color:0x1e1c20,emissive:0x1a1520,emissiveIntensity:0.15,roughness:0.9,metalness:0.05})),{position:new THREE.Vector3(0,-0.1,4.5)}));
+    {const eg=new THREE.PlaneGeometry(10,0.06);eg.rotateX(-Math.PI/2);const em=new THREE.Mesh(eg,new THREE.MeshBasicMaterial({color:0x8B7355,transparent:true,opacity:0.4}));em.position.set(0,-0.01,3);scene.add(em);}
+
+    // ── Nodes ──
+    const nodeObjs=[],raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
+    beliefs.forEach(b=>{const bp=bPos(b),col=new THREE.Color(SC[b.stage]||'#8B7355').clone();col.offsetHSL(0,0.15,0.15);const v=b.vitality||0,sz=0.04+v*0.14;
+      const inner=new THREE.Mesh(new THREE.SphereGeometry(sz,20,20),new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:0.6+v,roughness:0.15,metalness:0.2}));inner.position.set(bp.x,bp.y,bp.z);
+      const glow=new THREE.Mesh(new THREE.SphereGeometry(sz*3.5,16,16),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.08+v*0.15,side:THREE.BackSide}));glow.position.copy(inner.position);
+      const rGeo=new THREE.RingGeometry(sz*1.4,sz*1.65,32);rGeo.rotateX(-Math.PI/2);const ring=new THREE.Mesh(rGeo,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.3+v*0.4,side:THREE.DoubleSide}));ring.position.copy(inner.position);ring.position.y-=0.01;
+      const g=new THREE.Group();g.add(inner);g.add(glow);g.add(ring);
+      const ripples=[];if(v>0.3){const rc=v>0.6?3:v>0.4?2:1;for(let ri=0;ri<rc;ri++){const rpG=new THREE.RingGeometry(sz*1.2,sz*1.35,32);rpG.rotateX(-Math.PI/2);const rp=new THREE.Mesh(rpG,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.3,side:THREE.DoubleSide}));rp.position.copy(inner.position);rp.position.y-=0.02;g.add(rp);ripples.push({mesh:rp,phase:ri*(Math.PI*2/rc),baseSize:sz});}}
+      g.userData={belief:b,inner,glow,ring,ripples,baseY:bp.y,size:sz};scene.add(g);nodeObjs.push(g);});
+
+    // ── Labels ──
+    function mkLabel(text,position,color,size=0.3){const c=document.createElement('canvas'),cx=c.getContext('2d');c.width=512;c.height=64;cx.font='bold 28px Georgia';cx.fillStyle=color;cx.globalAlpha=0.5;cx.fillText(text.toUpperCase(),10,42);const t=new THREE.CanvasTexture(c);const m=new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false});const s=new THREE.Sprite(m);s.position.copy(position);s.scale.set(size*4,size*0.5,1);scene.add(s);}
+    mkLabel('Sheltered Valley',new THREE.Vector3(-1.2,elevation(-1.2,2)+0.25,2),TC.valley,0.35);
+    mkLabel('Rolling Hillside',new THREE.Vector3(0,elevation(0,0)+0.3,0),TC.hillside,0.35);
+    mkLabel('Sunlit Plateau',new THREE.Vector3(0.5,elevation(0.5,-2)+0.3,-2),TC.plateau,0.35);
+    mkLabel('High Ridge',new THREE.Vector3(1.5,elevation(1.5,-3.8)+0.35,-3.8),TC.ridge,0.35);
+    mkLabel('Open Waters',new THREE.Vector3(-3.5,elevation(-3.5,-2)+0.2,-2),TC.waters,0.3);
+    mkLabel('Invisible',new THREE.Vector3(-3,0.2,4.5),TC.invisible,0.22);
+    mkLabel('Surfaced',new THREE.Vector3(-1,0.2,4.5),TC.surfaced,0.22);
+    mkLabel('Echo',new THREE.Vector3(1,0.2,4.5),TC.echo,0.22);
+    mkLabel('Fossilized',new THREE.Vector3(3,0.2,4.5),TC.fossilized,0.22);
+
+    // ── Particles ──
+    const pCount=150,pGeo=new THREE.BufferGeometry(),pPos=new Float32Array(pCount*3),pSpd=[];
+    for(let i=0;i<pCount;i++){pPos[i*3]=(Math.random()-0.5)*14;pPos[i*3+1]=Math.random()*4;pPos[i*3+2]=(Math.random()-0.5)*14;pSpd.push(0.001+Math.random()*0.003);}
+    pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+    scene.add(new THREE.Points(pGeo,new THREE.PointsMaterial({color:0xffffff,size:0.02,transparent:true,opacity:0.12,sizeAttenuation:true,depthWrite:false})));
+
+    // ── Interaction ──
+    let selectedBelief=null,journeyObjs=[];
+    const panel=document.getElementById('terrainDetail'),panelContent=document.getElementById('terrainDetailContent');
+    document.getElementById('terrainCloseBtn').addEventListener('click',deselect);
+
+    function showDetail(belief){
+      selectedBelief=belief;const c=SC[belief.stage]||'#888',v=belief.vitality||0;
+      const vL=belief.type==='aligned'?(v>0.7?'Deeply rooted':v>0.4?'Taking hold':'Newly planted'):(v>0.5?'Strong grip':v>0.2?'Still echoing':'Nearly silent');
+      let h=`<div class="td-belief" style="color:${c}">${belief.text}</div><div class="td-badge ${belief.type}">${belief.type==='aligned'?'Aligned':'Limiting'} &middot; ${SN[belief.stage]}</div><div class="td-vrow"><div class="td-vbar"><div class="td-vfill" style="width:${Math.round(v*100)}%;background:${c};opacity:0.6"></div></div><span class="td-vlabel">${vL}</span></div>`;
+      if(belief.journey?.length){h+=`<div class="td-jtitle">Journey</div>`;belief.journey.forEach(s=>{const sc=SC[s.stage]||'#888';h+=`<div class="td-step"><div class="td-dot ${s.isCurrent?'current':''}" style="color:${sc};border-color:${sc}"></div><div class="td-label">${s.label}</div><div class="td-when">${s.when}</div><div class="td-stage" style="color:${sc}">${SN[s.stage]||s.stage}</div></div>`;});}
+      panelContent.innerHTML=h;panel.classList.add('visible');
+      nodeObjs.forEach(g=>{const sel=g.userData.belief.id===belief.id;g.userData.inner.material.opacity=sel?1:0.15;g.userData.inner.material.transparent=!sel;g.userData.glow.material.opacity=sel?0.15:0.02;g.userData.ring.material.opacity=sel?0.5:0.05;});
+      clearJourney();
+      const journey=belief.journey||[];
+      if(journey.length>=1){
+        const sPos=journey.map((s,i)=>{if(s.isCurrent)return bPos(belief);const base=S3D[s.stage]||{x:0,z:0};let h2=0;const id=belief.id+'-j-'+i;for(let j=0;j<id.length;j++)h2=((h2<<5)-h2+id.charCodeAt(j))|0;h2=Math.abs(h2);const x=base.x+((h2%1000)/1000-0.5),z=base.z+(((h2*7)%1000)/1000-0.5)*0.6;const ug=['invisible','surfaced','echo','fossilized'].includes(s.stage);return{x,y:ug?0.05:elevation(x,z)+0.05,z};});
+        if(sPos.length>1){const curve=new THREE.CatmullRomCurve3(sPos.map(p=>new THREE.Vector3(p.x,p.y+0.06,p.z)),false,'catmullrom',0.3);const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,64,0.015,8,false),new THREE.MeshBasicMaterial({color:new THREE.Color(c),transparent:true,opacity:0.6}));scene.add(tube);journeyObjs.push(tube);const gt=new THREE.Mesh(new THREE.TubeGeometry(curve,64,0.05,8,false),new THREE.MeshBasicMaterial({color:new THREE.Color(c),transparent:true,opacity:0.12,side:THREE.BackSide}));scene.add(gt);journeyObjs.push(gt);
+          const pp=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,8),new THREE.MeshBasicMaterial({color:new THREE.Color(c),transparent:true,opacity:0.9}));scene.add(pp);journeyObjs.push(pp);pp.userData.curve=curve;pp.userData.isTrailParticle=true;
+          const pg=new THREE.Mesh(new THREE.SphereGeometry(0.08,8,8),new THREE.MeshBasicMaterial({color:new THREE.Color(c),transparent:true,opacity:0.3,side:THREE.BackSide}));scene.add(pg);journeyObjs.push(pg);pg.userData.followParticle=pp;}
+        sPos.forEach((p,i)=>{const s=journey[i],sc2=new THREE.Color(SC[s.stage]||'#888');
+          if(!s.isCurrent){const gh=new THREE.Mesh(new THREE.SphereGeometry(0.035,12,12),new THREE.MeshStandardMaterial({color:sc2,emissive:sc2,emissiveIntensity:0.5,transparent:true,opacity:0.7}));gh.position.set(p.x,p.y+0.06,p.z);scene.add(gh);journeyObjs.push(gh);const dr=new THREE.RingGeometry(0.06,0.07,24);dr.rotateX(-Math.PI/2);const dm=new THREE.Mesh(dr,new THREE.MeshBasicMaterial({color:sc2,transparent:true,opacity:0.35,side:THREE.DoubleSide}));dm.position.set(p.x,p.y+0.05,p.z);scene.add(dm);journeyObjs.push(dm);}
+          else{for(let ri=0;ri<2;ri++){const bg=new THREE.RingGeometry(0.08,0.1,24);bg.rotateX(-Math.PI/2);const bm=new THREE.Mesh(bg,new THREE.MeshBasicMaterial({color:sc2,transparent:true,opacity:0.4,side:THREE.DoubleSide}));bm.position.set(p.x,p.y+0.05,p.z);scene.add(bm);journeyObjs.push(bm);bm.userData.isBeacon=true;bm.userData.beaconPhase=ri*Math.PI;}}
+          const lc=document.createElement('canvas'),lx=lc.getContext('2d');lc.width=512;lc.height=80;lx.font=`italic ${s.isCurrent?15:13}px Georgia`;lx.fillStyle=s.isCurrent?'rgba(255,255,255,0.9)':'rgba(255,255,255,0.6)';lx.fillText(s.label,10,28);lx.font='11px Georgia';lx.fillStyle='rgba(255,255,255,0.3)';lx.fillText(s.when,10,48);lx.font='9px Georgia';lx.fillStyle=SC[s.stage]||'#888';lx.globalAlpha=0.5;lx.fillText((SN[s.stage]||s.stage).toUpperCase(),10,65);
+          const lt=new THREE.CanvasTexture(lc),ls=new THREE.Sprite(new THREE.SpriteMaterial({map:lt,transparent:true,depthTest:false}));ls.position.set(p.x+(i%2===0?-0.5:0.5),p.y+0.21,p.z);ls.scale.set(1.2,0.2,1);scene.add(ls);journeyObjs.push(ls);});
+      }
+      const bp=bPos(belief),co=journey.length>2?new THREE.Vector3(1.5,3.5,4):new THREE.Vector3(1.5,2.5,3);
+      animCam(new THREE.Vector3(bp.x+co.x,bp.y+co.y,bp.z+co.z),new THREE.Vector3(bp.x,bp.y,bp.z));
+    }
+    function clearJourney(){journeyObjs.forEach(o=>scene.remove(o));journeyObjs=[];}
+    function deselect(){selectedBelief=null;panel.classList.remove('visible');nodeObjs.forEach(g=>{g.userData.inner.material.opacity=1;g.userData.inner.material.transparent=false;g.userData.glow.material.opacity=0.08+(g.userData.belief.vitality||0)*0.15;g.userData.ring.material.opacity=0.3+(g.userData.belief.vitality||0)*0.4;});clearJourney();controls.autoRotate=true;}
+    let camAnim=null;
+    function animCam(tp,la){camAnim={sp:camera.position.clone(),tp,st:controls.target.clone(),la,t0:performance.now(),dur:1200};controls.autoRotate=false;}
+    renderer.domElement.addEventListener('click',e=>{const rect=renderer.domElement.getBoundingClientRect();mouse.x=((e.clientX-rect.left)/rect.width)*2-1;mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(nodeObjs.flatMap(g=>[g.userData.inner]),false);if(hits.length){const hit=hits[0].object,grp=nodeObjs.find(g=>g.userData.inner===hit);if(grp){if(selectedBelief?.id===grp.userData.belief.id)deselect();else showDetail(grp.userData.belief);}}else if(selectedBelief)deselect();});
+    let hintHidden=false;controls.addEventListener('start',()=>{if(!hintHidden){document.getElementById('terrainHint').style.opacity='0';hintHidden=true;}});
+
+    // ── Animate ──
+    const clock=new THREE.Clock();
+    function animate(){requestAnimationFrame(animate);const t=clock.getElapsedTime();
+      nodeObjs.forEach(g=>{const v=g.userData.belief.vitality||0,sp=v>0.6?2:v>0.3?1.2:0.7,br=Math.sin(t*sp+g.userData.belief.id.charCodeAt(0))*0.5+0.5;g.userData.glow.scale.setScalar(1+br*0.4);g.userData.inner.material.emissiveIntensity=0.6+v+br*0.3;const by=g.userData.baseY+Math.sin(t*0.8+g.userData.belief.id.charCodeAt(1))*0.015;g.userData.inner.position.y=by;g.userData.glow.position.y=by;g.userData.ring.position.y=by-0.02;
+        if(g.userData.ripples)g.userData.ripples.forEach(rp=>{const cy=((t*0.8+rp.phase)%3)/3;rp.mesh.scale.setScalar(1+cy*3.5);rp.mesh.material.opacity=0.3*(1-cy);rp.mesh.position.y=by-0.02;});});
+      wRipples.forEach(wr=>{const cy=((t*0.5+wr.phase)%4)/4;wr.mesh.scale.setScalar(1+cy*1.5);wr.mesh.material.opacity=0.15*(1-cy);});
+      journeyObjs.forEach(o=>{if(o.userData.isTrailParticle&&o.userData.curve){const pr=(t*0.25)%1;o.position.copy(o.userData.curve.getPoint(pr));}if(o.userData.followParticle)o.position.copy(o.userData.followParticle.position);if(o.userData.isBeacon){const cy=((t*0.8+o.userData.beaconPhase)%2.5)/2.5;o.scale.setScalar(1+cy*4);o.material.opacity=0.4*(1-cy);}});
+      const pa=pGeo.attributes.position;for(let i=0;i<pCount;i++){pa.array[i*3+1]+=pSpd[i];if(pa.array[i*3+1]>4){pa.array[i*3+1]=0;pa.array[i*3]=(Math.random()-0.5)*14;pa.array[i*3+2]=(Math.random()-0.5)*14;}}pa.needsUpdate=true;
+      if(camAnim){const el=performance.now()-camAnim.t0,pr=Math.min(el/camAnim.dur,1),e=1-Math.pow(1-pr,3);camera.position.lerpVectors(camAnim.sp,camAnim.tp,e);controls.target.lerpVectors(camAnim.st,camAnim.la,e);if(pr>=1)camAnim=null;}
+      controls.update();renderer.render(scene,camera);
+    }
+    animate();
+    window.addEventListener('resize',()=>{camera.aspect=container.clientWidth/container.clientHeight;camera.updateProjectionMatrix();renderer.setSize(container.clientWidth,container.clientHeight);});
+    </script>
 
     <!-- ═══════════════════════════ -->
     <!-- 6. OUR MISSION (Pillars) -->
@@ -1140,19 +1378,19 @@
                 <h2>Our mission</h2>
                 <div class="pillars">
                     <div class="pillar">
-                        <div class="pillar-label">Identity Alignment</div>
-                        <h3>Close the gap between who you are and who you need to be</h3>
-                        <p>Daydream builds a deep understanding of your vision, your current reality, and the beliefs standing in the way. Then it creates experiences designed to close that gap. Not through willpower, but through practiced identity.</p>
+                        <div class="pillar-label">Belief Mapping</div>
+                        <h3>See what you actually believe, not just what you think you believe</h3>
+                        <p>Daydream surfaces the root-level beliefs driving your behavior. Both the ones pulling you forward and the ones quietly holding you back. Each becomes a node on your terrain, giving you a map of your inner world.</p>
                     </div>
                     <div class="pillar">
                         <div class="pillar-label">Deep Inner Work</div>
-                        <h3>Stories, questions, and reflections that make the vision real</h3>
-                        <p>Guided stories put you inside your future. Daily reflections surface what you're avoiding. Conversations reveal patterns you didn't see. Together, they make the person you're becoming feel vivid and familiar.</p>
+                        <h3>Conversations, visualizations, and reflections that reach the root</h3>
+                        <p>Guided visualizations put you inside your future. Conversations surface patterns you didn't see. Daily reflections keep you connected to what matters. Together, they create the conditions for beliefs to shift.</p>
                     </div>
                     <div class="pillar">
-                        <div class="pillar-label">Guided Path</div>
-                        <h3>Daydream meets you where you are</h3>
-                        <p>You don't have to figure out what you need. Open the app and Daydream determines where you are today, then guides you to the experience that matters most. Some days it's a story. Some days it's a hard question. You just show up.</p>
+                        <div class="pillar-label">Action That Moves Beliefs</div>
+                        <h3>Real change happens in the real world</h3>
+                        <p>Daydream helps you design actions that test your beliefs. When you report back what happened, your terrain responds. Aligned beliefs strengthen. Limiting beliefs lose their grip. Growth stops being abstract.</p>
                     </div>
                 </div>
             </div>
@@ -1197,7 +1435,7 @@
                         <div class="bridge-after">But the gap between intention and identity remains</div>
                     </div>
                 </div>
-                <p class="bridge-closer">Daydream closes this gap. Not through more information, but by changing who you believe you are at the deepest level.</p>
+                <p class="bridge-closer">Daydream closes this gap. Not through more information, but by surfacing what you believe, testing it through action, and letting the terrain show you what's changed.</p>
             </div>
         </section>
     </div>
@@ -1503,9 +1741,23 @@
         document.body.setAttribute('data-sky-dark', dark ? 'true' : 'false');
     }
 
+    // Sky canvas throttle — reduce to ~10fps when terrain section is in view
+    // (sky is fixed background so it must keep rendering, just slower)
+    let skyThrottled = false;
+    let lastDrawTime = 0;
+    const terrainSection = document.getElementById('terrainDemo');
+
     let lastColorUpdate = 0;
     function draw(time) {
         if (!W||!H) { requestAnimationFrame(draw); return; }
+
+        // Throttle: skip frames when terrain is in view (give GPU to Three.js)
+        if (skyThrottled && time - lastDrawTime < 100) { // ~10fps when throttled
+            requestAnimationFrame(draw);
+            return;
+        }
+        lastDrawTime = time;
+
         const minute = getMinute(), p = getPalette(minute);
         if (time-lastColorUpdate>500) { updateTextColors(p); lastColorUpdate=time; }
 
@@ -1519,6 +1771,14 @@
     }
 
     resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+
+    // Observe terrain section visibility — throttle sky when 3D terrain is in view
+    if (terrainSection) {
+        const terrainObserver = new IntersectionObserver((entries) => {
+            skyThrottled = entries[0].isIntersecting;
+        }, { threshold: 0.1 });
+        terrainObserver.observe(terrainSection);
+    }
 
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');

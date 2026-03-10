@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inner Terrain — 3D</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0b0f; overflow: hidden; font-family: Georgia, serif; }
+  canvas { display: block; }
+
+  /* Overlay UI */
+  .title-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    padding: 28px 36px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    pointer-events: none;
+  }
+  .title-bar h1 {
+    font-size: 18px; font-weight: 400; letter-spacing: 4px; color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+  }
+  .title-bar .sub {
+    font-size: 12px; font-style: italic; color: rgba(255,255,255,0.25); letter-spacing: 1px;
+  }
+
+  .hint {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 10;
+    font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 2px;
+    pointer-events: none; transition: opacity 1s;
+  }
+
+  /* Belief detail panel */
+  .detail-panel {
+    position: fixed; right: 32px; top: 50%; transform: translateY(-50%);
+    width: 320px; z-index: 20;
+    background: rgba(15,16,22,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 28px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .detail-panel.visible {
+    opacity: 1; pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
+  }
+  .detail-panel .belief-text {
+    font-size: 18px; line-height: 1.5; margin-bottom: 12px;
+  }
+  .detail-panel .belief-badge {
+    display: inline-block; font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .detail-panel .belief-badge.aligned { background: rgba(107,154,122,0.15); color: #6B9A7A; }
+  .detail-panel .belief-badge.limiting { background: rgba(184,90,90,0.15); color: #B85A5A; }
+  .detail-panel .vitality-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+  }
+  .detail-panel .vitality-bar {
+    flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+  }
+  .detail-panel .vitality-fill { height: 100%; border-radius: 2px; }
+  .detail-panel .vitality-label {
+    font-size: 10px; color: rgba(255,255,255,0.3); white-space: nowrap;
+  }
+  .detail-panel .journey-title {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.25); margin-bottom: 12px;
+  }
+  .detail-panel .journey-step {
+    position: relative; padding-left: 20px; padding-bottom: 16px;
+  }
+  .detail-panel .journey-step:last-child { padding-bottom: 0; }
+  .detail-panel .journey-step::before {
+    content: ''; position: absolute; left: 4px; top: 8px; bottom: -4px;
+    width: 1px; background: rgba(255,255,255,0.08);
+  }
+  .detail-panel .journey-step:last-child::before { display: none; }
+  .detail-panel .journey-dot {
+    position: absolute; left: 0; top: 5px;
+    width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid;
+  }
+  .detail-panel .journey-dot.current { background: currentColor; }
+  .detail-panel .journey-label {
+    font-size: 13px; line-height: 1.35; color: rgba(255,255,255,0.7);
+  }
+  .detail-panel .journey-when {
+    font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px;
+  }
+  .detail-panel .journey-stage {
+    font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.2); margin-top: 1px;
+  }
+  .detail-panel .close-btn {
+    position: absolute; top: 16px; right: 16px; width: 28px; height: 28px;
+    border: none; background: rgba(255,255,255,0.05); border-radius: 50%;
+    color: rgba(255,255,255,0.3); font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .detail-panel .close-btn:hover { background: rgba(255,255,255,0.1); }
+</style>
+</head>
+<body>
+
+<div class="title-bar">
+  <h1>Inner Terrain</h1>
+  <span class="sub">Maya's journey — going public with her writing</span>
+</div>
+<div class="hint" id="hint">drag to explore &middot; click a node to see its journey</div>
+
+<div class="detail-panel" id="detail">
+  <button class="close-btn" id="closeBtn">&times;</button>
+  <div id="detailContent"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ============ COLORS ============
+const COLORS = {
+  valley: '#6B9A7A', hillside: '#8B9B5A', plateau: '#C49545',
+  ridge: '#9878B8', waters: '#4A9BA8', invisible: '#555555',
+  surfaced: '#B85A5A', echo: '#997070', fossilized: '#887878',
+  contour: '#8B7355',
+};
+
+const STAGE_NAMES = {
+  sheltered_valley: 'Sheltered Valley', rolling_hillside: 'Rolling Hillside',
+  sunlit_plateau: 'Sunlit Plateau', high_ridge: 'High Ridge',
+  open_waters: 'Open Waters', invisible: 'Invisible',
+  surfaced: 'Surfaced', echo: 'Echo', fossilized: 'Fossilized',
+};
+
+// ============ PERLIN NOISE ============
+function seededRand(seed) {
+  let s = seed;
+  return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+}
+function createNoise(seed) {
+  const R = seededRand(seed);
+  const perm = [];
+  for (let i = 0; i < 256; i++) perm[i] = i;
+  for (let i = 255; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+  for (let i = 0; i < 256; i++) perm[256 + i] = perm[i];
+  const fade = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a, b, t) => a + t * (b - a);
+  const grad = (hash, x, y) => { const h = hash & 3, u = h < 2 ? x : y, v = h < 2 ? y : x; return ((h & 1) ? -u : u) + ((h & 2) ? -v : v); };
+  return (x, y) => {
+    const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+    const xf = x - Math.floor(x), yf = y - Math.floor(y);
+    const u = fade(xf), v = fade(yf);
+    return lerp(
+      lerp(grad(perm[perm[X]+Y], xf, yf), grad(perm[perm[X+1]+Y], xf-1, yf), u),
+      lerp(grad(perm[perm[X]+Y+1], xf, yf-1), grad(perm[perm[X+1]+Y+1], xf-1, yf-1), u), v
+    );
+  };
+}
+const noise = createNoise(42);
+function fbm(x, y, oct = 4) {
+  let v = 0, a = 1, f = 1, m = 0;
+  for (let i = 0; i < oct; i++) { v += noise(x*f, y*f) * a; m += a; a *= 0.5; f *= 2; }
+  return v / m;
+}
+
+// ============ ELEVATION ============
+// 3D world layout (x: -5 to 5, z: -5 to 5):
+//
+//   z=-5 (far)     HIGH RIDGE (peaks, snow)
+//                   SUNLIT PLATEAU (flat golden)
+//                   ROLLING HILLSIDE (green slopes)
+//                   OPEN WATERS (top-left)
+//   z=0            ----
+//                   SHELTERED VALLEY (bowl between hills, front-center)
+//   z=3 (near)     --- valley extends toward viewer
+//   z=5 (nearest)  UNDERGROUND ZONES (invisible/surfaced/echo/fossilized)
+//
+function elevation(x, z) {
+  // === SHELTERED VALLEY — bowl between two sheltering hills (front, z=1 to 3) ===
+  // Two flanking hills create a sheltered dip
+  const hillLeft  = Math.exp(-((x+2.5)**2)/1.5 - ((z-1.8)**2)/2.0) * 0.45;
+  const hillRight = Math.exp(-((x+0.2)**2)/1.2 - ((z-2.2)**2)/1.8) * 0.4;
+  // Valley floor — gentle dip, NOT deep (stays above 0.05)
+  const valleyDip = -Math.exp(-((x+1.2)**2)/2.0 - ((z-2.0)**2)/1.5) * 0.25;
+  const valley = hillLeft + hillRight + valleyDip;
+
+  // === ROLLING HILLSIDE — green rounded hills (center, z=-1 to 1) ===
+  const hillside1 = Math.exp(-((x+0.5)**2)/3.0 - ((z-0)**2)/2.0) * 0.55;
+  const hillside2 = Math.exp(-((x-1.0)**2)/2.0 - ((z+0.5)**2)/2.5) * 0.4;
+
+  // === SUNLIT PLATEAU — elevated flat mesa (center-back, z=-1 to -3) ===
+  const plateauRaw = Math.exp(-((x-0.5)**2)/5.0 - ((z+2)**2)/3.0) * 1.1;
+  const plateau = Math.min(plateauRaw, 0.8); // flat top
+
+  // === HIGH RIDGE — tallest peaks, snow cap (far back, z=-3 to -5) ===
+  const ridge1 = Math.exp(-((x-1.5)**2)/1.5 - ((z+3.5)**2)/1.2) * 2.2;
+  const ridge2 = Math.exp(-((x-2.5)**2)/1.2 - ((z+4.0)**2)/1.0) * 1.8;
+  const ridge3 = Math.exp(-((x-0.5)**2)/2.0 - ((z+4.5)**2)/1.5) * 1.4;
+  const ridgeShoulder = Math.exp(-((x-3.5)**2)/2.0 - ((z+3.0)**2)/2.0) * 1.0;
+
+  // === OPEN WATERS — low pool (left side, z=-1 to -3) ===
+  const waters = -Math.exp(-((x+3.5)**2)/2.0 - ((z+2)**2)/2.5) * 0.3;
+
+  // General slope: rises toward the back (negative z = higher)
+  const slope = (-z * 0.06);
+
+  // Perlin noise for organic variation
+  const n = fbm(x * 0.5, z * 0.5, 4) * 0.15;
+  const n2 = fbm(x * 0.9 + 10, z * 0.9, 3) * 0.06;
+
+  return slope + valley + hillside1 + hillside2 + plateau + ridge1 + ridge2 + ridge3 + ridgeShoulder + waters + n + n2;
+}
+
+// ============ SAMPLE BELIEFS — A WRITER GOING PUBLIC ============
+// Story: Maya, a writer who's been journaling privately for years,
+// is now building the courage to publish online and share her essays.
+// Realistic distribution: most beliefs still in valley (early stage),
+// fewer further along. Underground has 3 surfaced, 0 echo, 1 fossilized.
+const beliefs = [
+
+  // --- ALIGNED: climbing from valley to ridge ---
+
+  // SHELTERED VALLEY — most beliefs start here, untested
+  { id:'val-writing', text:'My writing doesn\'t need to be perfect to be worth reading',
+    type:'aligned', stage:'sheltered_valley', vitality: 0.18,
+    journey:[
+      {stage:'sheltered_valley', label:'Realized during a late-night journaling session', when:'2 weeks ago', isCurrent:true},
+    ]},
+
+  { id:'val-stories', text:'The stories I carry deserve more than a private notebook',
+    type:'aligned', stage:'sheltered_valley', vitality: 0.25,
+    journey:[
+      {stage:'sheltered_valley', label:'Emerged after a visualization of her future self', when:'10 days ago', isCurrent:true},
+    ]},
+
+  { id:'val-scared', text:'I\'m allowed to write about things that scare me',
+    type:'aligned', stage:'sheltered_valley', vitality: 0.12,
+    journey:[
+      {stage:'sheltered_valley', label:'Whispered it after reading someone else\'s brave essay', when:'1 week ago', isCurrent:true},
+    ]},
+
+  // OPEN WATERS — a belief that surfaced from action, emotional root unclear
+  { id:'ow-something', text:'Something changes in me when people hear my actual voice',
+    type:'aligned', stage:'open_waters', vitality: 0.35,
+    journey:[
+      {stage:'open_waters', label:'Noticed this after a podcast — not sure what it means yet', when:'4 days ago', isCurrent:true},
+    ]},
+
+  // ROLLING HILLSIDE — took first action
+  { id:'hill-connection', text:'Writing is how I connect — not performing, connecting',
+    type:'aligned', stage:'rolling_hillside', vitality: 0.48,
+    journey:[
+      {stage:'sheltered_valley', label:'Felt it after a reader replied saying "me too"', when:'5 weeks ago'},
+      {stage:'rolling_hillside', label:'Wrote a post as a letter to one person instead of an audience', when:'6 days ago', isCurrent:true},
+    ]},
+
+  // SUNLIT PLATEAU — multiple actions, becoming identity
+  { id:'a5', text:'My voice reaches people I\'ll never meet — and that matters',
+    type:'aligned', stage:'sunlit_plateau', vitality: 0.74,
+    journey:[
+      {stage:'sheltered_valley', label:'A stranger DM\'d saying her essay helped them', when:'8 weeks ago'},
+      {stage:'rolling_hillside', label:'Started a weekly writing habit', when:'5 weeks ago'},
+      {stage:'sunlit_plateau', label:'Got republished by a publication she admires', when:'1 week ago', isCurrent:true},
+    ]},
+
+  // HIGH RIDGE — solidified, this is who she is
+  { id:'a6', text:'I am a writer. Not becoming one — I already am.',
+    type:'aligned', stage:'high_ridge', vitality: 0.92,
+    journey:[
+      {stage:'sheltered_valley', label:'First whispered this to herself', when:'10 weeks ago'},
+      {stage:'rolling_hillside', label:'Introduced herself as a writer at a dinner', when:'7 weeks ago'},
+      {stage:'sunlit_plateau', label:'Strangers started calling her "the writer"', when:'4 weeks ago'},
+      {stage:'high_ridge', label:'Doesn\'t question it anymore — this is who she is', when:'3 days ago', isCurrent:true},
+    ]},
+
+  // --- LIMITING: weakening underground ---
+
+  // SURFACED — named the fear, strong grip still (3 beliefs here)
+  { id:'lim-lose-people', text:'If I write what I really think, I\'ll lose the people I care about',
+    type:'limiting', stage:'surfaced', vitality: 0.68,
+    journey:[
+      {stage:'invisible', label:'Kept her real opinions out of every draft', when:'6 weeks ago'},
+      {stage:'surfaced', label:'Named this fear after a conversation about self-censorship', when:'2 weeks ago', isCurrent:true},
+    ]},
+
+  { id:'lim-not-enough', text:'My best writing isn\'t good enough for real publications',
+    type:'limiting', stage:'surfaced', vitality: 0.55,
+    journey:[
+      {stage:'invisible', label:'Compared herself to published authors daily', when:'8 weeks ago'},
+      {stage:'surfaced', label:'Recognized the pattern: she submits then withdraws', when:'3 weeks ago', isCurrent:true},
+    ]},
+
+  { id:'lim-selfish', text:'Wanting an audience for my writing is selfish',
+    type:'limiting', stage:'surfaced', vitality: 0.45,
+    journey:[
+      {stage:'invisible', label:'Confused ambition with selfishness her whole life', when:'5 weeks ago'},
+      {stage:'surfaced', label:'Named it after noticing she apologizes every time she shares a link', when:'2 weeks ago', isCurrent:true},
+    ]},
+
+  // ECHO — none currently sitting here
+  // (but the fossilized belief below passed through echo on its journey)
+
+  // FOSSILIZED — a relic, no longer shapes her choices
+  { id:'l4', text:'Real writers don\'t need to promote their own work',
+    type:'limiting', stage:'fossilized', vitality: 0.04,
+    journey:[
+      {stage:'invisible', label:'Believed this was humility — it was hiding', when:'14 weeks ago'},
+      {stage:'surfaced', label:'Realized every writer she admires shares their work', when:'10 weeks ago'},
+      {stage:'echo', label:'Shared a thread about her writing process despite the cringe', when:'6 weeks ago'},
+      {stage:'fossilized', label:'A relic — she promotes with pride now', when:'3 weeks ago', isCurrent:true},
+    ]},
+];
+
+// ============ STAGE → 3D POSITION ============
+const STAGE_3D = {
+  sheltered_valley: { x: -1.2, z: 2.0 },   // front-center bowl
+  rolling_hillside: { x: 0.0,  z: 0.0 },    // center hills
+  sunlit_plateau:   { x: 0.5,  z: -2.0 },   // center-back mesa
+  high_ridge:       { x: 1.5,  z: -3.8 },   // far back peaks
+  open_waters:      { x: -3.5, z: -2.0 },   // left side pool
+  // Underground — far near side, past the valley
+  invisible:        { x: -3.0, z: 4.5 },
+  surfaced:         { x: -1.0, z: 4.5 },
+  echo:             { x: 1.0,  z: 4.5 },
+  fossilized:       { x: 3.0,  z: 4.5 },
+};
+
+// Per-stage spread — valley is tighter to keep nodes in the dip
+const STAGE_SPREAD = {
+  sheltered_valley: { sx: 1.6, sz: 1.0 },  // wider spread so multiple nodes are visible
+  rolling_hillside: { sx: 1.2, sz: 0.8 },
+  sunlit_plateau:   { sx: 1.4, sz: 0.8 },
+  high_ridge:       { sx: 1.0, sz: 0.7 },
+  open_waters:      { sx: 1.0, sz: 0.7 },
+  invisible:        { sx: 1.0, sz: 0.5 },
+  surfaced:         { sx: 1.0, sz: 0.5 },
+  echo:             { sx: 1.0, sz: 0.5 },
+  fossilized:       { sx: 1.0, sz: 0.5 },
+};
+
+function beliefPosition(b) {
+  const base = STAGE_3D[b.stage] || { x: 0, z: 0 };
+  const spread = STAGE_SPREAD[b.stage] || { sx: 1.0, sz: 0.7 };
+  let hash = 0;
+  for (let i = 0; i < b.id.length; i++) hash = ((hash << 5) - hash + b.id.charCodeAt(i)) | 0;
+  hash = Math.abs(hash);
+  const ox = ((hash % 1000) / 1000 - 0.5) * spread.sx;
+  const oz = (((hash * 7) % 1000) / 1000 - 0.5) * spread.sz;
+  const x = base.x + ox;
+  const z = base.z + oz;
+  const underground = ['invisible','surfaced','echo','fossilized'].includes(b.stage);
+  const y = underground ? 0.05 : elevation(x, z) + 0.1; // underground nodes sit just above the plane
+  return { x, y, z };
+}
+
+// ============ THREE.JS SETUP ============
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0b0f, 0.06);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(6, 6, 8);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.body.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.maxPolarAngle = Math.PI * 0.48;
+controls.minPolarAngle = Math.PI * 0.1;
+controls.minDistance = 4;
+controls.maxDistance = 18;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.3;
+controls.target.set(0, 0.5, 0);
+
+// ============ LIGHTING ============
+const ambientLight = new THREE.AmbientLight(0x2a2840, 0.8);
+scene.add(ambientLight);
+
+const sunLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+sunLight.position.set(8, 10, 4);
+sunLight.castShadow = false;
+scene.add(sunLight);
+
+const warmLight = new THREE.PointLight(0xffaa66, 0.6, 20);
+warmLight.position.set(-4, 5, -3);
+scene.add(warmLight);
+
+const coolLight = new THREE.PointLight(0x4488cc, 0.3, 20);
+coolLight.position.set(4, 3, 6);
+scene.add(coolLight);
+
+// Subtle hemisphere light for ambient fill
+const hemiLight = new THREE.HemisphereLight(0x8899bb, 0x332211, 0.4);
+scene.add(hemiLight);
+
+// ============ TERRAIN MESH with VERTEX COLORS ============
+const terrainSize = 10;
+const segments = 200;
+const terrainGeo = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
+terrainGeo.rotateX(-Math.PI / 2);
+
+// Terrain colors — each zone has a distinct natural palette
+const terrainColors = {
+  valley:   new THREE.Color('#7a9a7a'),  // muted sage green — sheltered mossy basin
+  hillside: new THREE.Color('#6b8c4a'),  // rich grass green — rolling green hills
+  plateau:  new THREE.Color('#c8a855'),  // golden wheat — sun-baked fields
+  ridge:    new THREE.Color('#8a8a90'),  // rocky gray — mountain stone
+  snow:     new THREE.Color('#e8e8ef'),  // snow white — summit cap
+  waters:   new THREE.Color('#4a8898'),  // deep teal — cool water
+  base:     new THREE.Color('#b0a890'),  // neutral earth
+};
+
+// Zone proximity influences — matched to new layout
+const zoneInfluences = [
+  { cx: -1.2, cz: 2.0, r: 2.5, color: terrainColors.valley },
+  { cx: 0.0,  cz: 0.0, r: 2.8, color: terrainColors.hillside },
+  { cx: 0.5,  cz: -2.0, r: 3.0, color: terrainColors.plateau },
+  { cx: 1.5,  cz: -3.8, r: 2.5, color: terrainColors.ridge },
+  { cx: -3.5, cz: -2.0, r: 2.2, color: terrainColors.waters },
+];
+
+const pos = terrainGeo.attributes.position;
+const colors = new Float32Array(pos.count * 3);
+
+for (let i = 0; i < pos.count; i++) {
+  const x = pos.getX(i);
+  const z = pos.getZ(i);
+  const y = elevation(x, z);
+  pos.setY(i, Math.max(y, -0.08)); // slight dip for valley but not through the floor
+
+  // Start with base earth tone
+  const vc = terrainColors.base.clone();
+
+  // Blend zone colors based on distance (stronger influence than before)
+  for (const zone of zoneInfluences) {
+    const dist = Math.sqrt((x - zone.cx) ** 2 + (z - zone.cz) ** 2);
+    const influence = Math.max(0, 1 - dist / zone.r);
+    const strength = influence * influence * 0.55;
+    vc.lerp(zone.color, strength);
+  }
+
+  // Height-based coloring overlay:
+  // High elevation → gray rocky, very high → snow white
+  if (y > 1.2) {
+    const snowBlend = Math.min(1, (y - 1.2) / 0.8); // 1.2→2.0 = 0→1
+    vc.lerp(terrainColors.snow, snowBlend * 0.85);
+  } else if (y > 0.7) {
+    const rockBlend = (y - 0.7) / 0.5; // 0.7→1.2 = 0→1
+    vc.lerp(terrainColors.ridge, rockBlend * 0.3);
+  }
+
+  // Low areas near water get bluer
+  if (y < 0.05) {
+    const waterBlend = Math.max(0, (0.05 - y) / 0.3);
+    vc.lerp(terrainColors.waters, waterBlend * 0.4);
+  }
+
+  // Add subtle noise variation for natural look
+  const nv = fbm(x * 2, z * 2, 2) * 0.04;
+  vc.r = Math.max(0, Math.min(1, vc.r + nv));
+  vc.g = Math.max(0, Math.min(1, vc.g + nv * 0.8));
+  vc.b = Math.max(0, Math.min(1, vc.b + nv * 0.5));
+
+  colors[i * 3] = vc.r;
+  colors[i * 3 + 1] = vc.g;
+  colors[i * 3 + 2] = vc.b;
+}
+terrainGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+terrainGeo.computeVertexNormals();
+
+const terrainMat = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.9,
+  metalness: 0.02,
+  flatShading: false,
+  side: THREE.DoubleSide,
+});
+const terrain = new THREE.Mesh(terrainGeo, terrainMat);
+scene.add(terrain);
+
+// ============ OPEN WATERS ============
+// ============ OPEN WATERS (left side, z=-2) ============
+const waterGeo = new THREE.CircleGeometry(1.6, 48);
+waterGeo.rotateX(-Math.PI / 2);
+const waterMat = new THREE.MeshStandardMaterial({
+  color: new THREE.Color(COLORS.waters),
+  roughness: 0.1,
+  metalness: 0.35,
+  transparent: true,
+  opacity: 0.55,
+  side: THREE.DoubleSide,
+});
+const water = new THREE.Mesh(waterGeo, waterMat);
+water.position.set(-3.5, 0.03, -2.0);
+scene.add(water);
+
+// Water ripple rings
+const waterRipples = [];
+for (let i = 0; i < 3; i++) {
+  const rGeo = new THREE.RingGeometry(0.5 + i * 0.45, 0.55 + i * 0.45, 48);
+  rGeo.rotateX(-Math.PI / 2);
+  const rMat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(COLORS.waters), transparent: true, opacity: 0.15, side: THREE.DoubleSide,
+  });
+  const rMesh = new THREE.Mesh(rGeo, rMat);
+  rMesh.position.set(-3.5, 0.04, -2.0);
+  scene.add(rMesh);
+  waterRipples.push({ mesh: rMesh, phase: i * 2.1 });
+}
+
+// ============ CONTOUR LINES ON TERRAIN ============
+const contourLevels = 25;
+const contourMat = new THREE.LineBasicMaterial({ color: 0x8B7355, transparent: true, opacity: 0.18 });
+const contourMajorMat = new THREE.LineBasicMaterial({ color: 0x8B7355, transparent: true, opacity: 0.32 });
+
+for (let li = 1; li <= contourLevels; li++) {
+  const targetY = li * 0.1 - 0.2;
+  const isMajor = li % 5 === 0;
+  const points = [];
+  // Trace contour at this elevation
+  const res = 80;
+  for (let row = 0; row < res; row++) {
+    const z = -5 + (row / res) * 10;
+    let lastAbove = false;
+    for (let col = 0; col < res; col++) {
+      const x = -5 + (col / res) * 10;
+      const e = elevation(x, z);
+      const above = e >= targetY;
+      if (col > 0 && above !== lastAbove) {
+        // Crossing point
+        const prevX = -5 + ((col - 1) / res) * 10;
+        const prevE = elevation(prevX, z);
+        const t = (targetY - prevE) / (e - prevE);
+        const crossX = prevX + t * (10 / res);
+        points.push(new THREE.Vector3(crossX, targetY + 0.01, z));
+      }
+      lastAbove = above;
+    }
+  }
+  // Also trace columns
+  for (let col = 0; col < res; col++) {
+    const x = -5 + (col / res) * 10;
+    let lastAbove = false;
+    for (let row = 0; row < res; row++) {
+      const z = -5 + (row / res) * 10;
+      const e = elevation(x, z);
+      const above = e >= targetY;
+      if (row > 0 && above !== lastAbove) {
+        const prevZ = -5 + ((row - 1) / res) * 10;
+        const prevE = elevation(x, prevZ);
+        const t = (targetY - prevE) / (e - prevE);
+        const crossZ = prevZ + t * (10 / res);
+        points.push(new THREE.Vector3(x, targetY + 0.01, crossZ));
+      }
+      lastAbove = above;
+    }
+  }
+
+  if (points.length > 2) {
+    // Sort points into chains by proximity
+    const sorted = [points[0]];
+    const used = new Set([0]);
+    for (let s = 0; s < Math.min(points.length, 500); s++) {
+      const last = sorted[sorted.length - 1];
+      let bestIdx = -1, bestDist = 0.4; // max connection distance
+      for (let j = 0; j < points.length; j++) {
+        if (used.has(j)) continue;
+        const d = last.distanceTo(points[j]);
+        if (d < bestDist) { bestDist = d; bestIdx = j; }
+      }
+      if (bestIdx === -1) break;
+      used.add(bestIdx);
+      sorted.push(points[bestIdx]);
+    }
+
+    if (sorted.length > 3) {
+      const geo = new THREE.BufferGeometry().setFromPoints(sorted);
+      const line = new THREE.Line(geo, isMajor ? contourMajorMat : contourMat);
+      scene.add(line);
+    }
+  }
+}
+
+// ============ UNDERGROUND ZONE (near side, z=3.5 to 6) ============
+// Dark surface that's visible — slightly emissive so nodes pop
+const ugGeo = new THREE.PlaneGeometry(terrainSize, 3);
+ugGeo.rotateX(-Math.PI / 2);
+const ugMat = new THREE.MeshStandardMaterial({
+  color: 0x1e1c20,
+  emissive: 0x1a1520,
+  emissiveIntensity: 0.15,
+  roughness: 0.9,
+  metalness: 0.05,
+  transparent: false,
+});
+const ugPlane = new THREE.Mesh(ugGeo, ugMat);
+ugPlane.position.set(0, -0.1, 4.5);
+scene.add(ugPlane);
+
+// Subtle warm light illuminating the underground so nodes are visible
+const ugLight = new THREE.PointLight(0xaa7766, 0.8, 8);
+ugLight.position.set(0, 1.5, 4.5);
+scene.add(ugLight);
+
+// Ground edge separating above/underground
+const edgeGeo = new THREE.PlaneGeometry(terrainSize, 0.06);
+edgeGeo.rotateX(-Math.PI / 2);
+const edgeMat = new THREE.MeshBasicMaterial({ color: 0x8B7355, transparent: true, opacity: 0.4 });
+const edge = new THREE.Mesh(edgeGeo, edgeMat);
+edge.position.set(0, -0.01, 3.0);
+scene.add(edge);
+
+// ============ BELIEF NODES ============
+const nodeObjects = [];
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+const stageColorMap = {
+  sheltered_valley: COLORS.valley, rolling_hillside: COLORS.hillside,
+  sunlit_plateau: COLORS.plateau, high_ridge: COLORS.ridge,
+  open_waters: COLORS.waters, invisible: COLORS.invisible,
+  surfaced: COLORS.surfaced, echo: COLORS.echo, fossilized: COLORS.fossilized,
+};
+
+beliefs.forEach(b => {
+  const bPos = beliefPosition(b);
+  const col = new THREE.Color(stageColorMap[b.stage] || '#8B7355');
+
+  const v = b.vitality || 0;
+  // Bigger size range — low vitality = small, high = prominent
+  const size = 0.04 + v * 0.14; // range: 0.04 (barely there) to 0.18 (dominant)
+
+  // Brighter version for emissive pop against terrain
+  const brightCol = col.clone();
+  brightCol.offsetHSL(0, 0.15, 0.15); // slightly more saturated + lighter
+
+  // Inner sphere (solid core) — bright, emissive
+  const innerGeo = new THREE.SphereGeometry(size, 20, 20);
+  const innerMat = new THREE.MeshStandardMaterial({
+    color: brightCol, emissive: brightCol, emissiveIntensity: 0.6 + v * 1.0,
+    roughness: 0.15, metalness: 0.2,
+  });
+  const inner = new THREE.Mesh(innerGeo, innerMat);
+  inner.position.set(bPos.x, bPos.y, bPos.z);
+
+  // Outer glow sphere — larger, more visible
+  const glowGeo = new THREE.SphereGeometry(size * 3.5, 16, 16);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: brightCol, transparent: true, opacity: 0.08 + v * 0.15,
+    side: THREE.BackSide,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.position.copy(inner.position);
+
+  // Base ring — brighter
+  const ringGeo = new THREE.RingGeometry(size * 1.4, size * 1.65, 32);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: brightCol, transparent: true, opacity: 0.3 + v * 0.4,
+    side: THREE.DoubleSide,
+  });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.position.copy(inner.position);
+  ring.position.y -= 0.01;
+  ring.rotation.x = -Math.PI / 2;
+
+  const group = new THREE.Group();
+  group.add(inner);
+  group.add(glow);
+  group.add(ring);
+
+  // Ripple rings for high vitality nodes
+  const ripples = [];
+  if (v > 0.3) {
+    const rippleCount = v > 0.6 ? 3 : v > 0.4 ? 2 : 1;
+    for (let ri = 0; ri < rippleCount; ri++) {
+      const rpGeo = new THREE.RingGeometry(size * 1.2, size * 1.35, 32);
+      rpGeo.rotateX(-Math.PI / 2);
+      const rpMat = new THREE.MeshBasicMaterial({
+        color: col, transparent: true, opacity: 0.3, side: THREE.DoubleSide,
+      });
+      const rp = new THREE.Mesh(rpGeo, rpMat);
+      rp.position.copy(inner.position);
+      rp.position.y -= 0.02;
+      group.add(rp);
+      ripples.push({ mesh: rp, phase: ri * (Math.PI * 2 / rippleCount), baseSize: size });
+    }
+  }
+
+  group.userData = { belief: b, inner, glow, ring, ripples, baseY: bPos.y, size };
+  scene.add(group);
+  nodeObjects.push(group);
+});
+
+// ============ ZONE LABELS (3D Sprites) ============
+function createLabel(text, position, color, size = 0.3) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 512; canvas.height = 64;
+  ctx.font = `bold ${28}px Georgia`;
+  ctx.fillStyle = 'transparent';
+  ctx.fillRect(0, 0, 512, 64);
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.5;
+  ctx.letterSpacing = '4px';
+  ctx.fillText(text.toUpperCase(), 10, 42);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+  const sprite = new THREE.Sprite(mat);
+  sprite.position.copy(position);
+  sprite.scale.set(size * 4, size * 0.5, 1);
+  scene.add(sprite);
+  return sprite;
+}
+
+createLabel('Sheltered Valley', new THREE.Vector3(-1.2, elevation(-1.2, 2.0) + 0.25, 2.0), COLORS.valley, 0.35);
+createLabel('Rolling Hillside', new THREE.Vector3(0.0, elevation(0.0, 0.0) + 0.3, 0.0), COLORS.hillside, 0.35);
+createLabel('Sunlit Plateau', new THREE.Vector3(0.5, elevation(0.5, -2.0) + 0.3, -2.0), COLORS.plateau, 0.35);
+createLabel('High Ridge', new THREE.Vector3(1.5, elevation(1.5, -3.8) + 0.35, -3.8), COLORS.ridge, 0.35);
+createLabel('Open Waters', new THREE.Vector3(-3.5, elevation(-3.5, -2.0) + 0.2, -2.0), COLORS.waters, 0.3);
+createLabel('Invisible', new THREE.Vector3(-3.0, 0.2, 4.5), COLORS.invisible, 0.25);
+createLabel('Surfaced', new THREE.Vector3(-1.0, 0.2, 4.5), COLORS.surfaced, 0.25);
+createLabel('Echo', new THREE.Vector3(1.0, 0.2, 4.5), COLORS.echo, 0.25);
+createLabel('Fossilized', new THREE.Vector3(3.0, 0.2, 4.5), COLORS.fossilized, 0.25);
+
+// ============ INTERACTION ============
+let selectedBelief = null;
+let journeyTrail = null;
+let journeyNodes = [];
+const detailPanel = document.getElementById('detail');
+const detailContent = document.getElementById('detailContent');
+const closeBtn = document.getElementById('closeBtn');
+
+function showDetail(belief) {
+  selectedBelief = belief;
+  const col = {
+    sheltered_valley: COLORS.valley, rolling_hillside: COLORS.hillside,
+    sunlit_plateau: COLORS.plateau, high_ridge: COLORS.ridge,
+    open_waters: COLORS.waters, surfaced: COLORS.surfaced, echo: COLORS.echo, fossilized: COLORS.fossilized, invisible: COLORS.invisible,
+  }[belief.stage] || '#888';
+
+  const v = belief.vitality || 0;
+  const vLabel = belief.type === 'aligned'
+    ? (v > 0.7 ? 'Deeply rooted' : v > 0.4 ? 'Taking hold' : 'Newly planted')
+    : (v > 0.5 ? 'Strong grip' : v > 0.2 ? 'Still echoing' : 'Nearly silent');
+
+  let html = `<div class="belief-text" style="color:${col}">${belief.text}</div>`;
+  html += `<div class="belief-badge ${belief.type}">${belief.type === 'aligned' ? 'Aligned' : 'Limiting'} &middot; ${STAGE_NAMES[belief.stage]}</div>`;
+  html += `<div class="vitality-row">
+    <div class="vitality-bar"><div class="vitality-fill" style="width:${Math.round(v*100)}%;background:${col};opacity:0.6"></div></div>
+    <span class="vitality-label">${vLabel}</span>
+  </div>`;
+
+  if (belief.journey?.length > 0) {
+    html += `<div class="journey-title">Journey</div>`;
+    belief.journey.forEach((step, i) => {
+      const sc = {sheltered_valley:COLORS.valley,rolling_hillside:COLORS.hillside,sunlit_plateau:COLORS.plateau,
+        high_ridge:COLORS.ridge,open_waters:COLORS.waters,invisible:COLORS.invisible,surfaced:COLORS.surfaced,
+        echo:COLORS.echo,fossilized:COLORS.fossilized}[step.stage] || '#888';
+      html += `<div class="journey-step">
+        <div class="journey-dot ${step.isCurrent ? 'current' : ''}" style="color:${sc};border-color:${sc}"></div>
+        <div class="journey-label">${step.label}</div>
+        <div class="journey-when">${step.when}</div>
+        <div class="journey-stage" style="color:${sc}">${STAGE_NAMES[step.stage] || step.stage}</div>
+      </div>`;
+    });
+  }
+
+  detailContent.innerHTML = html;
+  detailPanel.classList.add('visible');
+
+  // Fade other nodes
+  nodeObjects.forEach(g => {
+    const isSelected = g.userData.belief.id === belief.id;
+    g.userData.inner.material.opacity = isSelected ? 1 : 0.15;
+    g.userData.inner.material.transparent = !isSelected;
+    g.userData.glow.material.opacity = isSelected ? 0.15 : 0.02;
+    g.userData.ring.material.opacity = isSelected ? 0.5 : 0.05;
+  });
+
+  // Draw journey trail
+  clearJourney();
+  const journey = belief.journey || [];
+  if (journey.length >= 1) {
+    const stepPositions = journey.map((step, i) => {
+      if (step.isCurrent) return beliefPosition(belief);
+      const base = STAGE_3D[step.stage] || { x: 0, z: 0 };
+      let h = 0;
+      const idStr = belief.id + '-j-' + i;
+      for (let j = 0; j < idStr.length; j++) h = ((h << 5) - h + idStr.charCodeAt(j)) | 0;
+      h = Math.abs(h);
+      const ox = ((h % 1000) / 1000 - 0.5) * 1.0;
+      const oz = (((h * 7) % 1000) / 1000 - 0.5) * 0.6;
+      const x = base.x + ox, z = base.z + oz;
+      const underground = ['invisible','surfaced','echo','fossilized'].includes(step.stage);
+      const y = underground ? 0.05 : elevation(x, z) + 0.05;
+      return { x, y, z };
+    });
+
+    // Glowing trail tube (only if 2+ steps)
+    if (stepPositions.length > 1) {
+      const curve = new THREE.CatmullRomCurve3(
+        stepPositions.map(p => new THREE.Vector3(p.x, p.y + 0.06, p.z)),
+        false, 'catmullrom', 0.3
+      );
+      const tubeGeo = new THREE.TubeGeometry(curve, 64, 0.015, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(col), transparent: true, opacity: 0.6,
+      });
+      const tube = new THREE.Mesh(tubeGeo, tubeMat);
+      scene.add(tube);
+      journeyNodes.push(tube);
+
+      // Outer glow tube
+      const glowTubeGeo = new THREE.TubeGeometry(curve, 64, 0.05, 8, false);
+      const glowTubeMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(col), transparent: true, opacity: 0.12, side: THREE.BackSide,
+      });
+      const glowTube = new THREE.Mesh(glowTubeGeo, glowTubeMat);
+      scene.add(glowTube);
+      journeyNodes.push(glowTube);
+
+      // Traveling particle along trail
+      const particleGeo = new THREE.SphereGeometry(0.03, 8, 8);
+      const particleMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(col), transparent: true, opacity: 0.9,
+      });
+      const particle = new THREE.Mesh(particleGeo, particleMat);
+      scene.add(particle);
+      journeyNodes.push(particle);
+      // Store curve for animation
+      particle.userData.curve = curve;
+      particle.userData.isTrailParticle = true;
+
+      // Particle glow
+      const pGlowGeo = new THREE.SphereGeometry(0.08, 8, 8);
+      const pGlowMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(col), transparent: true, opacity: 0.3, side: THREE.BackSide,
+      });
+      const pGlow = new THREE.Mesh(pGlowGeo, pGlowMat);
+      scene.add(pGlow);
+      journeyNodes.push(pGlow);
+      pGlow.userData.followParticle = particle;
+    }
+
+    // Ghost nodes + 3D labels at each step
+    stepPositions.forEach((p, i) => {
+      const step = journey[i];
+      const stageCol = new THREE.Color(stageColorMap[step.stage] || '#888');
+      const yOff = 0.06;
+
+      if (!step.isCurrent) {
+        // Ghost sphere
+        const ghostGeo = new THREE.SphereGeometry(0.035, 12, 12);
+        const ghostMat = new THREE.MeshStandardMaterial({
+          color: stageCol, emissive: stageCol, emissiveIntensity: 0.5,
+          transparent: true, opacity: 0.7,
+        });
+        const ghost = new THREE.Mesh(ghostGeo, ghostMat);
+        ghost.position.set(p.x, p.y + yOff, p.z);
+        scene.add(ghost);
+        journeyNodes.push(ghost);
+
+        // Dashed ring around ghost
+        const dashRingGeo = new THREE.RingGeometry(0.06, 0.07, 24);
+        dashRingGeo.rotateX(-Math.PI / 2);
+        const dashRingMat = new THREE.MeshBasicMaterial({
+          color: stageCol, transparent: true, opacity: 0.35, side: THREE.DoubleSide,
+        });
+        const dashRing = new THREE.Mesh(dashRingGeo, dashRingMat);
+        dashRing.position.set(p.x, p.y + yOff - 0.01, p.z);
+        scene.add(dashRing);
+        journeyNodes.push(dashRing);
+      } else {
+        // Pulsing beacon at current position
+        for (let ri = 0; ri < 2; ri++) {
+          const beaconGeo = new THREE.RingGeometry(0.08, 0.1, 24);
+          beaconGeo.rotateX(-Math.PI / 2);
+          const beaconMat = new THREE.MeshBasicMaterial({
+            color: stageCol, transparent: true, opacity: 0.4, side: THREE.DoubleSide,
+          });
+          const beacon = new THREE.Mesh(beaconGeo, beaconMat);
+          beacon.position.set(p.x, p.y + yOff - 0.01, p.z);
+          scene.add(beacon);
+          journeyNodes.push(beacon);
+          beacon.userData.isBeacon = true;
+          beacon.userData.beaconPhase = ri * Math.PI;
+          beacon.userData.beaconColor = stageCol;
+        }
+      }
+
+      // 3D label sprite for each step
+      const labelCanvas = document.createElement('canvas');
+      const lCtx = labelCanvas.getContext('2d');
+      labelCanvas.width = 512; labelCanvas.height = 80;
+      lCtx.clearRect(0, 0, 512, 80);
+      // Label text
+      lCtx.font = `italic ${step.isCurrent ? 15 : 13}px Georgia`;
+      lCtx.fillStyle = step.isCurrent ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)';
+      lCtx.fillText(step.label, 10, 28);
+      // When text
+      lCtx.font = '11px Georgia';
+      lCtx.fillStyle = 'rgba(255,255,255,0.3)';
+      lCtx.fillText(step.when, 10, 48);
+      // Stage name
+      lCtx.font = '9px Georgia';
+      lCtx.fillStyle = stageColorMap[step.stage] || '#888';
+      lCtx.globalAlpha = 0.5;
+      lCtx.fillText((STAGE_NAMES[step.stage] || step.stage).toUpperCase(), 10, 65);
+
+      const labelTex = new THREE.CanvasTexture(labelCanvas);
+      const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true, depthTest: false });
+      const labelSprite = new THREE.Sprite(labelMat);
+      const side = i % 2 === 0 ? -1 : 1;
+      labelSprite.position.set(p.x + side * 0.5, p.y + yOff + 0.15, p.z);
+      labelSprite.scale.set(1.2, 0.2, 1);
+      scene.add(labelSprite);
+      journeyNodes.push(labelSprite);
+    });
+  }
+
+  // Smooth camera move — position to see the full journey
+  const bPos = beliefPosition(belief);
+  const camOffset = journey.length > 2
+    ? new THREE.Vector3(1.5, 3.5, 4) // zoom out more for long journeys
+    : new THREE.Vector3(1.5, 2.5, 3);
+  const targetPos = new THREE.Vector3(bPos.x + camOffset.x, bPos.y + camOffset.y, bPos.z + camOffset.z);
+  animateCamera(targetPos, new THREE.Vector3(bPos.x, bPos.y, bPos.z));
+}
+
+function clearJourney() {
+  if (journeyTrail) { scene.remove(journeyTrail); journeyTrail = null; }
+  journeyNodes.forEach(n => scene.remove(n));
+  journeyNodes = [];
+}
+
+function deselectAll() {
+  selectedBelief = null;
+  detailPanel.classList.remove('visible');
+  nodeObjects.forEach(g => {
+    g.userData.inner.material.opacity = 1;
+    g.userData.inner.material.transparent = false;
+    g.userData.glow.material.opacity = 0.08 + (g.userData.belief.vitality || 0) * 0.1;
+    g.userData.ring.material.opacity = 0.3 + (g.userData.belief.vitality || 0) * 0.3;
+  });
+  clearJourney();
+}
+
+closeBtn.addEventListener('click', deselectAll);
+
+// Camera animation
+let cameraAnim = null;
+function animateCamera(targetPosition, lookAt) {
+  const startPos = camera.position.clone();
+  const startTarget = controls.target.clone();
+  const startTime = performance.now();
+  const duration = 1200;
+  controls.autoRotate = false;
+
+  cameraAnim = { startPos, targetPosition, startTarget, lookAt, startTime, duration };
+}
+
+// Click detection
+renderer.domElement.addEventListener('click', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(nodeObjects.flatMap(g => [g.userData.inner]), false);
+
+  if (intersects.length > 0) {
+    const hit = intersects[0].object;
+    const group = nodeObjects.find(g => g.userData.inner === hit);
+    if (group) {
+      if (selectedBelief?.id === group.userData.belief.id) {
+        deselectAll();
+      } else {
+        showDetail(group.userData.belief);
+      }
+    }
+  } else if (selectedBelief) {
+    deselectAll();
+  }
+});
+
+// Hide hint after first interaction
+let hintHidden = false;
+controls.addEventListener('start', () => {
+  if (!hintHidden) {
+    document.getElementById('hint').style.opacity = '0';
+    hintHidden = true;
+  }
+});
+
+// ============ PARTICLES (atmospheric) ============
+const particleCount = 200;
+const particleGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleSpeeds = [];
+for (let i = 0; i < particleCount; i++) {
+  particlePositions[i*3] = (Math.random() - 0.5) * 14;
+  particlePositions[i*3+1] = Math.random() * 4;
+  particlePositions[i*3+2] = (Math.random() - 0.5) * 14;
+  particleSpeeds.push(0.001 + Math.random() * 0.003);
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+const particleMat = new THREE.PointsMaterial({
+  color: 0xffffff, size: 0.02, transparent: true, opacity: 0.15,
+  sizeAttenuation: true, depthWrite: false,
+});
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// ============ ANIMATION LOOP ============
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Node breathing + ripple animation
+  nodeObjects.forEach(g => {
+    const v = g.userData.belief.vitality || 0;
+    const speed = v > 0.6 ? 2 : v > 0.3 ? 1.2 : 0.7;
+    const breathe = Math.sin(t * speed + g.userData.belief.id.charCodeAt(0)) * 0.5 + 0.5;
+    g.userData.glow.scale.setScalar(1 + breathe * 0.4);
+    g.userData.inner.material.emissiveIntensity = 0.6 + v * 1.0 + breathe * 0.3;
+    const bobY = g.userData.baseY + Math.sin(t * 0.8 + g.userData.belief.id.charCodeAt(1)) * 0.015;
+    g.userData.inner.position.y = bobY;
+    g.userData.glow.position.y = bobY;
+    g.userData.ring.position.y = bobY - 0.02;
+
+    // Animate ripple rings — expand outward and fade
+    if (g.userData.ripples) {
+      g.userData.ripples.forEach(rp => {
+        const cycle = ((t * 0.8 + rp.phase) % 3.0) / 3.0; // 0→1 over 3 seconds
+        const scale = 1 + cycle * 3.5;
+        rp.mesh.scale.setScalar(scale);
+        rp.mesh.material.opacity = 0.3 * (1 - cycle);
+        rp.mesh.position.y = bobY - 0.02;
+      });
+    }
+  });
+
+  // Water ripple animation
+  waterRipples.forEach(wr => {
+    const cycle = ((t * 0.5 + wr.phase) % 4.0) / 4.0;
+    const scale = 1 + cycle * 1.5;
+    wr.mesh.scale.setScalar(scale);
+    wr.mesh.material.opacity = 0.15 * (1 - cycle);
+  });
+
+  // Journey trail particle + beacon animations
+  journeyNodes.forEach(obj => {
+    if (obj.userData.isTrailParticle && obj.userData.curve) {
+      const progress = (t * 0.25) % 1; // travel along curve every 4s
+      const pt = obj.userData.curve.getPoint(progress);
+      obj.position.copy(pt);
+    }
+    if (obj.userData.followParticle) {
+      obj.position.copy(obj.userData.followParticle.position);
+    }
+    if (obj.userData.isBeacon) {
+      const cycle = ((t * 0.8 + obj.userData.beaconPhase) % 2.5) / 2.5;
+      obj.scale.setScalar(1 + cycle * 4);
+      obj.material.opacity = 0.4 * (1 - cycle);
+    }
+  });
+
+  // Particles drift
+  const pAttr = particles.geometry.attributes.position;
+  for (let i = 0; i < particleCount; i++) {
+    pAttr.array[i*3+1] += particleSpeeds[i];
+    if (pAttr.array[i*3+1] > 4) {
+      pAttr.array[i*3+1] = 0;
+      pAttr.array[i*3] = (Math.random() - 0.5) * 14;
+      pAttr.array[i*3+2] = (Math.random() - 0.5) * 14;
+    }
+  }
+  pAttr.needsUpdate = true;
+
+  // Camera animation
+  if (cameraAnim) {
+    const elapsed = performance.now() - cameraAnim.startTime;
+    const progress = Math.min(elapsed / cameraAnim.duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3); // ease out cubic
+
+    camera.position.lerpVectors(cameraAnim.startPos, cameraAnim.targetPosition, ease);
+    controls.target.lerpVectors(cameraAnim.startTarget, cameraAnim.lookAt, ease);
+
+    if (progress >= 1) cameraAnim = null;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ============ RESIZE ============
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
