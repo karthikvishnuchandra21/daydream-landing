@@ -1095,7 +1095,7 @@
     <!-- ══════════════════════════════════════════════ -->
     <!-- 2. SCIENCE (first section after hero) -->
     <!-- ══════════════════════════════════════════════ -->
-    <div class="section-bg section-bg-dark">
+    <div class="section-bg section-bg-dark" id="science">
         <section class="content-section">
             <div class="reveal">
                 <div class="section-divider"></div>
@@ -1194,7 +1194,7 @@
     <!-- ══════════════════════════════════ -->
     <!-- 5. TERRAIN DEMO (Interactive 3D) -->
     <!-- ══════════════════════════════════ -->
-    <div class="terrain-demo-section" id="terrainDemo">
+    <div class="terrain-demo-section" id="innerterrain">
         <iframe src="terrain-3d.html" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer" loading="lazy"></iframe>
     </div>
 
@@ -1245,7 +1245,7 @@
     function bPos(b){const base=S3D[b.stage]||{x:0,z:0},sp=SPR[b.stage]||{sx:1,sz:0.7};let h=0;for(let i=0;i<b.id.length;i++)h=((h<<5)-h+b.id.charCodeAt(i))|0;h=Math.abs(h);const x=base.x+((h%1000)/1000-0.5)*sp.sx,z=base.z+(((h*7)%1000)/1000-0.5)*sp.sz;const ug=['invisible','surfaced','echo','fossilized'].includes(b.stage);return{x,y:ug?0.05:elevation(x,z)+0.1,z};}
 
     // ── Three.js setup ──
-    const container=document.getElementById('terrainDemo');
+    const container=document.getElementById('innerterrain');
     const scene=new THREE.Scene();
     scene.fog=new THREE.FogExp2(0x0a0b0f,0.06);
     const camera=new THREE.PerspectiveCamera(45,container.clientWidth/container.clientHeight,0.1,100);
@@ -1371,7 +1371,7 @@
     <!-- ═══════════════════════════ -->
     <!-- 6. OUR MISSION (Pillars) -->
     <!-- ═══════════════════════════ -->
-    <div class="section-bg section-bg-dark">
+    <div class="section-bg section-bg-dark" id="mission">
         <section class="content-section">
             <div class="reveal">
                 <div class="section-divider"></div>
@@ -1400,7 +1400,7 @@
     <!-- ════════════════════════════════════════════════ -->
     <!-- 7. AUDIENCE SECTION -->
     <!-- ════════════════════════════════════════════════ -->
-    <div class="section-bg section-bg-gradient-up">
+    <div class="section-bg section-bg-gradient-up" id="becoming">
         <section class="content-section">
             <div class="reveal">
                 <div class="section-divider"></div>
@@ -1769,7 +1769,7 @@
     // (sky is fixed background so it must keep rendering, just slower)
     let skyThrottled = false;
     let lastDrawTime = 0;
-    const terrainSection = document.getElementById('terrainDemo');
+    const terrainSection = document.getElementById('innerterrain');
 
     let lastColorUpdate = 0;
     function draw(time) {
