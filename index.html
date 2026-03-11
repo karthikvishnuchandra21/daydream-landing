@@ -1457,6 +1457,7 @@
                             <label for="trialEmail">Email</label>
                             <input type="email" id="trialEmail" placeholder="you@example.com" required>
                         </div>
+                        <div id="trialExtra" style="max-height:0;overflow:hidden;opacity:0;transition:max-height 0.5s cubic-bezier(0.22,1,0.36,1),opacity 0.4s ease;">
                         <div class="form-group">
                             <label>Why do you want to try Daydream?</label>
                             <div class="choice-group">
@@ -1496,6 +1497,7 @@
                         </div>
                         <button type="submit" class="submit-btn">Request trial</button>
                         <p class="form-note">We'll send you a trial invite by email.</p>
+                        </div><!-- end trialExtra -->
                     </form>
                     <div class="thanks-state" id="thanksState">
                         <h3>You're in.</h3>
@@ -1544,6 +1546,28 @@
     // ═══════════════════
     // Form interactions
     // ═══════════════════
+
+    // Expand extra form fields after email is entered
+    const trialEmail = document.getElementById('trialEmail');
+    const trialExtra = document.getElementById('trialExtra');
+    let trialExpanded = false;
+    if (trialEmail && trialExtra) {
+        trialEmail.addEventListener('input', function() {
+            if (!trialExpanded && this.value.includes('@')) {
+                trialExtra.style.maxHeight = '600px';
+                trialExtra.style.opacity = '1';
+                trialExpanded = true;
+            }
+        });
+        // Also expand on focus out if email looks valid
+        trialEmail.addEventListener('blur', function() {
+            if (!trialExpanded && this.value.length > 3 && this.value.includes('@')) {
+                trialExtra.style.maxHeight = '600px';
+                trialExtra.style.opacity = '1';
+                trialExpanded = true;
+            }
+        });
+    }
 
     function submitTrialForm(e) {
         e.preventDefault();
