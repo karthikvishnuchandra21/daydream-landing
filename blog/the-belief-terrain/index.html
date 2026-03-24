@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Blog — Daydream</title>
+    <title>The Belief Terrain — Daydream Blog</title>
+    <meta name="description" content="How Daydream maps your beliefs onto a living 3D landscape you can explore.">
+    <meta property="og:title" content="The Belief Terrain — Daydream">
+    <meta property="og:description" content="How Daydream maps your beliefs onto a living 3D landscape you can explore.">
+    <meta property="og:image" content="https://daydreamers.app/blog/the-belief-terrain/cover.png">
+    <meta property="og:type" content="article">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --cream: #F2F4EE;
@@ -42,6 +47,8 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
+            background: rgba(242, 244, 238, 0.85);
+            backdrop-filter: blur(12px);
         }
 
         .header-logo {
@@ -93,91 +100,154 @@
 
         .request-trial-link:hover { color: var(--charcoal); }
 
-        /* ── Blog Content ── */
-        .blog-container {
-            flex: 1;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 7rem 2rem 4rem;
+        /* ── Banner Image ── */
+        .banner {
             width: 100%;
-        }
-
-        .blog-heading {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 6vw, 3.5rem);
-            font-weight: 300;
-            letter-spacing: 0.02em;
-            margin-bottom: 3rem;
-            color: var(--charcoal);
-            text-align: center;
-            animation: fadeUp 1.2s ease-out;
-        }
-
-        /* ── Blog Card Grid ── */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            animation: fadeUp 1.2s ease-out 0.1s both;
-        }
-
-        .blog-card {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .blog-card:hover .blog-card-image {
-            box-shadow: 0 12px 40px rgba(74, 70, 64, 0.15);
-        }
-
-        .blog-card-image {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 12px;
+            aspect-ratio: 21 / 9;
+            max-height: 480px;
             overflow: hidden;
-            background: var(--cream-dark);
-            transition: box-shadow 0.3s ease;
-            box-shadow: 0 4px 20px rgba(74, 70, 64, 0.08);
+            margin-top: 72px;
         }
 
-        .blog-card-image img {
+        .banner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        .blog-card-body {
-            padding: 1rem 0.25rem;
+        /* ── Article ── */
+        .article {
+            flex: 1;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+            width: 100%;
+            animation: fadeUp 1s ease-out;
         }
 
-        .blog-card-tag {
+        .article-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--warm-gray);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.3s ease;
+        }
+
+        .article-back:hover { color: var(--charcoal); }
+
+        .article-tag {
             font-size: 0.7rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--warm-gray);
+            margin-bottom: 0.75rem;
+        }
+
+        .article-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 300;
+            line-height: 1.2;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-date {
+            font-size: 0.8rem;
+            color: var(--warm-gray-light);
+            margin-bottom: 2.5rem;
+        }
+
+        .article-body p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--charcoal-soft);
+            margin-bottom: 1.5rem;
+        }
+
+        .article-body p.lead {
+            font-size: 1.05rem;
+            color: var(--charcoal);
+            line-height: 1.85;
+        }
+
+        .article-body h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--charcoal);
+            margin: 2.5rem 0 1rem;
+        }
+
+        /* ── Terrain Embed ── */
+        .terrain-embed {
+            margin: 2.5rem -2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #0a0b0f;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .terrain-embed iframe {
+            width: 100%;
+            height: 480px;
+            border: none;
+            display: block;
+        }
+
+        .terrain-embed-caption {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.35);
+            background: #0a0b0f;
+            text-align: center;
+            letter-spacing: 0.03em;
+        }
+
+        /* ── Stages Grid ── */
+        .stages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .stage-card {
+            background: var(--cream-dark);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+
+        .stage-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--charcoal);
             margin-bottom: 0.4rem;
         }
 
-        .blog-card-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            color: var(--charcoal);
-            line-height: 1.3;
-            margin-bottom: 0.35rem;
+        .stage-card p {
+            font-size: 0.8rem !important;
+            color: var(--warm-gray) !important;
+            margin-bottom: 0 !important;
+            line-height: 1.5 !important;
         }
 
-        .blog-card-date {
-            font-size: 0.8rem;
-            color: var(--warm-gray-light);
+        .stage-card.full {
+            grid-column: 1 / -1;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--warm-gray-light);
+            margin: 2rem 0;
         }
 
         /* ── Footer ── */
@@ -212,16 +282,18 @@
             color: var(--warm-gray-light);
         }
 
-        /* ── Animations ── */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 640px) {
             .header { padding: 1rem 1.5rem; }
-            .blog-grid { grid-template-columns: 1fr; }
-            .blog-container { padding: 6rem 1.5rem 3rem; }
+            .article { padding: 2rem 1.5rem 3rem; }
+            .terrain-embed { margin: 2rem -1.5rem; }
+            .terrain-embed iframe { height: 360px; }
+            .stages { grid-template-columns: 1fr; }
+            .banner { aspect-ratio: 16 / 9; margin-top: 60px; }
         }
     </style>
 </head>
@@ -275,22 +347,90 @@
         </div>
     </header>
 
-    <main class="blog-container">
-        <h1 class="blog-heading">Blog</h1>
+    <!-- Banner -->
+    <div class="banner">
+        <img src="/blog/the-belief-terrain/cover.png" alt="The Belief Terrain — abstract landscape visualization" />
+    </div>
 
-        <div class="blog-grid">
-            <a href="/blog/the-belief-terrain" class="blog-card">
-                <div class="blog-card-image">
-                    <img src="/blog/the-belief-terrain/cover.png" alt="The Belief Terrain — a 3D landscape of glowing nodes representing personal beliefs" />
+    <article class="article">
+        <a href="/blog" class="article-back">&larr; Blog</a>
+
+        <div class="article-tag">Product</div>
+        <h1 class="article-title">The Belief Terrain</h1>
+        <div class="article-date">March 23, 2026</div>
+
+        <div class="article-body">
+            <p class="lead">
+                Every person carries an invisible landscape shaped by their beliefs. Some lift you up. Others pull you underground. We built the Belief Terrain to make that landscape visible.
+            </p>
+
+            <h2>A world, not a list</h2>
+            <p>
+                The Belief Terrain is an interactive 3D environment that maps your beliefs onto a procedurally generated landscape. As you use Daydream, beliefs are surfaced from your stories and placed into this world. Aligned beliefs live above ground. Limiting beliefs live below. You can rotate, zoom, and click any belief to trace its journey.
+            </p>
+
+            <!-- Embedded Terrain -->
+            <div class="terrain-embed">
+                <iframe src="/terrain-3d.html" loading="lazy" allow="accelerometer"></iframe>
+                <div class="terrain-embed-caption">drag to explore &middot; click a node to see its journey</div>
+            </div>
+
+            <h2>Nine stages of belief</h2>
+            <p>
+                Each region of the terrain represents a stage of development. Beliefs move between stages as you reflect and take action.
+            </p>
+
+            <div class="stages">
+                <div class="stage-card">
+                    <h3>Sheltered Valley</h3>
+                    <p>Newly planted beliefs, still fragile</p>
                 </div>
-                <div class="blog-card-body">
-                    <div class="blog-card-tag">Product</div>
-                    <h2 class="blog-card-title">The Belief Terrain</h2>
-                    <div class="blog-card-date">March 23, 2026</div>
+                <div class="stage-card">
+                    <h3>Rolling Hillside</h3>
+                    <p>Taking hold through early action</p>
                 </div>
-            </a>
+                <div class="stage-card">
+                    <h3>Sunlit Plateau</h3>
+                    <p>Deeply rooted, reinforced by experience</p>
+                </div>
+                <div class="stage-card">
+                    <h3>High Ridge</h3>
+                    <p>Your strongest convictions</p>
+                </div>
+                <div class="stage-card">
+                    <h3>Invisible</h3>
+                    <p>Beliefs you don't know you have</p>
+                </div>
+                <div class="stage-card">
+                    <h3>Surfaced</h3>
+                    <p>Recently uncovered through reflection</p>
+                </div>
+                <div class="stage-card">
+                    <h3>Echo</h3>
+                    <p>Keeps showing up across stories</p>
+                </div>
+                <div class="stage-card">
+                    <h3>Fossilized</h3>
+                    <p>Deep patterns, hard to shift</p>
+                </div>
+                <div class="stage-card full">
+                    <h3>Open Waters</h3>
+                    <p>Beliefs in transition — not yet aligned or limiting, still being explored</p>
+                </div>
+            </div>
+
+            <h2>Why it matters</h2>
+            <p>
+                Most tools give you a single insight and move on. Daydream is different. The beliefs underneath your stories are what actually shape your life. The Belief Terrain makes them tangible, a place to return to, notice patterns, and watch yourself change over time.
+            </p>
+
+            <div class="divider"></div>
+
+            <p>
+                The Belief Terrain is available now. Open it from your home screen and start exploring what you already believe.
+            </p>
         </div>
-    </main>
+    </article>
 
     <footer>
         <div class="footer-inner">
@@ -320,6 +460,7 @@
             </div>
             <div class="footer-links">
                 <a href="/">Home</a>
+                <a href="/blog">Blog</a>
             </div>
             <p class="footer-text">San Francisco, 2026</p>
         </div>
