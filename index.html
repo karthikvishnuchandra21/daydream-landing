@@ -798,78 +798,229 @@
         }
 
         /* ── Responsive ── */
-        /* ── Reviews Carousel ── */
+        /* ── Reviews Carousel (Glass Card) ── */
         .reviews-carousel {
             margin-top: 2.5rem;
             width: 100%;
-            max-width: 520px;
+            max-width: 560px;
             position: relative;
         }
 
         .reviews-track {
             position: relative;
-            min-height: 160px;
+            min-height: 180px;
+            overflow: hidden;
         }
 
         .review-card {
             position: absolute;
             top: 0; left: 0; right: 0;
             opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateX(40px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
             pointer-events: none;
-            text-align: center;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 2rem 2.25rem;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
         }
 
         .review-card.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
             pointer-events: auto;
         }
 
-        .review-quote {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1rem, 2vw, 1.15rem);
-            font-weight: 300;
-            font-style: italic;
-            color: var(--hero-text-sub);
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
+        .review-card.exiting {
+            opacity: 0;
+            transform: translateX(-40px);
         }
 
-        .review-quote::before { content: '\201C'; }
-        .review-quote::after { content: '\201D'; }
+        .review-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
 
         .review-author {
             font-family: 'DM Sans', sans-serif;
             font-size: 0.8rem;
             font-weight: 400;
-            color: rgba(255,255,255,0.4);
-            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.04em;
             text-transform: uppercase;
+        }
+
+        .review-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--hero-text-sub);
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .review-quote::before { content: '\201C'; }
+        .review-quote::after { content: '\201D'; }
+
+        .review-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.25rem;
         }
 
         .review-dots {
             display: flex;
-            justify-content: center;
             gap: 0.5rem;
-            margin-top: 1.25rem;
         }
 
         .review-dot {
-            width: 6px;
-            height: 6px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: rgba(255,255,255,0.2);
-            border: none;
-            padding: 0;
-            cursor: pointer;
+            border: none; padding: 0; cursor: pointer;
             transition: background 0.3s ease, transform 0.3s ease;
         }
 
         .review-dot.active {
             background: rgba(255,255,255,0.6);
             transform: scale(1.3);
+        }
+
+        .review-arrows {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .review-arrow {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .review-arrow:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* ── Review Modal ── */
+        .review-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            padding: 2rem;
+        }
+
+        .review-modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .review-modal {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2.5rem 2.75rem;
+            max-width: 580px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.35s ease;
+            position: relative;
+        }
+
+        .review-modal-overlay.open .review-modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .review-modal-close {
+            position: absolute;
+            top: 1rem; right: 1.25rem;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .review-modal-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+        }
+
+        .review-modal .modal-author {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .review-modal .modal-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+
+        .review-modal .modal-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--hero-text-sub);
+            line-height: 1.7;
+        }
+
+        .review-modal .modal-text p {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .review-modal .modal-text p:last-child {
+            margin-bottom: 0;
         }
 
         @media (max-width: 640px) {
@@ -884,6 +1035,8 @@
             .trial-form-glass { padding: 1.75rem; }
             .reviews-carousel { max-width: 90%; }
             .reviews-track { min-height: 200px; }
+            .review-card { padding: 1.5rem; }
+            .review-modal { padding: 1.75rem; }
         }
 
         /* ── Dynamic sky overrides ── */
@@ -1160,10 +1313,23 @@
 
             <!-- Reviews Carousel -->
             <div class="reviews-carousel" id="reviewsCarousel">
-                <div class="reviews-track" id="reviewsTrack">
-                    <!-- Reviews will be populated from the REVIEWS array below -->
+                <div class="reviews-track" id="reviewsTrack"></div>
+                <div class="review-nav">
+                    <div class="review-dots" id="reviewDots"></div>
+                    <div class="review-arrows">
+                        <button class="review-arrow" id="reviewPrev">&#8592;</button>
+                        <button class="review-arrow" id="reviewNext">&#8594;</button>
+                    </div>
                 </div>
-                <div class="review-dots" id="reviewDots"></div>
+            </div>
+
+            <!-- Review Modal -->
+            <div class="review-modal-overlay" id="reviewModal">
+                <div class="review-modal">
+                    <button class="review-modal-close" id="reviewModalClose">&times;</button>
+                    <div class="modal-author" id="modalAuthor"></div>
+                    <div class="modal-text" id="modalText"></div>
+                </div>
             </div>
         </div>
         <a href="#walkthrough" class="scroll-indicator">
@@ -1900,51 +2066,87 @@
     // ── Reviews Carousel ──
     const REVIEWS = [
         {
+            quote: "It didn't try to teach me anything. It showed me a version of myself who just... doesn't operate from that place anymore. And it wasn't vague or preachy. It was specific to my stuff.",
+            author: "Anxious Attachment",
+            full: "I found this during one of those nights where you know you're being irrational but you can't stop. He hadn't replied in a few hours and I was already in full doom mode. I've done this enough times to know the pattern. Knowing doesn't help.\n\nI've read Attached, I've done therapy, I understand the anxious attachment thing intellectually. I can explain exactly why I get like this. Doesn't change the fact that I still get like this.\n\nWhat surprised me about Daydream is it didn't try to teach me anything. It showed me a version of myself who just... doesn't operate from that place anymore. And it wasn't vague or preachy. It was specific to my stuff. The story it created about my future self — how she moves through her day, how she handles the exact situations that send me into a spiral — it felt real. Not aspirational. Just calm.\n\nI've been using it for about two weeks. I'm not gonna pretend I'm a different person. But there was a moment last week where I felt the anxiety start and instead of acting on it I just sat with it. That doesn't sound like much but if you know you know.\n\nThe thing I appreciate is it never once told me to love myself or set boundaries or any of that. It just made the alternative feel possible. Like oh, I don't have to be this way forever. That was enough to make me keep coming back."
+        },
+        {
             quote: "Finally something that doesn't just tell me to believe in myself. I stopped asking 'am I the kind of person who can do this?' and started asking 'what would that version of me do right now?'",
-            author: "Startup Founder"
+            author: "Startup Founder",
+            full: "I quit my PM job at Google 8 months ago to build a startup. Everyone told me I was brave. Internally I felt like a fraud every single day. I tried journaling, I tried therapy, I even hired a coach for two months. They all helped me understand why I felt like an imposter. None of them helped me actually stop feeling like one.\n\nDaydream is different. The first visualization it created of my future self — the version of me who's already built the company, already navigated the uncertainty — something clicked. It wasn't aspirational fluff. It felt specific to me. Like it understood the exact gap I was sitting in.\n\nI've been using it daily for 3 weeks. The biggest shift: I stopped asking \"am I the kind of person who can do this?\" and started asking \"what would that version of me do right now?\" Subtle difference. Massive impact."
         },
         {
             quote: "This picks up exactly where therapy left off. Therapy processes the past, but it doesn't give you a visceral, embodied experience of who you're becoming. Daydream does.",
-            author: "Post-Therapy Plateau"
+            author: "Post-Therapy Plateau",
+            full: "I did 3 years of therapy. It was genuinely life-changing. I understand my attachment patterns, I know where my anxiety comes from, I can name the narratives I inherited from my parents. But knowing all of that didn't make me different. I'd sit in session, have a breakthrough, and then go home and act exactly the same way.\n\nMy therapist actually couldn't argue when I told her about Daydream. The future-self work fills a gap that talk therapy structurally can't. Therapy processes the past, but it doesn't give you a visceral, embodied experience of who you're becoming. Daydream does.\n\nThe stories it generates about my future self are eerily resonant. Not generic \"you'll be confident and successful\" stuff. It picks up on the specific identity pressure points I'm stuck on and shows me what it looks like on the other side. I've cried twice using this app. In a good way."
         },
         {
             quote: "Helped me stop grieving the old me. The visualization of my future self as a designer — someone who still has the analytical rigor from law but channels it into empathy-driven work — that was the first time the new career felt like me.",
-            author: "Career Reinventor"
+            author: "Career Reinventor",
+            full: "I was a litigation attorney for 12 years. Left last year to pivot into UX design. Rationally I know it was the right call. Emotionally I felt like I'd amputated a limb. My entire identity — how I introduced myself, how I thought, how I argued — was built around being a lawyer. I didn't know who I was without it.\n\nA friend sent me Daydream and honestly I was skeptical. AI for identity work? But the intake conversation was shockingly deep. It didn't just ask what I wanted to do next. It asked about the parts of my old identity I was mourning and the parts I was relieved to leave behind.\n\nThe visualization of my future self as a designer — someone who still has the analytical rigor from law but channels it into empathy-driven work — that was the first time the new career felt like me and not just something I was trying on. Four stars only because I wish the app reminded me to come back. I sometimes forget, and then when I do return I wonder why I waited."
         },
         {
             quote: "I needed to build a new me. This actually helped. It held space for the grief AND pulled me toward something new. I'm not broken — I'm just between identities.",
-            author: "Life Transition"
+            author: "Life Transition",
+            full: "Going through a divorce at 38 is like watching your operating system crash. Half my decisions for the last decade were made as part of a \"we.\" Suddenly there's no we. Just me. And I didn't really know who \"me\" was anymore.\n\nEvery resource I found was about healing, coping, moving on. Daydream was the only thing that asked: \"Who do you want to become now that you get to choose?\" Not in a toxic positivity way. It held space for the grief AND pulled me toward something new.\n\nThe companion conversations feel like talking to someone who actually understands that I'm not broken. I'm just between identities. That distinction matters more than I can express."
         },
         {
             quote: "I've tried literally everything. This is the first thing that felt new. Instead of 'do these behaviors and you'll become that person,' it's 'feel into that person first, and the behaviors start to make sense.'",
-            author: "Self-Improvement Veteran"
+            author: "Self-Improvement Veteran",
+            full: "Atomic Habits. The Mountain Is You. 75 Hard. Cold plunges. Therapy. Coaching. Meditation retreats. I've done all of it. I'm not even being dramatic. I have a spreadsheet.\n\nMost of it works for a few weeks and then I slide back. Not because I lack discipline — because the \"new habits\" never felt like mine. They felt like costumes I was wearing over the same person.\n\nDaydream flipped the script. Instead of \"do these behaviors and you'll become that person,\" it's \"feel into that person first, and the behaviors start to make sense.\" The psychology nerd in me recognizes this is identity-based behavior change (James Clear talks about it but never operationalizes it). Daydream actually operationalizes it.\n\nKnocking one star because the app could be more polished and I wish there was a mobile experience that made it easier to check in throughout the day. But the core experience? Nothing else like it."
         },
         {
             quote: "Surprisingly not bullshit. The future-self story it generated had details that felt uncomfortably accurate — not in a cold-reading way, but like it had connected dots I hadn't connected myself.",
-            author: "Skeptical Technologist"
+            author: "Skeptical Technologist",
+            full: "I'm an ML engineer. I went in fully expecting to hate this. \"AI identity transformation\" sounds like it was named by a YC pitch deck generator. But I was going through a rough patch — career stagnation, questioning everything — and a friend I respect told me to try it.\n\nThe intake was better than I expected. The visualization was... actually affecting? I felt something I didn't anticipate. The future-self story it generated had details that felt uncomfortably accurate — not in a cold-reading way, but like it had connected dots I hadn't connected myself.\n\nI'm giving it 3 stars because I've only used it a week and I don't trust my own honeymoon-phase enthusiasm. But I will say this: I've used ChatGPT for \"therapy-like\" conversations before and it felt hollow. This felt different. There's clearly something more intentional in the design. I'll update this review in a month."
         },
         {
             quote: "I'm recommending this to clients as a complement to our sessions. It's doing something therapy genuinely can't do well: creating a vivid, emotionally resonant experience of a client's future self.",
-            author: "Licensed Therapist"
+            author: "Licensed Therapist",
+            full: "I'm a licensed therapist specializing in life transitions. A client told me about Daydream and I tried it myself before forming an opinion. I was skeptical. Most AI mental health tools are irresponsible at worst, shallow at best.\n\nDaydream is neither. It's not trying to be therapy. It's doing something therapy genuinely can't do well: creating a vivid, emotionally resonant experience of a client's future self. In session, I can help someone understand their patterns and process their past. But I can't generate the felt sense of who they're becoming. Daydream can.\n\nThree of my clients now use it between sessions. All three have reported feeling more agentic and less stuck. The identity pressure point framework maps cleanly onto how I already think about change. Whoever built this understands the psychology deeply. This isn't a chatbot with a therapy skin. It's a genuinely new modality."
         },
     ];
 
+    // ── Modal logic ──
+    const modalOverlay = document.getElementById('reviewModal');
+    const modalAuthor = document.getElementById('modalAuthor');
+    const modalText = document.getElementById('modalText');
+
+    function openReviewModal(idx) {
+        const r = REVIEWS[idx];
+        modalAuthor.innerHTML = '<div class="modal-avatar"></div>' + r.author;
+        modalText.innerHTML = r.full.split('\\n\\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
+        modalOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('reviewModalClose').addEventListener('click', function() {
+        modalOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    });
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            modalOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // ── Carousel logic ──
     (function initReviewsCarousel() {
         const track = document.getElementById('reviewsTrack');
         const dots = document.getElementById('reviewDots');
         if (!track || !dots || REVIEWS.length === 0) return;
 
-        // Build cards
-        REVIEWS.forEach((r, i) => {
+        REVIEWS.forEach(function(r, i) {
             const card = document.createElement('div');
             card.className = 'review-card' + (i === 0 ? ' active' : '');
-            card.innerHTML = `<p class="review-quote">${r.quote}</p><span class="review-author">${r.author}</span>`;
+            card.innerHTML = '<div class="review-card-header"><div class="review-avatar"></div><span class="review-author">' + r.author + '</span></div><p class="review-quote">' + r.quote + '</p>';
+            card.addEventListener('click', function() { openReviewModal(i); });
             track.appendChild(card);
 
             const dot = document.createElement('button');
             dot.className = 'review-dot' + (i === 0 ? ' active' : '');
-            dot.setAttribute('aria-label', `Review ${i + 1}`);
-            dot.addEventListener('click', () => goTo(i));
+            dot.addEventListener('click', function() { goTo(i); });
             dots.appendChild(dot);
         });
 
@@ -1955,8 +2157,11 @@
             const cards = track.querySelectorAll('.review-card');
             const allDots = dots.querySelectorAll('.review-dot');
             cards[current].classList.remove('active');
+            cards[current].classList.add('exiting');
             allDots[current].classList.remove('active');
+            cards.forEach(function(c) { if (!c.classList.contains('active')) setTimeout(function() { c.classList.remove('exiting'); }, 500); });
             current = idx;
+            cards[current].classList.remove('exiting');
             cards[current].classList.add('active');
             allDots[current].classList.add('active');
             clearInterval(timer);
@@ -1964,6 +2169,9 @@
         }
 
         function advance() { goTo((current + 1) % REVIEWS.length); }
+
+        document.getElementById('reviewPrev').addEventListener('click', function() { goTo((current - 1 + REVIEWS.length) % REVIEWS.length); });
+        document.getElementById('reviewNext').addEventListener('click', function() { goTo((current + 1) % REVIEWS.length); });
     })();
 
     </script>
