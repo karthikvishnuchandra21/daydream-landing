@@ -800,7 +800,7 @@
         /* ── Responsive ── */
         /* ── Reviews Carousel (Glass Card) ── */
         .reviews-carousel {
-            margin-top: 2.5rem;
+            margin-top: 4rem;
             width: 100%;
             max-width: 560px;
             position: relative;
@@ -855,8 +855,9 @@
 
         .review-author-info {
             display: flex;
-            flex-direction: column;
-            gap: 0.1rem;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .review-author {
@@ -874,6 +875,11 @@
             color: rgba(255,255,255,0.5);
             letter-spacing: 0.04em;
             text-transform: uppercase;
+        }
+
+        .review-author-info .review-separator {
+            color: rgba(255,255,255,0.25);
+            font-size: 0.7rem;
         }
 
         .review-quote {
@@ -1149,6 +1155,9 @@
         }
         body[data-sky-dark="false"] .review-avatar {
             border-color: rgba(0,0,0,0.1);
+        }
+        body[data-sky-dark="false"] .review-separator {
+            color: rgba(0,0,0,0.25);
         }
         body[data-sky-dark="false"] .review-dot {
             background: rgba(0,0,0,0.15);
@@ -2325,7 +2334,7 @@
         REVIEWS.forEach(function(r, i) {
             const card = document.createElement('div');
             card.className = 'review-card' + (i === 0 ? ' active' : '');
-            card.innerHTML = '<div class="review-card-header"><img class="review-avatar" src="' + r.avatar + '" alt="' + r.author + '"><div class="review-author-info"><span class="review-author">' + r.author + '</span><span class="review-subtitle">' + r.subtitle + '</span></div></div><p class="review-quote">' + r.quote + '</p>';
+            card.innerHTML = '<div class="review-card-header"><img class="review-avatar" src="' + r.avatar + '" alt="' + r.author + '"><div class="review-author-info"><span class="review-author">' + r.author + '</span><span class="review-separator">&middot;</span><span class="review-subtitle">' + r.subtitle + '</span></div></div><p class="review-quote">' + r.quote + '</p>';
             card.addEventListener('click', function() { openReviewModal(i); });
             track.appendChild(card);
 
