@@ -808,7 +808,7 @@
 
         .reviews-track {
             position: relative;
-            min-height: 120px;
+            min-height: 160px;
         }
 
         .review-card {
@@ -883,7 +883,7 @@
             .flip-card-inner { min-height: 160px; }
             .trial-form-glass { padding: 1.75rem; }
             .reviews-carousel { max-width: 90%; }
-            .reviews-track { min-height: 140px; }
+            .reviews-track { min-height: 200px; }
         }
 
         /* ── Dynamic sky overrides ── */
@@ -1899,9 +1899,34 @@
 
     // ── Reviews Carousel ──
     const REVIEWS = [
-        { quote: "Placeholder review one — replace with real copy.", author: "Persona Name" },
-        { quote: "Placeholder review two — replace with real copy.", author: "Persona Name" },
-        { quote: "Placeholder review three — replace with real copy.", author: "Persona Name" },
+        {
+            quote: "Finally something that doesn't just tell me to believe in myself. I stopped asking 'am I the kind of person who can do this?' and started asking 'what would that version of me do right now?'",
+            author: "Startup Founder"
+        },
+        {
+            quote: "This picks up exactly where therapy left off. Therapy processes the past, but it doesn't give you a visceral, embodied experience of who you're becoming. Daydream does.",
+            author: "Post-Therapy Plateau"
+        },
+        {
+            quote: "Helped me stop grieving the old me. The visualization of my future self as a designer — someone who still has the analytical rigor from law but channels it into empathy-driven work — that was the first time the new career felt like me.",
+            author: "Career Reinventor"
+        },
+        {
+            quote: "I needed to build a new me. This actually helped. It held space for the grief AND pulled me toward something new. I'm not broken — I'm just between identities.",
+            author: "Life Transition"
+        },
+        {
+            quote: "I've tried literally everything. This is the first thing that felt new. Instead of 'do these behaviors and you'll become that person,' it's 'feel into that person first, and the behaviors start to make sense.'",
+            author: "Self-Improvement Veteran"
+        },
+        {
+            quote: "Surprisingly not bullshit. The future-self story it generated had details that felt uncomfortably accurate — not in a cold-reading way, but like it had connected dots I hadn't connected myself.",
+            author: "Skeptical Technologist"
+        },
+        {
+            quote: "I'm recommending this to clients as a complement to our sessions. It's doing something therapy genuinely can't do well: creating a vivid, emotionally resonant experience of a client's future self.",
+            author: "Licensed Therapist"
+        },
     ];
 
     (function initReviewsCarousel() {
@@ -1924,7 +1949,7 @@
         });
 
         let current = 0;
-        let timer = setInterval(advance, 5000);
+        let timer = setInterval(advance, 6000);
 
         function goTo(idx) {
             const cards = track.querySelectorAll('.review-card');
@@ -1935,7 +1960,7 @@
             cards[current].classList.add('active');
             allDots[current].classList.add('active');
             clearInterval(timer);
-            timer = setInterval(advance, 5000);
+            timer = setInterval(advance, 6000);
         }
 
         function advance() { goTo((current + 1) % REVIEWS.length); }
