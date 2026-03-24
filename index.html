@@ -1550,7 +1550,7 @@
     <!-- 5. TERRAIN DEMO (Interactive 3D) -->
     <!-- ══════════════════════════════════ -->
     <div class="terrain-demo-section" id="innerterrain">
-        <iframe src="terrain-3d.html" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer" loading="lazy"></iframe>
+        <iframe id="terrainIframe" data-src="terrain-3d.html" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer"></iframe>
     </div>
 
     <!-- Inline terrain module removed — using iframe to terrain-3d.html instead -->
@@ -2230,6 +2230,18 @@
             skyThrottled = entries[0].isIntersecting;
         }, { threshold: 0.1 });
         terrainObserver.observe(terrainSection);
+
+        // Lazy-load the 3D terrain iframe only when user scrolls near it
+        const terrainIframe = document.getElementById('terrainIframe');
+        if (terrainIframe && !terrainIframe.src) {
+            const lazyObserver = new IntersectionObserver(function(entries) {
+                if (entries[0].isIntersecting) {
+                    terrainIframe.src = terrainIframe.dataset.src;
+                    lazyObserver.disconnect();
+                }
+            }, { rootMargin: '200px' });
+            lazyObserver.observe(terrainSection);
+        }
     }
 
     // Scroll reveal
@@ -2265,7 +2277,7 @@
             full: "I did 3 years of therapy. Genuinely helpful. I understand my attachment patterns, I know where my anxiety comes from, I can name the narratives I inherited from my parents. But knowing all of that didn't make me different. I'd sit in session, have a breakthrough, and then go home and act exactly the same way.\n\nI wasn't looking for a replacement for therapy. I was looking for something that does what therapy doesn't — which is actually make the future feel tangible. Therapy is great at processing the past. It's not great at helping you feel who you're becoming. That's what Daydream does.\n\nThe stories it generates about my future self are weirdly resonant. Not generic \"you'll be confident and successful\" stuff. It picks up on the specific things I'm stuck on and shows me what it looks like on the other side. I still do therapy. But this fills a gap I didn't know how to articulate before."
         },
         {
-            quote: "Helped me stop grieving the old me. The visualization of my future self as a designer — someone who still has the analytical rigor from law but channels it differently — that was the first time the new career felt like me.",
+            quote: "Helped me stop grieving the old me. The visualization of my future self as a designer, someone who still has the analytical rigor from law but channels it differently, that was the first time the new career felt like me.",
             author: "F36",
             subtitle: "Career Change",
             avatar: "avatars/butterfly-career.png",
@@ -2286,7 +2298,7 @@
             full: "Atomic Habits. The Mountain Is You. 75 Hard. Cold plunges. Therapy. Coaching. Meditation retreats. I've done a lot. Most of it works for a few weeks and then I slide back. Not because I lack discipline, but because the new habits never really felt like mine. They felt like things I was doing on top of the same person.\n\nDaydream flipped it. Instead of \"do these behaviors and you'll become that person,\" it's more like \"connect with that person first and the behaviors start to make sense.\" I've read about identity based behavior change before but nothing ever made it feel concrete until this.\n\nTaking off a star because the app could be more polished and I wish there was a better mobile experience. But the core of what it does? I haven't found anything else like it."
         },
         {
-            quote: "Surprisingly not bullshit. The future-self story it generated had details that felt uncomfortably accurate — not in a cold-reading way, but like it had connected dots I hadn't connected myself.",
+            quote: "Surprisingly not bullshit. The future-self story it generated had details that felt uncomfortably accurate. Not in a cold-reading way, but like it had connected dots I hadn't connected myself.",
             author: "M30",
             subtitle: "Career Stagnation",
             avatar: "avatars/fox-skeptic.png",
