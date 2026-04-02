@@ -160,8 +160,85 @@
         .article-date {
             font-size: 0.8rem;
             color: var(--warm-gray-light);
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
+
+        /* ── Audio Player (Green Waveform) ── */
+        .audio-player {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #f4f6f0, #eef2e8);
+            border: 1px solid rgba(143, 191, 143, 0.3);
+            border-radius: 24px;
+            margin-bottom: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .audio-player:hover { border-color: rgba(143, 191, 143, 0.6); box-shadow: 0 2px 12px rgba(61, 92, 61, 0.08); }
+
+        .audio-play-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #8FBF8F, #3D5C3D);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(61, 92, 61, 0.25);
+            transition: transform 0.2s ease;
+        }
+
+        .audio-player:hover .audio-play-btn { transform: scale(1.05); }
+
+        .audio-play-btn svg { width: 11px; height: 11px; fill: white; margin-left: 1px; }
+
+        .audio-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .audio-wave .bar {
+            width: 2.5px;
+            border-radius: 2px;
+            background: rgba(143, 191, 143, 0.3);
+            transition: background 0.15s ease;
+        }
+
+        .audio-wave .bar.active { background: #3D5C3D; }
+
+        .audio-time {
+            font-size: 0.65rem;
+            color: var(--warm-gray);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            padding-right: 0.4rem;
+        }
+
+        .audio-speed-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #3D5C3D;
+            background: none;
+            border: 1px solid rgba(143, 191, 143, 0.4);
+            border-radius: 4px;
+            padding: 0.15rem 0.35rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-right: 0.3rem;
+        }
+
+        .audio-speed-btn:hover { border-color: #3D5C3D; }
 
         .article-body p {
             font-size: 0.95rem;
@@ -359,6 +436,18 @@
         <h1 class="article-title">The Belief Terrain</h1>
         <div class="article-date">March 23, 2026</div>
 
+        <!-- Audio Pill -->
+        <div class="audio-player" id="audioPlayer">
+            <button class="audio-play-btn" id="playBtn" aria-label="Play audio">
+                <svg id="playIcon" viewBox="0 0 16 16"><polygon points="5,2 13,8 5,14"/></svg>
+                <svg id="pauseIcon" viewBox="0 0 16 16" style="display:none"><rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/></svg>
+            </button>
+            <div class="audio-wave" id="audioWave"></div>
+            <span class="audio-time" id="audioTime">0:55</span>
+            <button class="audio-speed-btn" id="speedBtn">1x</button>
+        </div>
+        <audio id="audioEl" preload="metadata" src="/blog/the-belief-terrain/audio.mp3"></audio>
+
         <div class="article-body">
             <p class="lead">
                 Every person carries an invisible landscape shaped by their beliefs. Some lift you up. Others pull you underground. We built the Belief Terrain to make that landscape visible.
@@ -465,5 +554,95 @@
             <p class="footer-text">San Francisco, 2026</p>
         </div>
     </footer>
+
+    <script>
+    (function() {
+        const audio = document.getElementById('audioEl');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const waveEl = document.getElementById('audioWave');
+        const timeEl = document.getElementById('audioTime');
+        const speedBtn = document.getElementById('speedBtn');
+        const speeds = [1, 1.25, 1.5, 2];
+        let speedIdx = 0;
+        let animFrame = null;
+
+        // Generate waveform bars
+        const barCount = 35;
+        const barHeights = [];
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            const h = 4 + Math.random() * 14;
+            bar.style.height = h + 'px';
+            barHeights.push(h);
+            waveEl.appendChild(bar);
+        }
+        const bars = waveEl.querySelectorAll('.bar');
+
+        function fmt(s) {
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return m + ':' + String(sec).padStart(2, '0');
+        }
+
+        function animate() {
+            if (audio.paused || !audio.duration) return;
+            const progress = audio.currentTime / audio.duration;
+            const activeIdx = Math.floor(progress * barCount);
+            bars.forEach(function(b, i) {
+                b.classList.toggle('active', i <= activeIdx);
+                // Subtle movement on active bars
+                if (i <= activeIdx && i > activeIdx - 4) {
+                    b.style.height = (4 + Math.random() * 14) + 'px';
+                } else {
+                    b.style.height = barHeights[i] + 'px';
+                }
+            });
+            timeEl.textContent = fmt(audio.duration - audio.currentTime);
+            animFrame = requestAnimationFrame(animate);
+        }
+
+        playBtn.onclick = function() {
+            if (audio.paused) { audio.play(); } else { audio.pause(); }
+        };
+
+        audio.onplay = function() {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            animate();
+        };
+
+        audio.onpause = function() {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            cancelAnimationFrame(animFrame);
+        };
+
+        audio.onloadedmetadata = function() { timeEl.textContent = fmt(audio.duration); };
+
+        // Click waveform to seek
+        waveEl.onclick = function(e) {
+            if (!audio.duration) return;
+            const rect = waveEl.getBoundingClientRect();
+            audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+        };
+
+        speedBtn.onclick = function() {
+            speedIdx = (speedIdx + 1) % speeds.length;
+            audio.playbackRate = speeds[speedIdx];
+            speedBtn.textContent = speeds[speedIdx] + 'x';
+        };
+
+        audio.onended = function() {
+            cancelAnimationFrame(animFrame);
+            bars.forEach(function(b, i) { b.classList.remove('active'); b.style.height = barHeights[i] + 'px'; });
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            timeEl.textContent = fmt(audio.duration);
+        };
+    })();
+    </script>
 </body>
 </html>
