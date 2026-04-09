@@ -63,7 +63,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease, opacity 0.3s ease;
         }
 
         .header.scrolled {
@@ -74,10 +74,142 @@
         .header-logo {
             display: flex;
             align-items: center;
+            gap: 0.6rem;
             text-decoration: none;
         }
 
-        .header-logo svg { width: 38px; height: 34px; }
+        .header-logo-img {
+            width: 34px;
+            height: 34px;
+        }
+
+        .header-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: var(--header-text-hover);
+            letter-spacing: 0.03em;
+        }
+
+        /* ── Section Nav ── */
+        .section-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 0.85rem 2rem;
+            transition: background 0.4s ease, border-color 0.4s ease;
+            background: transparent;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-nav .nav-logo {
+            position: absolute;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .section-nav.cream .nav-logo {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .section-nav .nav-logo img { width: 26px; height: 26px; }
+        .section-nav .nav-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem; font-weight: 300;
+            color: var(--charcoal); letter-spacing: 0.03em;
+        }
+
+        .section-nav .nav-right {
+            position: absolute;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .section-nav.cream .nav-right {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .section-nav .nav-right a {
+            font-size: 0.8rem;
+            color: var(--charcoal-soft);
+            padding: 0;
+        }
+        .section-nav .nav-right a:hover { color: var(--charcoal); }
+        .section-nav .nav-right .nav-login { font-weight: 500; color: var(--charcoal); }
+
+        /* Blog link — distinct green */
+        .section-nav a.nav-blog {
+            color: rgba(139, 179, 139, 0.6);
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+        }
+        .section-nav a.nav-blog:hover { color: rgba(139, 179, 139, 0.9); }
+        .section-nav.cream a.nav-blog { color: rgba(100, 140, 100, 0.55); }
+        .section-nav.cream a.nav-blog:hover { color: rgba(80, 120, 80, 0.85); }
+
+        /* Dark mode (on hero / sky) */
+        .section-nav a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+            padding: 0.2rem 0;
+            position: relative;
+        }
+
+        .section-nav a:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .section-nav a.active {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .section-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0; right: 0;
+            height: 1.5px;
+            background: var(--gold);
+            border-radius: 1px;
+        }
+
+        /* Light mode (on cream sections) */
+        .section-nav.cream {
+            background: rgba(242, 244, 238, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+
+        .section-nav.cream a {
+            color: rgba(74, 70, 64, 0.4);
+        }
+
+        .section-nav.cream a:hover {
+            color: var(--charcoal);
+        }
+
+        .section-nav.cream a.active {
+            color: var(--charcoal);
+        }
 
         .header-right {
             display: flex;
@@ -125,75 +257,173 @@
             color: var(--header-text-hover);
         }
 
-        /* ── Hero ── */
+        /* ── Hero (Split Layout) ── */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            padding: 2rem;
-            padding-bottom: 18vh;
             z-index: 1;
+            min-height: 92vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 6rem 4rem 4rem;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .hero-content {
-            text-align: center;
+        .hero-left {
+            max-width: 500px;
             animation: fadeUp 1.2s ease-out;
-            max-width: 720px;
         }
 
-        .logo {
+        .hero-headline {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
             font-weight: 300;
-            letter-spacing: 0.02em;
-            margin-bottom: 1.25rem;
             color: var(--hero-text);
-        }
-
-        .subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.1rem, 2.5vw, 1.45rem);
-            font-weight: 300;
-            font-style: italic;
-            color: var(--hero-text-sub);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
             margin-bottom: 1.5rem;
-            line-height: 1.55;
         }
 
-        .hero-body {
+        .hero-headline em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero-sub {
             font-family: 'DM Sans', sans-serif;
             font-size: 1rem;
             font-weight: 300;
-            color: var(--hero-text-sub);
-            margin-bottom: 0;
+            color: rgba(255,255,255,0.5);
             line-height: 1.7;
-            max-width: 560px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: 2rem;
+            max-width: 400px;
         }
 
-        /* ── Scroll Indicator ── */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem; left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
+        .hero-cta {
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--hero-text-sub);
-            animation: softBounce 2s ease-in-out infinite;
-            z-index: 10;
+            padding: 0.75rem 1.75rem;
+            background: linear-gradient(135deg, var(--gold), #a08050);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+        }
+        .hero-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(196,168,124,0.25);
         }
 
-        .scroll-indicator svg {
-            width: 20px; height: 20px;
-            stroke: var(--hero-text-sub);
+        .hero-proof {
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
         }
+        .hero-proof .trust-star { color: var(--gold); font-size: 0.85rem; }
+
+        /* ── Viz Card ── */
+        .viz-card-wrap { max-width: 520px; justify-self: center; }
+
+        .viz-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+
+        .viz-top {
+            padding: 0.7rem 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .viz-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: vizPulse 2s ease-in-out infinite; }
+        @keyframes vizPulse { 0%,100%{opacity:0.4}50%{opacity:1} }
+        .viz-label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+        .viz-sep { color: rgba(255,255,255,0.12); font-size: 0.6rem; }
+        .viz-topic { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: rgba(255,255,255,0.45); }
+
+        .viz-text-area {
+            padding: 2rem 2rem;
+            height: 160px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .viz-sentence {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem; font-weight: 300;
+            line-height: 1.9; color: rgba(255,255,255,0.85);
+            text-align: center; max-width: 420px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 3px;
+        }
+        .viz-sentence .word {
+            display: inline-block;
+            padding: 1px 2px;
+            border-radius: 3px;
+            color: rgba(255,255,255,0.25);
+            transition: color 0.1s ease;
+        }
+        .viz-sentence .word.spoken { color: rgba(255,255,255,0.75); }
+        .viz-sentence .word.active { color: var(--gold); }
+
+        .viz-sentence-wrap {
+            opacity: 0; transform: translateY(6px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .viz-sentence-wrap.visible { opacity: 1; transform: translateY(0); }
+
+        .viz-shift-label {
+            text-align: center;
+            padding: 0 1.5rem 0.75rem;
+            min-height: 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .viz-shift-label.visible { opacity: 1; }
+        .viz-shift-text {
+            font-size: 0.65rem; font-weight: 400;
+            letter-spacing: 0.04em; color: rgba(255,255,255,0.3);
+        }
+        .viz-shift-text strong { color: var(--gold); font-weight: 500; }
+
+        .viz-controls {
+            padding: 0.6rem 1.1rem 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .viz-play {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; flex-shrink: 0; transition: all 0.2s;
+        }
+        .viz-play:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .viz-play svg { width: 10px; height: 10px; }
+        .viz-progress { flex: 1; height: 2px; background: rgba(255,255,255,0.06); border-radius: 1px; overflow: hidden; }
+        .viz-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s linear; }
+        .viz-time { font-size: 0.62rem; color: rgba(255,255,255,0.2); font-variant-numeric: tabular-nums; }
+
+        .viz-selector { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+        .viz-pill {
+            padding: 0.3rem 0.75rem; font-size: 0.68rem; color: rgba(255,255,255,0.3);
+            background: none; border: 1px solid rgba(255,255,255,0.06); border-radius: 50px;
+            cursor: pointer; transition: all 0.3s; white-space: nowrap;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .viz-pill:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.12); }
+        .viz-pill.active { color: var(--gold); border-color: rgba(196,168,124,0.25); }
 
         /* ── Content Sections ── */
         .section-bg {
@@ -208,7 +438,7 @@
 
         .sky-fade-into-content {
             position: relative; z-index: 1;
-            height: 120px;
+            height: 180px;
             background: linear-gradient(to bottom, transparent 0%, var(--cream) 100%);
             margin-top: -1px;
         }
@@ -787,171 +1017,202 @@
         }
 
         .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            opacity: 1;
+            transform: none;
         }
 
-        .reveal.visible {
+        /* ── Scroll-triggered child animations ── */
+        .reveal [data-anim] {
+            opacity: 0;
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* fade-up (default) */
+        .reveal [data-anim="fade-up"] {
+            transform: translateY(40px);
+        }
+        .reveal [data-anim="fade-up"].anim-visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ── Responsive ── */
-        /* ── Reviews Carousel (Glass Card) ── */
-        .reviews-carousel {
-            margin-top: 4rem;
-            width: 100%;
-            max-width: 560px;
-            position: relative;
+        /* fade-in (no movement) */
+        .reveal [data-anim="fade-in"] {
+            transform: none;
         }
-
-        .reviews-track {
-            position: relative;
-            min-height: 180px;
-            overflow: hidden;
-        }
-
-        .review-card {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            opacity: 0;
-            transform: translateX(40px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            pointer-events: none;
-            background: rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 2rem 2.25rem;
-            backdrop-filter: blur(24px);
-            cursor: pointer;
-        }
-
-        .review-card.active {
+        .reveal [data-anim="fade-in"].anim-visible {
             opacity: 1;
-            transform: translateX(0);
-            pointer-events: auto;
         }
 
-        .review-card.exiting {
-            opacity: 0;
+        /* scale-up */
+        .reveal [data-anim="scale-up"] {
+            transform: scale(0.92) translateY(20px);
+        }
+        .reveal [data-anim="scale-up"].anim-visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* slide-left */
+        .reveal [data-anim="slide-left"] {
             transform: translateX(-40px);
         }
+        .reveal [data-anim="slide-left"].anim-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-        .review-card-header {
+        /* slide-right */
+        .reveal [data-anim="slide-right"] {
+            transform: translateX(40px);
+        }
+        .reveal [data-anim="slide-right"].anim-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── Store Badges ── */
+        .store-badges {
             display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 0.75rem;
-            margin-bottom: 1rem;
+            margin-top: 2rem;
         }
 
-        .review-avatar {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.15);
-            flex-shrink: 0;
-            object-fit: cover;
-        }
-
-        .review-author-info {
+        .store-badge {
             display: flex;
-            flex-direction: row;
             align-items: center;
             gap: 0.5rem;
+            padding: 0.55rem 1.1rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
         }
 
-        .review-author {
+        .store-badge:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .store-badge-icon {
+            width: 16px;
+            height: 16px;
+            color: rgba(255,255,255,0.7);
+            flex-shrink: 0;
+        }
+
+        .store-badge-text {
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+            line-height: 1;
+        }
+
+        .store-badge-label {
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.9);
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.75);
+            letter-spacing: 0.01em;
+        }
+
+        .store-badge-date {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.35);
             letter-spacing: 0.02em;
         }
 
-        .review-subtitle {
+        /* ── Social Proof Block ── */
+        .hero-social-proof {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .trust-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.9rem;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 400;
             color: rgba(255,255,255,0.5);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            background: none;
+            border: none;
+            letter-spacing: 0.03em;
         }
 
-        .review-author-info .review-separator {
-            color: rgba(255,255,255,0.25);
-            font-size: 0.7rem;
+        .trust-star {
+            color: var(--gold);
+            font-size: 0.85rem;
+            line-height: 1;
         }
 
-        .review-quote {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.05rem, 2vw, 1.2rem);
-            font-weight: 300;
-            font-style: italic;
-            color: rgba(255,255,255,0.9);
-            line-height: 1.6;
-            text-align: left;
+        /* ── Reviews Strip ── */
+        .reviews-strip {
+            width: 100%;
+            max-width: 540px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .review-quote::before { content: '\201C'; }
-        .review-quote::after { content: '\201D'; }
-
-        .review-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1.25rem;
+        .reviews-strip-inner {
+            position: relative;
+            height: 28px;
         }
 
-        .review-dots {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .review-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: none; padding: 0; cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        .review-dot.active {
-            background: rgba(255,255,255,0.6);
-            transform: scale(1.3);
-        }
-
-        .review-arrows {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .review-arrow {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.5);
-            cursor: pointer;
+        .review-strip-item {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s ease;
+            gap: 0.5rem;
+            padding: 0;
+            background: none;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
         }
 
-        .review-arrow:hover {
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.8);
+        .review-strip-item.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        /* ── Review Modal ── */
+        .review-strip-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .review-strip-author {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.3);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ── Review Modal (disabled) ── */
         .review-modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(16px);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
@@ -1064,20 +1325,24 @@
             margin-bottom: 0;
         }
 
+        @media (max-width: 1000px) {
+            .hero { grid-template-columns: 1fr; padding: 6rem 2rem 3rem; gap: 2.5rem; min-height: auto; }
+            .hero-left { max-width: 100%; text-align: center; }
+            .hero-sub { margin: 0 auto 2rem; }
+            .hero-proof { justify-content: center; }
+            .viz-card-wrap { max-width: 100%; }
+        }
         @media (max-width: 640px) {
             section.content-section { padding: 4rem 1.5rem; }
             .header { padding: 1rem 1.25rem; }
-            .hero-content { padding: 0 0.5rem; }
             .trial-form-section { padding: 3rem 1.5rem 2rem; }
             .science-grid { grid-template-columns: 1fr; }
             .feature-grid { grid-template-columns: 1fr; }
             .flip-card { min-height: 160px; }
             .flip-card-inner { min-height: 160px; }
             .trial-form-glass { padding: 1.75rem; }
-            .reviews-carousel { max-width: 90%; }
-            .reviews-track { min-height: 200px; }
-            .review-card { padding: 1.5rem; }
-            .review-modal { padding: 1.75rem; }
+            .hero { padding: 5rem 1.5rem 2rem; }
+            .viz-selector { flex-wrap: wrap; }
         }
 
         /* ── Dynamic sky overrides ── */
@@ -1140,67 +1405,118 @@
             color: var(--hero-text);
         }
         /* ── Light sky overrides for reviews ── */
-        body[data-sky-dark="false"] .review-card {
-            background: rgba(255,255,255,0.35);
-            border-color: rgba(255,255,255,0.15);
+        body[data-sky-dark="false"] .review-strip-quote {
+            color: rgba(30,25,20,0.45);
         }
-        body[data-sky-dark="false"] .review-author {
-            color: rgba(30,25,20,0.95);
+        body[data-sky-dark="false"] .review-strip-author {
+            color: rgba(30,25,20,0.3);
         }
-        body[data-sky-dark="false"] .review-subtitle {
-            color: rgba(30,25,20,0.65);
+        body[data-sky-dark="false"] .hero-headline {
+            color: var(--charcoal);
         }
-        body[data-sky-dark="false"] .review-quote {
-            color: rgba(30,25,20,0.85);
+        body[data-sky-dark="false"] .hero-headline em {
+            color: var(--gold);
         }
-        body[data-sky-dark="false"] .review-avatar {
-            border-color: rgba(0,0,0,0.1);
+        body[data-sky-dark="false"] .subtitle {
+            color: rgba(30,25,20,0.55);
         }
-        body[data-sky-dark="false"] .review-separator {
-            color: rgba(0,0,0,0.25);
-        }
-        body[data-sky-dark="false"] .review-dot {
-            background: rgba(0,0,0,0.15);
-        }
-        body[data-sky-dark="false"] .review-dot.active {
-            background: rgba(0,0,0,0.5);
-        }
-        body[data-sky-dark="false"] .review-arrow {
-            border-color: rgba(0,0,0,0.12);
+        body[data-sky-dark="false"] .store-badge {
             background: rgba(0,0,0,0.04);
-            color: rgba(0,0,0,0.4);
+            border-color: rgba(0,0,0,0.1);
         }
-        body[data-sky-dark="false"] .review-arrow:hover {
+        body[data-sky-dark="false"] .store-badge:hover {
             background: rgba(0,0,0,0.08);
-            color: rgba(0,0,0,0.7);
         }
-        body[data-sky-dark="false"] .review-modal {
-            background: rgba(255,255,255,0.88);
+        body[data-sky-dark="false"] .store-badge-icon {
+            color: rgba(30,25,20,0.6);
+        }
+        body[data-sky-dark="false"] .store-badge-label {
+            color: rgba(30,25,20,0.7);
+        }
+        body[data-sky-dark="false"] .store-badge-date {
+            color: rgba(30,25,20,0.4);
+        }
+        body[data-sky-dark="false"] .trust-pill {
+            color: rgba(30,25,20,0.4);
+        }
+        /* Hero left — light sky */
+        body[data-sky-dark="false"] .hero-sub {
+            color: rgba(30,25,20,0.5);
+        }
+        body[data-sky-dark="false"] .hero-proof {
+            color: rgba(30,25,20,0.35);
+        }
+        /* Viz card — light sky */
+        body[data-sky-dark="false"] .viz-card {
+            background: rgba(0,0,0,0.04);
+            border-color: rgba(0,0,0,0.08);
+        }
+        body[data-sky-dark="false"] .viz-top {
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+        body[data-sky-dark="false"] .viz-sep {
+            color: rgba(30,25,20,0.15);
+        }
+        body[data-sky-dark="false"] .viz-topic {
+            color: rgba(30,25,20,0.45);
+        }
+        body[data-sky-dark="false"] .viz-sentence .word {
+            color: rgba(30,25,20,0.2);
+        }
+        body[data-sky-dark="false"] .viz-sentence .word.spoken {
+            color: rgba(30,25,20,0.7);
+        }
+        body[data-sky-dark="false"] .viz-sentence .word.active {
+            color: #8b7355;
+        }
+        body[data-sky-dark="false"] .viz-shift-text {
+            color: rgba(30,25,20,0.35);
+        }
+        body[data-sky-dark="false"] .viz-shift-text strong {
+            color: #8b7355;
+        }
+        body[data-sky-dark="false"] .viz-controls {
+            border-top-color: rgba(0,0,0,0.06);
+        }
+        body[data-sky-dark="false"] .viz-play {
             border-color: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.03);
+            color: rgba(30,25,20,0.4);
         }
-        body[data-sky-dark="false"] .review-modal .modal-author {
-            color: var(--charcoal);
+        body[data-sky-dark="false"] .viz-play:hover {
+            background: rgba(0,0,0,0.06);
+            color: rgba(30,25,20,0.7);
         }
-        body[data-sky-dark="false"] .review-modal .modal-author-name {
-            color: var(--charcoal);
+        body[data-sky-dark="false"] .viz-progress {
+            background: rgba(0,0,0,0.06);
         }
-        body[data-sky-dark="false"] .review-modal .modal-author-subtitle {
-            color: var(--charcoal-soft);
+        body[data-sky-dark="false"] .viz-time {
+            color: rgba(30,25,20,0.25);
         }
-        body[data-sky-dark="false"] .review-modal .modal-text {
-            color: var(--charcoal-soft);
+        body[data-sky-dark="false"] .viz-pill {
+            color: rgba(30,25,20,0.3);
+            border-color: rgba(0,0,0,0.06);
         }
-        body[data-sky-dark="false"] .review-modal .modal-avatar {
-            border-color: rgba(0,0,0,0.1);
+        body[data-sky-dark="false"] .viz-pill:hover {
+            color: rgba(30,25,20,0.5);
+            border-color: rgba(0,0,0,0.12);
         }
-        body[data-sky-dark="false"] .review-modal-close {
-            border-color: rgba(0,0,0,0.1);
-            background: rgba(0,0,0,0.05);
-            color: rgba(0,0,0,0.4);
+        body[data-sky-dark="false"] .viz-pill.active {
+            color: #8b7355;
+            border-color: rgba(139,115,85,0.3);
         }
-        body[data-sky-dark="false"] .review-modal-close:hover {
-            background: rgba(0,0,0,0.1);
-            color: rgba(0,0,0,0.7);
+        /* Section nav on light sky (hero only, before cream) */
+        body[data-sky-dark="false"] .section-nav:not(.cream) a {
+            color: rgba(30,25,20,0.35);
+        }
+        body[data-sky-dark="false"] .section-nav:not(.cream) a:hover {
+            color: rgba(30,25,20,0.7);
+        }
+        body[data-sky-dark="false"] .section-nav:not(.cream) a.active {
+            color: rgba(30,25,20,0.8);
+        }
+        body[data-sky-dark="false"] .section-nav:not(.cream) a.nav-blog {
+            color: rgba(100,140,100,0.5);
         }
 
         /* ── Terrain Demo Section ── */
@@ -1361,87 +1677,75 @@
     <!-- Header -->
     <header class="header" id="header">
         <a href="/" class="header-logo">
-            <svg viewBox="0 0 100 90" fill="none">
-                <defs>
-                    <linearGradient id="hwL" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
-                    </linearGradient>
-                    <linearGradient id="hwR" x1="100%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
-                    </linearGradient>
-                    <radialGradient id="hGlow" cx="50%" cy="40%" r="50%">
-                        <stop offset="0%" stop-color="#A8D4A8" stop-opacity="0.6"/><stop offset="100%" stop-color="#8FBF8F" stop-opacity="0"/>
-                    </radialGradient>
-                </defs>
-                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
-                    <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
-                    <path d="M44 28 C40 20,30 14,20 14 C14 14,10 18,10 24 C10 30,16 36,28 40 C38 43,44 38,44 32Z" fill="url(#hGlow)"/>
-                    <path d="M46 30 C38 26,28 22,18 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <path d="M46 34 C36 32,24 32,14 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <circle cx="6" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="4" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="3" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
-                    <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#hwL)" stroke="#1A1A1A" stroke-width="1"/>
-                    <path d="M48 46 C42 54,34 62,28 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <circle cx="16" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="16" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
-                </g>
-                <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
-                    <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
-                    <path d="M56 28 C60 20,70 14,80 14 C86 14,90 18,90 24 C90 30,84 36,72 40 C62 43,56 38,56 32Z" fill="url(#hGlow)"/>
-                    <path d="M54 30 C62 26,72 22,82 20" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <path d="M54 34 C64 32,76 32,86 34" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <circle cx="94" cy="12" r="2.5" fill="#1A1A1A" opacity="0.9"/><circle cx="96" cy="20" r="2.2" fill="#1A1A1A" opacity="0.85"/><circle cx="97" cy="28" r="2" fill="#1A1A1A" opacity="0.8"/>
-                    <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#hwR)" stroke="#1A1A1A" stroke-width="1"/>
-                    <path d="M52 46 C58 54,66 62,72 70" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.7"/>
-                    <circle cx="84" cy="72" r="2" fill="#1A1A1A" opacity="0.85"/><circle cx="84" cy="80" r="1.8" fill="#1A1A1A" opacity="0.8"/>
-                </g>
-                <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
-                <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-                <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-                <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
-            </svg>
+            <img src="logo.svg" alt="Daydream" class="header-logo-img">
+            <span class="header-logo-text">daydream</span>
         </a>
         <div class="header-right">
             <a href="/blog" class="header-link">Blog</a>
-            <div class="header-cta-group">
-                <a href="https://exp.daydreamers.app/" class="header-link login-link">Log in</a>
-                <a href="#trial-form" class="request-trial-link">Request trial</a>
-            </div>
+            <a href="https://exp.daydreamers.app/" class="header-link login-link">Log in</a>
         </div>
     </header>
+
+    <!-- Section Nav -->
+    <nav class="section-nav" id="sectionNav">
+        <a href="/" class="nav-logo">
+            <img src="logo.svg" alt="Daydream">
+            <span class="nav-logo-text">daydream</span>
+        </a>
+        <a href="#science">Science</a>
+        <a href="#walkthrough">How It Works</a>
+        <a href="#innerterrain">Inner Terrain</a>
+        <a href="#mission">Mission</a>
+        <a href="#becoming">Becoming</a>
+        <a href="https://exp.daydreamers.app/">Get Started</a>
+        <a href="/blog" class="nav-blog">Blog</a>
+        <div class="nav-right">
+            <a href="https://exp.daydreamers.app/" class="nav-login">Log in</a>
+        </div>
+    </nav>
 
     <!-- ═══════════ -->
     <!-- 1. HERO -->
     <!-- ═══════════ -->
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="logo">Daydream</h1>
-            <p class="subtitle">Daydream makes your future self feel so vivid and inevitable that you start showing up as them today.</p>
+        <div class="hero-left">
+            <h1 class="hero-headline">Become who you<br><em>already know</em> you are</h1>
+            <p class="hero-sub">Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be.</p>
+            <a href="https://exp.daydreamers.app/" class="hero-cta">Start your first session</a>
+            <div class="hero-proof"><span class="trust-star">&#9733;</span> 4.9 &middot; Trusted by 5K+ people</div>
+        </div>
 
-            <!-- Reviews Carousel -->
-            <div class="reviews-carousel" id="reviewsCarousel">
-                <div class="reviews-track" id="reviewsTrack"></div>
-                <div class="review-nav">
-                    <div class="review-dots" id="reviewDots"></div>
-                    <div class="review-arrows">
-                        <button class="review-arrow" id="reviewPrev">&#8592;</button>
-                        <button class="review-arrow" id="reviewNext">&#8594;</button>
+        <div class="viz-card-wrap">
+            <div class="viz-card">
+                <div class="viz-top">
+                    <div class="viz-dot"></div>
+                    <span class="viz-label">Live Session</span>
+                    <span class="viz-sep">&middot;</span>
+                    <span class="viz-topic" id="vizTopic"></span>
+                </div>
+                <div class="viz-text-area">
+                    <div class="viz-sentence-wrap" id="vizSentenceWrap">
+                        <p class="viz-sentence" id="vizSentence"></p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Review Modal -->
-            <div class="review-modal-overlay" id="reviewModal">
-                <div class="review-modal">
-                    <button class="review-modal-close" id="reviewModalClose">&times;</button>
-                    <div class="modal-author" id="modalAuthor"></div>
-                    <div class="modal-text" id="modalText"></div>
+                <div class="viz-shift-label" id="vizShift">
+                    <span class="viz-shift-text" id="vizShiftText"></span>
+                </div>
+                <div class="viz-controls">
+                    <button class="viz-play" id="vizPlay">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
+                    </button>
+                    <div class="viz-progress"><div class="viz-progress-fill" id="vizProgress"></div></div>
+                    <span class="viz-time" id="vizTime">0:00</span>
                 </div>
             </div>
+            <div class="viz-selector">
+                <button class="viz-pill active" data-viz="0">The Courage to Stay Uncertain</button>
+                <button class="viz-pill" data-viz="1">The Arithmetic of Desire</button>
+                <button class="viz-pill" data-viz="2">Building Something Real</button>
+            </div>
+            <audio id="vizAudio" preload="auto"></audio>
         </div>
-        <a href="#walkthrough" class="scroll-indicator">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </a>
     </section>
 
     <!-- Transition: sky → cream -->
@@ -1453,34 +1757,34 @@
     <div class="section-bg section-bg-dark" id="science">
         <section class="content-section">
             <div class="reveal">
-                <div class="section-divider"></div>
-                <h2>Built on how the brain actually changes</h2>
-                <div class="science-intro">
+                <div class="section-divider" data-anim="fade-in"></div>
+                <h2 data-anim="fade-up">Built on how the brain actually changes</h2>
+                <div class="science-intro" data-anim="fade-up">
                     <p>Daydream is built on neuroscience: the research on how identity forms, how neural pathways strengthen, and why certain kinds of practice produce lasting change.</p>
                 </div>
                 <div class="science-grid">
-                    <div class="science-item">
+                    <div class="science-item" data-anim="scale-up">
                         <div class="science-marker"></div>
                         <div>
                             <h3>Naming a belief weakens its grip</h3>
                             <p>Putting feelings into words reduces amygdala activity by activating the prefrontal cortex.<a href="https://pubmed.ncbi.nlm.nih.gov/17576282/" target="_blank" rel="noopener" class="cite-link"><sup>1</sup></a> The simple act of labeling a fear or limiting belief engages regulatory circuits that dampen the brain's emotional alarm system.</p>
                         </div>
                     </div>
-                    <div class="science-item">
+                    <div class="science-item" data-anim="scale-up">
                         <div class="science-marker"></div>
                         <div>
                             <h3>Beliefs shape what you literally see</h3>
                             <p>Neuroscientists have shown that prior beliefs warp the brain's representation of sensory information.<a href="https://news.mit.edu/2019/how-expectation-influences-perception-0715" target="_blank" rel="noopener" class="cite-link"><sup>2</sup></a> Your beliefs don't just influence decisions. They alter perception itself, filtering reality through what the brain already expects to be true.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9339788/" target="_blank" rel="noopener" class="cite-link"><sup>3</sup></a></p>
                         </div>
                     </div>
-                    <div class="science-item">
+                    <div class="science-item" data-anim="scale-up">
                         <div class="science-marker"></div>
                         <div>
                             <h3>Vivid rehearsal activates real neural pathways</h3>
                             <p>Mental rehearsal produces the same cortical changes as physical practice.<a href="https://pubmed.ncbi.nlm.nih.gov/15496925/" target="_blank" rel="noopener" class="cite-link"><sup>4</sup></a> Imagining an action activates the motor cortex, strengthens neural connections, and improves real-world performance, all without moving a muscle.</p>
                         </div>
                     </div>
-                    <div class="science-item">
+                    <div class="science-item" data-anim="scale-up">
                         <div class="science-marker"></div>
                         <div>
                             <h3>Identity predicts behavior more than intention</h3>
@@ -1498,32 +1802,32 @@
     <div class="section-bg section-bg-cream">
         <section id="walkthrough" class="content-section">
             <div class="reveal">
-                <div class="section-divider"></div>
-                <h2>What happens when you open Daydream</h2>
-                <p class="section-subheader">Daydream builds a living map of what you believe and helps you change it through action.</p>
+                <div class="section-divider" data-anim="fade-in"></div>
+                <h2 data-anim="fade-up">What happens when you open Daydream</h2>
+                <p class="section-subheader" data-anim="fade-up">Daydream builds a living map of what you believe and helps you change it through action.</p>
                 <div class="walkthrough-steps">
-                    <div class="walkthrough-step">
+                    <div class="walkthrough-step" data-anim="slide-right">
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h3>Tell your story.</h3>
                             <p>Share what you're working through. Daydream listens deeply, remembers everything, and builds an understanding of who you are and what's standing in the way.</p>
                         </div>
                     </div>
-                    <div class="walkthrough-step">
+                    <div class="walkthrough-step" data-anim="slide-right">
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <h3>Surface what you believe.</h3>
                             <p>Daydream identifies the beliefs underneath your goals. The ones pulling you forward and the ones quietly holding you back. Each one becomes a node on your personal terrain map.</p>
                         </div>
                     </div>
-                    <div class="walkthrough-step">
+                    <div class="walkthrough-step" data-anim="slide-right">
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h3>Create plans and take action.</h3>
                             <p>Turn beliefs into real-world action. Daydream helps you design small, meaningful steps. When you report back, your beliefs evolve based on what actually happened.</p>
                         </div>
                     </div>
-                    <div class="walkthrough-step">
+                    <div class="walkthrough-step" data-anim="slide-right">
                         <div class="step-number">4</div>
                         <div class="step-content">
                             <h3>Watch your terrain change.</h3>
@@ -1541,7 +1845,7 @@
     <div class="section-bg section-bg-gradient-up">
         <section class="content-section" style="padding-top: 4rem; padding-bottom: 4rem;">
             <div class="reveal">
-                <p class="pull-quote">You already know who you want to be. The distance isn't knowledge. It's what you believe about yourself underneath everything else. Daydream makes that visible, and then helps you change it.</p>
+                <p class="pull-quote" data-anim="fade-in">You already know who you want to be. The distance isn't knowledge. It's what you believe about yourself underneath everything else. Daydream makes that visible, and then helps you change it.</p>
             </div>
         </section>
     </div>
@@ -1729,20 +2033,20 @@
     <div class="section-bg section-bg-dark" id="mission">
         <section class="content-section">
             <div class="reveal">
-                <div class="section-divider"></div>
-                <h2>Our mission</h2>
+                <div class="section-divider" data-anim="fade-in"></div>
+                <h2 data-anim="fade-up">Our mission</h2>
                 <div class="pillars">
-                    <div class="pillar">
+                    <div class="pillar" data-anim="fade-up">
                         <div class="pillar-label">Belief Mapping</div>
                         <h3>See what you actually believe, not just what you think you believe</h3>
                         <p>Daydream surfaces the root-level beliefs driving your behavior. Both the ones pulling you forward and the ones quietly holding you back. Each becomes a node on your terrain, giving you a map of your inner world.</p>
                     </div>
-                    <div class="pillar">
+                    <div class="pillar" data-anim="fade-up">
                         <div class="pillar-label">Deep Inner Work</div>
                         <h3>Conversations, visualizations, and reflections that reach the root</h3>
                         <p>Guided visualizations put you inside your future. Conversations surface patterns you didn't see. Daily reflections keep you connected to what matters. Together, they create the conditions for beliefs to shift.</p>
                     </div>
-                    <div class="pillar">
+                    <div class="pillar" data-anim="fade-up">
                         <div class="pillar-label">Action That Moves Beliefs</div>
                         <h3>Real change happens in the real world</h3>
                         <p>Daydream helps you design actions that test your beliefs. When you report back what happened, your terrain responds. Aligned beliefs strengthen. Limiting beliefs lose their grip. Growth stops being abstract.</p>
@@ -1758,31 +2062,31 @@
     <div class="section-bg section-bg-gradient-up" id="becoming">
         <section class="content-section">
             <div class="reveal">
-                <div class="section-divider"></div>
-                <h2>The science of becoming</h2>
+                <div class="section-divider" data-anim="fade-in"></div>
+                <h2 data-anim="fade-up">The science of becoming</h2>
                 <div class="bridge-grid">
-                    <div class="bridge-item">
+                    <div class="bridge-item" data-anim="scale-up">
                         <div class="bridge-before">Every belief you name becomes something you can work with</div>
                         <div class="bridge-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </div>
                         <div class="bridge-after">Neuroscience shows that externalizing a belief weakens its unconscious grip</div>
                     </div>
-                    <div class="bridge-item">
+                    <div class="bridge-item" data-anim="scale-up">
                         <div class="bridge-before">One small action rewires more than a thousand affirmations</div>
                         <div class="bridge-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </div>
                         <div class="bridge-after">Real experience activates neural pathways that imagination alone cannot</div>
                     </div>
-                    <div class="bridge-item">
+                    <div class="bridge-item" data-anim="scale-up">
                         <div class="bridge-before">Limiting beliefs don't disappear. They fossilize</div>
                         <div class="bridge-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </div>
                         <div class="bridge-after">Each time you act despite the fear, the belief loses its authority over you</div>
                     </div>
-                    <div class="bridge-item">
+                    <div class="bridge-item" data-anim="scale-up">
                         <div class="bridge-before">Identity isn't something you decide. It's something you prove to yourself</div>
                         <div class="bridge-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1790,7 +2094,7 @@
                         <div class="bridge-after">Every action you take is a vote for the person you're becoming</div>
                     </div>
                 </div>
-                <p class="bridge-closer">Daydream gives you the map, the tools, and the mirror. The journey is yours.</p>
+                <p class="bridge-closer" data-anim="fade-up">Daydream gives you the map, the tools, and the mirror. The journey is yours.</p>
             </div>
         </section>
     </div>
@@ -1804,9 +2108,9 @@
     <div class="trial-form-wrapper" id="trial-form">
         <div class="trial-form-section">
             <div class="reveal">
-                <h2 style="color: var(--hero-text);">The distance is smaller than you think</h2>
-                <p class="trial-sub" style="color: var(--hero-text-sub);">Start where you are. Daydream meets you there.</p>
-                <div class="trial-form-glass" id="trialFormGlass">
+                <h2 style="color: var(--hero-text);" data-anim="fade-up">The distance is smaller than you think</h2>
+                <p class="trial-sub" style="color: var(--hero-text-sub);" data-anim="fade-up">Start where you are. Daydream meets you there.</p>
+                <div class="trial-form-glass" id="trialFormGlass" data-anim="scale-up">
                     <form id="trialForm" onsubmit="submitTrialForm(event)">
                         <div class="form-group">
                             <label for="trialEmail">Email</label>
@@ -1867,28 +2171,7 @@
     <footer>
         <div class="footer-inner">
             <div class="footer-logo">
-                <svg viewBox="0 0 100 90" fill="none">
-                    <defs>
-                        <linearGradient id="fwL" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
-                        </linearGradient>
-                        <linearGradient id="fwR" x1="100%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#A8D4A8"/><stop offset="60%" stop-color="#8FBF8F"/><stop offset="100%" stop-color="#3D5C3D"/>
-                        </linearGradient>
-                    </defs>
-                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(20deg)">
-                        <path d="M48 26 C42 14,28 4,12 6 C4 8,1 16,2 26 C3 36,12 44,28 45 C40 45,47 38,48 26Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
-                        <path d="M48 40 C44 46,32 56,20 66 C12 74,12 82,20 86 C32 90,44 82,48 68 C51 56,50 46,48 40Z" fill="url(#fwL)" stroke="#1A1A1A" stroke-width="1"/>
-                    </g>
-                    <g style="transform-origin:50px 45px;transform:perspective(200px) rotateY(-20deg)">
-                        <path d="M52 26 C58 14,72 4,88 6 C96 8,99 16,98 26 C97 36,88 44,72 45 C60 45,53 38,52 26Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
-                        <path d="M52 40 C56 46,68 56,80 66 C88 74,88 82,80 86 C68 90,56 82,52 68 C49 56,50 46,52 40Z" fill="url(#fwR)" stroke="#1A1A1A" stroke-width="1"/>
-                    </g>
-                    <ellipse cx="50" cy="58" rx="3.2" ry="18" fill="#1A1A1A"/><ellipse cx="50" cy="38" rx="4" ry="6" fill="#1A1A1A"/><circle cx="50" cy="28" r="5" fill="#1A1A1A"/>
-                    <path d="M47 24 Q40 14,34 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-                    <path d="M53 24 Q60 14,66 6" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-                    <circle cx="34" cy="6" r="2" fill="#1A1A1A"/><circle cx="66" cy="6" r="2" fill="#1A1A1A"/>
-                </svg>
+                <img src="logo.svg" alt="Daydream" style="width:34px;height:34px;">
             </div>
             <div class="footer-links">
                 <a href="/blog">Blog</a>
@@ -1898,6 +2181,185 @@
     </footer>
 
     <script>
+    // ═══════════════════════════════════
+    // Visualization Karaoke Engine
+    // ═══════════════════════════════════
+
+    const VIZ_AUDIO_BASE = 'https://srdsjvtxgybgykjgjgww.supabase.co/storage/v1/object/public/story-audio/e75afca7-728e-45e8-b63a-6ec508702591/';
+    const VIZ_TIMESTAMP_FILES = ['timestamps-courage.json', 'timestamps-arithmetic.json', 'timestamps-building.json'];
+
+    const VIZ_DATA = [
+        {
+            topic: 'The Courage to Stay Uncertain',
+            audioUrl: VIZ_AUDIO_BASE + '8a4942ac-21d4-461d-9420-5b20d68c9160-follow-up-visualization.mp3',
+            beliefs: [
+                { text: "If I put something imperfect out there, it will confirm I'm not ready", type: 'limiting' },
+                { text: "I need to be certain something is right before I can act", type: 'limiting' },
+                { text: "Real trust in myself gets built through action, not waiting until I feel ready", type: 'aligned' },
+                { text: "Other people's experience of my work will teach me more than my own endless refining", type: 'aligned' },
+            ],
+        },
+        {
+            topic: 'The Arithmetic of Desire',
+            audioUrl: VIZ_AUDIO_BASE + '7993190e-0d84-481e-8665-e9dd19f39f75-original-story.mp3',
+            beliefs: [
+                { text: "Attraction triggers self-protection through distance", type: 'limiting' },
+                { text: "Attractive/successful people determine my worth", type: 'limiting' },
+                { text: "Hierarchy thinking blocks real connection", type: 'aligned' },
+                { text: "My capacity for connection already exists in me", type: 'aligned' },
+            ],
+        },
+        {
+            topic: 'Building Something Real',
+            audioUrl: VIZ_AUDIO_BASE + 'f128d4f5-2626-47e2-9255-17b8e9782e3f-original-story.mp3',
+            beliefs: [
+                { text: "I don't know how to create value", type: 'limiting' },
+                { text: "If I go all in and still fail, it proves I am not enough", type: 'limiting' },
+                { text: "Building substance matters more than performing success", type: 'aligned' },
+                { text: "My best work happens when I'm curious and playful", type: 'aligned' },
+            ],
+        }
+    ];
+
+    (function initVizEngine() {
+        let vizCur = 0, vizPlaying = false;
+        let tsWords = [], vizSentences = [], curSentIdx = -1;
+
+        const vizAudio = document.getElementById('vizAudio');
+        const vizSentEl = document.getElementById('vizSentence');
+        const vizWrapEl = document.getElementById('vizSentenceWrap');
+        const vizProgEl = document.getElementById('vizProgress');
+        const vizTimeEl = document.getElementById('vizTime');
+        const vizTopicEl = document.getElementById('vizTopic');
+        const vizPlayBtn = document.getElementById('vizPlay');
+        const vizShiftEl = document.getElementById('vizShift');
+        const vizShiftTextEl = document.getElementById('vizShiftText');
+
+        if (!vizAudio || !vizSentEl) return;
+
+        // Binary search for active word (matching production getActiveWordIndex)
+        function getActiveWordIdx(t) {
+            let left = 0, right = tsWords.length - 1;
+            while (left <= right) {
+                const mid = Math.floor((left + right) / 2);
+                const w = tsWords[mid];
+                if (t >= w.start && t < w.end) return mid;
+                else if (t < w.start) right = mid - 1;
+                else left = mid + 1;
+            }
+            for (let i = 0; i < tsWords.length; i++) {
+                if (tsWords[i].start > t) return Math.max(0, i - 1);
+            }
+            return tsWords.length - 1;
+        }
+
+        // Group words into sentences (matching production storyParser)
+        function buildSentences() {
+            const sents = []; let cur = [];
+            for (let i = 0; i < tsWords.length; i++) {
+                cur.push(i);
+                if (/[.!?]$/.test(tsWords[i].text)) { sents.push([...cur]); cur = []; }
+            }
+            if (cur.length > 0) sents.push(cur);
+            const merged = [];
+            for (let i = 0; i < sents.length; i++) {
+                if (sents[i].length < 5 && i + 1 < sents.length) { merged.push([...sents[i], ...sents[i + 1]]); i++; }
+                else merged.push(sents[i]);
+            }
+            return merged;
+        }
+
+        function getSentForWord(wi) {
+            for (let i = 0; i < vizSentences.length; i++) {
+                const s = vizSentences[i];
+                if (wi >= s[0] && wi <= s[s.length - 1]) return i;
+            }
+            return vizSentences.length - 1;
+        }
+
+        function renderSent(idx) {
+            if (idx === curSentIdx || idx >= vizSentences.length) return;
+            curSentIdx = idx;
+            const wis = vizSentences[idx];
+            vizWrapEl.classList.remove('visible');
+            setTimeout(() => {
+                vizSentEl.innerHTML = wis.map(i => '<span class="word" data-wi="' + i + '">' + tsWords[i].text + '</span>').join('');
+                vizWrapEl.classList.add('visible');
+            }, 200);
+        }
+
+        function updateKaraoke() {
+            const t = vizAudio.currentTime;
+            if (tsWords.length === 0) return;
+            const activeIdx = getActiveWordIdx(t);
+            const sentIdx = getSentForWord(activeIdx);
+            renderSent(sentIdx);
+            vizSentEl.querySelectorAll('.word').forEach(el => {
+                const wi = parseInt(el.dataset.wi);
+                if (wi < activeIdx) { el.classList.add('spoken'); el.classList.remove('active'); }
+                else if (wi === activeIdx) { el.classList.add('active'); el.classList.remove('spoken'); }
+                else { el.classList.remove('spoken', 'active'); }
+            });
+            const dur = Math.min(vizAudio.duration || 60, 60);
+            vizProgEl.style.width = ((t / dur) * 100) + '%';
+            const s = Math.floor(t);
+            vizTimeEl.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+        }
+
+        // Belief rotation
+        let beliefIv = null, bIdx = 0;
+        function startBeliefs() { stopBeliefs(); bIdx = 0; showBelief(); beliefIv = setInterval(showBelief, 4000); }
+        function stopBeliefs() { clearInterval(beliefIv); }
+        function showBelief() {
+            const bs = VIZ_DATA[vizCur].beliefs;
+            if (!bs || !bs.length) return;
+            const b = bs[bIdx % bs.length];
+            const pfx = b.type === 'limiting' ? 'Addressing' : 'Strengthening';
+            vizShiftEl.classList.remove('visible');
+            setTimeout(() => { vizShiftTextEl.innerHTML = '<strong>' + pfx + '</strong>: ' + b.text; vizShiftEl.classList.add('visible'); }, 200);
+            bIdx++;
+        }
+
+        async function vizLoad(i) {
+            vizCur = i; curSentIdx = -1; vizPlaying = false;
+            const v = VIZ_DATA[i];
+            vizTopicEl.textContent = v.topic;
+            const resp = await fetch(VIZ_TIMESTAMP_FILES[i]);
+            const data = await resp.json();
+            tsWords = data.words;
+            vizSentences = buildSentences();
+            vizAudio.pause();
+            vizAudio.src = v.audioUrl;
+            vizAudio.currentTime = 0;
+            vizProgEl.style.width = '0%'; vizTimeEl.textContent = '0:00';
+            vizPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>';
+            document.querySelectorAll('.viz-pill').forEach((p, j) => p.classList.toggle('active', j === i));
+            if (vizSentences.length > 0) renderSent(0);
+            setTimeout(() => vizPlay(), 1200);
+        }
+
+        function vizPlay() {
+            if (vizPlaying) return; vizPlaying = true;
+            vizPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+            startBeliefs();
+            vizAudio.play().catch(() => { vizPlaying = false; stopBeliefs(); vizPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>'; });
+        }
+
+        function vizStop() {
+            vizPlaying = false; vizAudio.pause(); stopBeliefs();
+            vizShiftEl.classList.remove('visible');
+            vizPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>';
+        }
+
+        vizAudio.addEventListener('timeupdate', updateKaraoke);
+        vizAudio.addEventListener('timeupdate', () => { if (vizAudio.currentTime >= 60) { vizStop(); setTimeout(() => vizLoad((vizCur + 1) % VIZ_DATA.length), 2500); } });
+        vizAudio.addEventListener('ended', () => { vizStop(); setTimeout(() => vizLoad((vizCur + 1) % VIZ_DATA.length), 2500); });
+        vizPlayBtn.addEventListener('click', () => { if (vizPlaying) vizStop(); else vizPlay(); });
+        document.querySelectorAll('.viz-pill').forEach(p => p.addEventListener('click', () => vizLoad(parseInt(p.dataset.viz))));
+
+        vizLoad(0);
+    })();
+
     // ═══════════════════
     // Form interactions
     // ═══════════════════
@@ -2244,10 +2706,58 @@
         }
     }
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    function revealOnScroll() { reveals.forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight-150) el.classList.add('visible'); }); }
-    window.addEventListener('scroll', revealOnScroll); revealOnScroll();
+    // ── Section nav: always visible, toggle dark/cream mode ──
+    (function initSectionNav() {
+        const nav = document.getElementById('sectionNav');
+        const links = nav.querySelectorAll('a');
+        const sectionLinks = Array.from(links).filter(a => a.getAttribute('href').startsWith('#'));
+        const sectionIds = sectionLinks.map(a => a.getAttribute('href').slice(1));
+        const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateNav() {
+            const scrollY = window.scrollY;
+            const heroEnd = document.querySelector('.sky-fade-into-content');
+            const threshold = heroEnd ? heroEnd.offsetTop - 200 : 600;
+
+            // Toggle cream background when past hero
+            const isCream = scrollY > threshold;
+            nav.classList.toggle('cream', isCream);
+
+            // Hide original header when section nav takes over
+            const header = document.querySelector('.header');
+            if (header) header.style.opacity = isCream ? '0' : '1';
+
+            // Track active section
+            let activeId = '';
+            for (const section of sections) {
+                if (section.offsetTop - 200 <= scrollY) {
+                    activeId = section.id;
+                }
+            }
+            sectionLinks.forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
+            });
+        }
+
+        window.addEventListener('scroll', updateNav, { passive: true });
+        updateNav();
+    })();
+
+    // Scroll reveal — staggered child animations
+    const revealSections = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const children = entry.target.querySelectorAll('[data-anim]');
+            children.forEach((child, i) => {
+                setTimeout(() => {
+                    child.classList.add('anim-visible');
+                }, i * 120);
+            });
+            revealObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    revealSections.forEach(el => revealObserver.observe(el));
 
     // Header blur
     const header = document.getElementById('header');
@@ -2256,128 +2766,74 @@
     // ── Reviews Carousel ──
     const REVIEWS = [
         {
-            quote: "I've read Attached, I've done therapy, I understand the anxious attachment thing intellectually. What surprised me about Daydream is it didn't try to teach me anything. It showed me a version of myself who doesn't operate from that place anymore. And it wasn't vague or preachy. It was specific to my stuff.",
-            author: "F27",
+            quote: "It showed me a version of myself who doesn't operate from that place anymore. Specific to my stuff, not generic.",
+            author: "F27, Sarah",
             subtitle: "Anxious Attachment",
-            avatar: "avatars/cat-anxious.png",
-            full: "I've read Attached, I've done therapy, I understand the anxious attachment thing intellectually. What surprised me about Daydream is it didn't try to teach me anything. It showed me a version of myself who doesn't operate from that place anymore. And it wasn't vague or preachy. It was specific to my stuff.\n\nThe story it created about my future self, how she moves through her day, how she handles the exact situations that send me into a spiral, it felt real. Not aspirational. Just calm.\n\nI've been using it for about two months. I'm not gonna pretend I'm a different person. But there was a moment last week where I felt the anxiety start and instead of acting on it I was able to respond to it differently, similar to how the visualized version of me responds to anxiety."
+            avatar: "avatars/cat-anxious.png"
         },
         {
-            quote: "Making progress is one thing but training my mind to believe I was an independent founder was another thing. Coaching and journaling helped but Daydream made me believe I am who I say I am.",
-            author: "M26",
+            quote: "Coaching and journaling helped but Daydream made me believe I am who I say I am.",
+            author: "M26, James",
             subtitle: "Starting a Company",
-            avatar: "avatars/wolf-founder.png",
-            full: "I left my tech job 8 months ago to start a company. Making progress is one thing but training my mind to believe I was an independent founder was another thing. Coaching and journaling helped but Daydream made me believe I am who I say I am.\n\nThe first visualization it created of my future self, the version of me who's already built the company, already navigated the uncertainty, something clicked. It wasn't generic motivational stuff. It felt specific to my situation. Like it understood the exact gap I was sitting in.\n\nI've been using it daily for about 3 weeks. The main shift is I stopped asking \"am I the kind of person who can do this?\" and started asking \"what would that version of me do right now?\" I make decisions faster now. I second guess less. It's not magic but it's the most useful thing I've found for the imposter syndrome stuff specifically."
+            avatar: "avatars/wolf-founder.png"
         },
         {
-            quote: "This picks up exactly where therapy left off. Therapy is great at processing the past. It's not great at helping you feel who you're becoming. That's what Daydream does.",
-            author: "F31",
+            quote: "Therapy is great at processing the past. It's not great at helping you feel who you're becoming. That's what this does.",
+            author: "F31, Priya",
             subtitle: "Post-Therapy Plateau",
-            avatar: "avatars/owl-therapy.png",
-            full: "I did 3 years of therapy. Genuinely helpful. I understand my attachment patterns, I know where my anxiety comes from, I can name the narratives I inherited from my parents. But knowing all of that didn't make me different. I'd sit in session, have a breakthrough, and then go home and act exactly the same way.\n\nI wasn't looking for a replacement for therapy. I was looking for something that does what therapy doesn't, which is actually make the future feel tangible. Therapy is great at processing the past. It's not great at helping you feel who you're becoming. That's what Daydream does.\n\nThe stories it generates about my future self are weirdly resonant. Not generic \"you'll be confident and successful\" stuff. It picks up on the specific things I'm stuck on and shows me what it looks like on the other side. I still do therapy. But this fills a gap I didn't know how to articulate before."
+            avatar: "avatars/owl-therapy.png"
         },
         {
-            quote: "Helped me stop grieving the old me. The visualization of my future self as a designer, someone who still has the analytical rigor from law but channels it differently, that was the first time the new career felt like me.",
-            author: "F36",
+            quote: "The first time the new career felt like me and not just something I was trying on.",
+            author: "F36, Claire",
             subtitle: "Career Change",
-            avatar: "avatars/butterfly-career.png",
-            full: "I was a litigation attorney for 12 years. Left last year to pivot into UX design. Rationally I know it was the right call. Emotionally it felt like losing a part of myself. My entire identity, how I introduced myself, how I thought, how I argued, was built around being a lawyer. I didn't know who I was without it.\n\nA friend sent me Daydream and I was skeptical. AI for identity work? But the intake conversation was surprisingly deep. It didn't just ask what I wanted to do next. It asked about the parts of my old identity I was mourning and the parts I was relieved to leave behind.\n\nThe visualization of my future self as a designer, someone who still has the analytical rigor from law but channels it differently, that was the first time the new career felt like me and not just something I was trying on. Four stars because I wish the app reminded me to come back. I forget sometimes, and then when I do return I wonder why I waited."
+            avatar: "avatars/butterfly-career.png"
         },
         {
-            quote: "I needed to figure out who I am again. This helped. It held space for where I actually was while also pulling me toward something new.",
-            author: "F38",
+            quote: "It held space for where I actually was while pulling me toward something new.",
+            author: "F38, Rachel",
             subtitle: "Divorce",
-            avatar: "avatars/hawk-divorce.png",
-            full: "Going through a divorce at 38 is disorienting in a way that's hard to explain. Half my decisions for the last decade were made as part of a \"we.\" Suddenly there's no we. Just me. And I didn't really know who that was anymore.\n\nEvery resource I found was about healing, coping, moving on. Daydream was the only thing that asked who I want to become now that I get to choose. And it didn't do it in a toxic positivity way. It held space for where I actually was while also pulling me toward something new.\n\nThe conversations feel like talking to something that understands I'm not broken. I'm just in between. I don't know why that reframe helped so much but it did."
+            avatar: "avatars/hawk-divorce.png"
         },
         {
-            quote: "I've tried basically everything. This actually felt new. Instead of 'do these behaviors and you'll become that person,' it's more like 'connect with that person first and the behaviors start to make sense.'",
-            author: "M32",
+            quote: "Connect with that person first and the behaviors start to make sense. Nothing else does this.",
+            author: "M32, Daniel",
             subtitle: "Self-Improvement",
-            avatar: "avatars/bear-selfimprovement.png",
-            full: "Atomic Habits. The Mountain Is You. 75 Hard. Cold plunges. Therapy. Coaching. Meditation retreats. I've done a lot. Most of it works for a few weeks and then I slide back. Not because I lack discipline, but because the new habits never really felt like mine. They felt like things I was doing on top of the same person.\n\nDaydream flipped it. Instead of \"do these behaviors and you'll become that person,\" it's more like \"connect with that person first and the behaviors start to make sense.\" I've read about identity based behavior change before but nothing ever made it feel concrete until this.\n\nTaking off a star because the app could be more polished and I wish there was a better mobile experience. But the core of what it does? I haven't found anything else like it."
+            avatar: "avatars/bear-selfimprovement.png"
         },
         {
-            quote: "Surprisingly not bullshit. The future-self story it generated had details that felt uncomfortably accurate. Not in a cold-reading way, but like it had connected dots I hadn't connected myself.",
-            author: "M30",
+            quote: "It connected dots I hadn't connected myself. Surprisingly not bullshit.",
+            author: "M30, Alex",
             subtitle: "Career Stagnation",
-            avatar: "avatars/fox-skeptic.png",
-            full: "I'm an ML engineer. I went in fully expecting to hate this. \"AI identity transformation\" sounds like it was named by a pitch deck generator. But I was going through a rough patch, career stagnation, questioning a lot of things, and a friend I respect told me to try it.\n\nThe intake was better than I expected. The visualization was... actually affecting? I felt something I didn't anticipate. The future-self story it generated had details that felt uncomfortably accurate. Not in a cold-reading way, but like it had connected dots I hadn't connected myself.\n\nI'm giving it 3 stars because I've only used it a week and I don't trust my own honeymoon phase enthusiasm. But I will say this: I've used ChatGPT for similar conversations before and it felt hollow. This felt different. There's clearly something more intentional in how it's designed. I'll update this in a month."
+            avatar: "avatars/fox-skeptic.png"
         },
         {
-            quote: "I'm recommending this to certain clients. It's doing something I can't do well in a 50-minute session: create a vivid, emotionally felt experience of a client's future self.",
-            author: "F44",
+            quote: "It creates a vivid, emotionally felt experience of a client's future self. I'm recommending it.",
+            author: "F44, Dr. Nair",
             subtitle: "Licensed Therapist",
-            avatar: "avatars/deer-therapist.png",
-            full: "I'm a licensed therapist specializing in life transitions. A client mentioned Daydream and I tried it myself before saying anything about it. I was skeptical. Most AI mental health tools are either irresponsible or shallow.\n\nDaydream is neither. It's not trying to be therapy, which is honestly the main reason I trust it. It's doing something I can't do well in a 50-minute session: create a vivid, emotionally felt experience of a client's future self. I can help someone understand their patterns. I can't generate that felt sense of who they're becoming. This can.\n\nThree of my clients use it between sessions now. The identity pressure point framework maps onto how I already think about change. I'm cautious about recommending tech to clients but this one has earned it."
+            avatar: "avatars/deer-therapist.png"
         },
     ];
 
-    // ── Modal logic ──
-    const modalOverlay = document.getElementById('reviewModal');
-    const modalAuthor = document.getElementById('modalAuthor');
-    const modalText = document.getElementById('modalText');
-
-    function openReviewModal(idx) {
-        const r = REVIEWS[idx];
-        modalAuthor.innerHTML = '<img class="modal-avatar" src="' + r.avatar + '" alt="' + r.author + '"><div class="modal-author-info"><span class="modal-author-name">' + r.author + '</span><span class="modal-author-subtitle">' + r.subtitle + '</span></div>';
-        modalText.innerHTML = r.full.split('\\n\\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
-        modalOverlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    document.getElementById('reviewModalClose').addEventListener('click', function() {
-        modalOverlay.classList.remove('open');
-        document.body.style.overflow = '';
-    });
-    modalOverlay.addEventListener('click', function(e) {
-        if (e.target === modalOverlay) {
-            modalOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-    });
-
-    // ── Carousel logic ──
-    (function initReviewsCarousel() {
-        const track = document.getElementById('reviewsTrack');
-        const dots = document.getElementById('reviewDots');
-        if (!track || !dots || REVIEWS.length === 0) return;
+    // ── Reviews strip auto-rotate ──
+    (function initReviewsStrip() {
+        const container = document.getElementById('reviewsStripInner');
+        if (!container || REVIEWS.length === 0) return;
 
         REVIEWS.forEach(function(r, i) {
-            const card = document.createElement('div');
-            card.className = 'review-card' + (i === 0 ? ' active' : '');
-            card.innerHTML = '<div class="review-card-header"><img class="review-avatar" src="' + r.avatar + '" alt="' + r.author + '"><div class="review-author-info"><span class="review-author">' + r.author + '</span><span class="review-separator">&middot;</span><span class="review-subtitle">' + r.subtitle + '</span></div></div><p class="review-quote">' + r.quote + '</p>';
-            card.addEventListener('click', function() { openReviewModal(i); });
-            track.appendChild(card);
-
-            const dot = document.createElement('button');
-            dot.className = 'review-dot' + (i === 0 ? ' active' : '');
-            dot.addEventListener('click', function() { goTo(i); });
-            dots.appendChild(dot);
+            const item = document.createElement('div');
+            item.className = 'review-strip-item' + (i === 0 ? ' active' : '');
+            item.innerHTML = '<span class="review-strip-quote">\u201C' + r.quote + '\u201D</span><span class="review-strip-author">\u2014 ' + r.author + '</span>';
+            container.appendChild(item);
         });
 
         let current = 0;
-        let timer = setInterval(advance, 6000);
-
-        function goTo(idx) {
-            const cards = track.querySelectorAll('.review-card');
-            const allDots = dots.querySelectorAll('.review-dot');
-            cards[current].classList.remove('active');
-            cards[current].classList.add('exiting');
-            allDots[current].classList.remove('active');
-            cards.forEach(function(c) { if (!c.classList.contains('active')) setTimeout(function() { c.classList.remove('exiting'); }, 500); });
-            current = idx;
-            cards[current].classList.remove('exiting');
-            cards[current].classList.add('active');
-            allDots[current].classList.add('active');
-            clearInterval(timer);
-            timer = setInterval(advance, 6000);
-        }
-
-        function advance() { goTo((current + 1) % REVIEWS.length); }
-
-        document.getElementById('reviewPrev').addEventListener('click', function() { goTo((current - 1 + REVIEWS.length) % REVIEWS.length); });
-        document.getElementById('reviewNext').addEventListener('click', function() { goTo((current + 1) % REVIEWS.length); });
+        setInterval(function() {
+            const items = container.querySelectorAll('.review-strip-item');
+            items[current].classList.remove('active');
+            current = (current + 1) % REVIEWS.length;
+            items[current].classList.add('active');
+        }, 4000);
     })();
 
     </script>
