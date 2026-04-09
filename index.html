@@ -317,18 +317,19 @@
             cursor: pointer;
             text-decoration: none;
             letter-spacing: 0.02em;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
         }
-        .hero-cta::after {
-            content: '\2192';
+        .hero-cta:hover { color: #a08050; }
+        .hero-cta-typed {
+            border-right: 2px solid var(--gold);
+            padding-right: 2px;
+            animation: ctaBlink 0.8s step-end infinite;
+        }
+        @keyframes ctaBlink { 0%,100%{border-color:var(--gold)}50%{border-color:transparent} }
+        .hero-cta-arrow {
             transition: transform 0.3s ease;
         }
-        .hero-cta:hover {
-            color: #a08050;
-        }
-        .hero-cta:hover::after {
-            transform: translateX(3px);
-        }
+        .hero-cta:hover .hero-cta-arrow { transform: translateX(3px); }
 
         .hero-stores {
             display: flex;
@@ -376,6 +377,9 @@
             border-radius: 16px;
             backdrop-filter: blur(20px);
             overflow: hidden;
+            height: 340px;
+            display: flex;
+            flex-direction: column;
         }
 
         .viz-top {
@@ -396,9 +400,7 @@
 
         .viz-text-area {
             padding: 2rem 2rem;
-            height: 180px;
-            min-height: 180px;
-            max-height: 180px;
+            flex: 1;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
@@ -1871,7 +1873,7 @@
         <div class="hero-left">
             <h1 class="hero-headline">Become who you<br><em>already know</em> you are</h1>
             <p class="hero-sub">Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be.</p>
-            <a href="https://exp.daydreamers.app/" class="hero-cta">Start your first session</a>
+            <a href="https://exp.daydreamers.app/" class="hero-cta"><span class="hero-cta-typed" id="heroCta"></span><span class="hero-cta-arrow">→</span></a>
             <div class="hero-stores">
                 <div class="hero-store"><svg class="hero-store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><span>iOS &middot; May 2026</span></div>
                 <div class="hero-store"><svg class="hero-store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.04l8.43-15.06.03-.06 3.36-6.01c.11-.2.29-.35.51-.38.22-.04.43.04.57.21l.05.06 1.41 2.1-1.42 2.53L7.69 21.5l-3.37 1.9c-.32.18-.72.07-.9-.25-.1-.18-.12-.4-.02-.58l.02-.04-.24-.49zm5.4-2.74L17.15 4.08l1.79-3.19c.11-.2.29-.35.51-.38.22-.04.43.04.57.21l4.7 8.39c.18.32.07.72-.25.9l-.06.03H9.3l-.72 1.27zm.01-5.4h12.02l-6.01-10.73-6.01 10.73z"/></svg><span>Android &middot; June 2026</span></div>
@@ -2530,6 +2532,74 @@
         document.querySelectorAll('.viz-pill').forEach(p => p.addEventListener('click', () => vizLoad(parseInt(p.dataset.viz))));
 
         vizLoad(0);
+    })();
+
+    // ═══════════════════════════════════
+    // Typewriter CTA
+    // ═══════════════════════════════════
+    (function initTypewriterCTA() {
+        const el = document.getElementById('heroCta');
+        if (!el) return;
+
+        const phrases = [
+            "Surface a hidden belief",
+            "Surface a limiting belief",
+            "Surface an aligned belief",
+            "Think, feel, and act in Alignment",
+            "Think, feel, and act with certainty",
+            "Rewire limiting beliefs",
+            "Reframe perspectives with positivity",
+            "You already know where you're going",
+        ];
+
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let deleting = false;
+        let currentText = '';
+
+        // Find shared prefix length between current phrase and next
+        function sharedPrefix(a, b) {
+            let i = 0;
+            while (i < a.length && i < b.length && a[i] === b[i]) i++;
+            return i;
+        }
+
+        function tick() {
+            const phrase = phrases[phraseIdx];
+            const nextPhrase = phrases[(phraseIdx + 1) % phrases.length];
+            const shared = sharedPrefix(phrase, nextPhrase);
+
+            if (!deleting) {
+                // Typing forward
+                charIdx++;
+                currentText = phrase.slice(0, charIdx);
+                el.textContent = currentText;
+                if (charIdx >= phrase.length) {
+                    // Pause at full phrase, then start deleting
+                    setTimeout(() => { deleting = true; tick(); }, 2000);
+                    return;
+                }
+                setTimeout(tick, 60 + Math.random() * 40);
+            } else {
+                // Deleting — only back to shared prefix with next phrase
+                charIdx--;
+                if (charIdx <= shared) {
+                    // Done deleting, move to next phrase, start typing from shared prefix
+                    deleting = false;
+                    phraseIdx = (phraseIdx + 1) % phrases.length;
+                    charIdx = shared;
+                    currentText = phrases[phraseIdx].slice(0, charIdx);
+                    el.textContent = currentText;
+                    setTimeout(tick, 300);
+                    return;
+                }
+                currentText = phrase.slice(0, charIdx);
+                el.textContent = currentText;
+                setTimeout(tick, 25);
+            }
+        }
+
+        tick();
     })();
 
     // ═══════════════════════════════════
