@@ -318,12 +318,16 @@
             text-decoration: none;
             letter-spacing: 0.02em;
             transition: color 0.3s ease;
+            height: 1.5em;
+            min-height: 1.5em;
         }
         .hero-cta:hover { color: #a08050; }
         .hero-cta-typed {
             border-right: 2px solid var(--gold);
             padding-right: 2px;
             animation: ctaBlink 0.8s step-end infinite;
+            min-width: 1px;
+            display: inline-block;
         }
         @keyframes ctaBlink { 0%,100%{border-color:var(--gold)}50%{border-color:transparent} }
         .hero-cta-arrow {
