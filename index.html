@@ -152,10 +152,11 @@
 
         /* Blog link — distinct green */
         .section-nav a.nav-blog {
-            color: rgba(139, 179, 139, 0.6);
+            color: rgba(139, 179, 139, 0.7);
             font-style: italic;
+            font-weight: 500;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
         .section-nav a.nav-blog:hover { color: rgba(139, 179, 139, 0.9); }
         .section-nav.cream a.nav-blog { color: rgba(100, 140, 100, 0.55); }
@@ -261,12 +262,12 @@
         .hero {
             position: relative;
             z-index: 1;
-            min-height: 92vh;
+            min-height: 70vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            padding: 6rem 4rem 4rem;
-            gap: 4rem;
+            padding: 5rem 4rem 1.5rem;
+            gap: 3.5rem;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -299,27 +300,34 @@
             line-height: 1.7;
             margin-bottom: 2rem;
             max-width: 400px;
+            text-align: left;
         }
 
         .hero-cta {
             display: inline-flex;
             align-items: center;
-            padding: 0.75rem 1.75rem;
-            background: linear-gradient(135deg, var(--gold), #a08050);
-            color: #fff;
+            gap: 0.4rem;
+            padding: 0;
+            background: none;
+            color: var(--gold);
             font-family: 'DM Sans', sans-serif;
             font-size: 0.9rem;
             font-weight: 400;
             border: none;
-            border-radius: 50px;
             cursor: pointer;
             text-decoration: none;
             letter-spacing: 0.02em;
             transition: all 0.3s ease;
         }
+        .hero-cta::after {
+            content: '\2192';
+            transition: transform 0.3s ease;
+        }
         .hero-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 30px rgba(196,168,124,0.25);
+            color: #a08050;
+        }
+        .hero-cta:hover::after {
+            transform: translateX(3px);
         }
 
         .hero-proof {
@@ -345,20 +353,28 @@
         }
 
         .viz-top {
-            padding: 0.7rem 1.1rem;
+            padding: 0.65rem 1rem;
             border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex; align-items: center; gap: 0.5rem;
         }
-        .viz-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: vizPulse 2s ease-in-out infinite; }
+        .viz-top-left {
+            display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;
+        }
+        .viz-dot { width: 7px; height: 7px; border-radius: 50%; background: #c45050; animation: vizPulse 2s ease-in-out infinite; }
         @keyframes vizPulse { 0%,100%{opacity:0.4}50%{opacity:1} }
         .viz-label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
         .viz-sep { color: rgba(255,255,255,0.12); font-size: 0.6rem; }
-        .viz-topic { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: rgba(255,255,255,0.45); }
+        .viz-top-pills {
+            display: flex; align-items: center; gap: 0.4rem; margin-left: auto;
+        }
 
         .viz-text-area {
             padding: 2rem 2rem;
-            height: 160px;
+            height: 180px;
+            min-height: 180px;
+            max-height: 180px;
             display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
 
         .viz-sentence {
@@ -415,9 +431,8 @@
         .viz-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s linear; }
         .viz-time { font-size: 0.62rem; color: rgba(255,255,255,0.2); font-variant-numeric: tabular-nums; }
 
-        .viz-selector { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
         .viz-pill {
-            padding: 0.3rem 0.75rem; font-size: 0.68rem; color: rgba(255,255,255,0.3);
+            padding: 0.25rem 0.6rem; font-size: 0.62rem; color: rgba(255,255,255,0.3);
             background: none; border: 1px solid rgba(255,255,255,0.06); border-radius: 50px;
             cursor: pointer; transition: all 0.3s; white-space: nowrap;
             font-family: 'DM Sans', sans-serif;
@@ -436,11 +451,128 @@
         .section-bg-gradient { background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%); }
         .section-bg-gradient-up { background: linear-gradient(180deg, var(--cream-dark) 0%, var(--cream) 100%); }
 
+        /* ── Belief Marquee ── */
+        .belief-marquee-section {
+            position: relative;
+            z-index: 1;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .belief-marquee-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .belief-marquee-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .belief-marquee-row {
+            display: flex;
+            gap: 0;
+            white-space: nowrap;
+            animation: marqueeScroll var(--marquee-dur, 60s) linear infinite;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .belief-marquee-row.reverse {
+            animation-direction: reverse;
+        }
+
+        .belief-marquee-row + .belief-marquee-row {
+            margin-top: 0.6rem;
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        .belief-marquee-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0;
+            flex-shrink: 0;
+        }
+
+        .belief-marquee-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.92rem;
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255,255,255,0.4);
+            white-space: nowrap;
+        }
+
+        .belief-marquee-sep {
+            color: rgba(255,255,255,0.15);
+            margin: 0 1.5rem;
+            font-size: 0.7rem;
+        }
+
+        .belief-marquee-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .belief-marquee-trust {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-bottom: 0.4rem;
+        }
+        .belief-marquee-trust .trust-star {
+            color: var(--gold);
+            font-size: 0.85rem;
+        }
+        body[data-sky-dark="false"] .belief-marquee-trust {
+            color: rgba(30,25,20,0.4);
+        }
+
+        .belief-marquee-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255,255,255,0.25);
+        }
+
+        /* Light sky overrides for marquee */
+        body[data-sky-dark="false"] .belief-marquee-title {
+            color: rgba(30,25,20,0.4);
+        }
+        body[data-sky-dark="false"] .belief-marquee-text {
+            color: rgba(30,25,20,0.35);
+        }
+        body[data-sky-dark="false"] .belief-marquee-sep {
+            color: rgba(30,25,20,0.12);
+        }
+        body[data-sky-dark="false"] .belief-marquee-tagline {
+            color: rgba(30,25,20,0.45);
+        }
+
+        /* Pause on hover */
+        .belief-marquee-row:hover {
+            animation-play-state: paused;
+        }
+
         .sky-fade-into-content {
             position: relative; z-index: 1;
-            height: 180px;
+            height: auto;
             background: linear-gradient(to bottom, transparent 0%, var(--cream) 100%);
             margin-top: -1px;
+            padding: 3rem 0 2rem;
         }
 
         .content-fade-into-sky {
@@ -1327,7 +1459,7 @@
 
         @media (max-width: 1000px) {
             .hero { grid-template-columns: 1fr; padding: 6rem 2rem 3rem; gap: 2.5rem; min-height: auto; }
-            .hero-left { max-width: 100%; text-align: center; }
+            .hero-left { max-width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
             .hero-sub { margin: 0 auto 2rem; }
             .hero-proof { justify-content: center; }
             .viz-card-wrap { max-width: 100%; }
@@ -1448,17 +1580,21 @@
         }
         /* Viz card — light sky */
         body[data-sky-dark="false"] .viz-card {
-            background: rgba(0,0,0,0.04);
-            border-color: rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            backdrop-filter: blur(20px);
         }
         body[data-sky-dark="false"] .viz-top {
-            border-bottom-color: rgba(0,0,0,0.06);
+            border-bottom-color: rgba(0,0,0,0.08);
         }
         body[data-sky-dark="false"] .viz-sep {
-            color: rgba(30,25,20,0.15);
+            color: rgba(30,25,20,0.3);
+        }
+        body[data-sky-dark="false"] .viz-label {
+            color: #8b7355;
         }
         body[data-sky-dark="false"] .viz-topic {
-            color: rgba(30,25,20,0.45);
+            color: rgba(30,25,20,0.6);
         }
         body[data-sky-dark="false"] .viz-sentence .word {
             color: rgba(30,25,20,0.2);
@@ -1494,16 +1630,18 @@
             color: rgba(30,25,20,0.25);
         }
         body[data-sky-dark="false"] .viz-pill {
-            color: rgba(30,25,20,0.3);
-            border-color: rgba(0,0,0,0.06);
+            color: rgba(30,25,20,0.45);
+            border-color: rgba(0,0,0,0.12);
+            background: rgba(0,0,0,0.03);
         }
         body[data-sky-dark="false"] .viz-pill:hover {
-            color: rgba(30,25,20,0.5);
-            border-color: rgba(0,0,0,0.12);
+            color: rgba(30,25,20,0.65);
+            border-color: rgba(0,0,0,0.18);
         }
         body[data-sky-dark="false"] .viz-pill.active {
             color: #8b7355;
-            border-color: rgba(139,115,85,0.3);
+            border-color: rgba(139,115,85,0.4);
+            background: rgba(139,115,85,0.08);
         }
         /* Section nav on light sky (hero only, before cream) */
         body[data-sky-dark="false"] .section-nav:not(.cream) a {
@@ -1709,16 +1847,19 @@
             <h1 class="hero-headline">Become who you<br><em>already know</em> you are</h1>
             <p class="hero-sub">Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be.</p>
             <a href="https://exp.daydreamers.app/" class="hero-cta">Start your first session</a>
-            <div class="hero-proof"><span class="trust-star">&#9733;</span> 4.9 &middot; Trusted by 5K+ people</div>
         </div>
 
         <div class="viz-card-wrap">
             <div class="viz-card">
                 <div class="viz-top">
-                    <div class="viz-dot"></div>
-                    <span class="viz-label">Live Session</span>
-                    <span class="viz-sep">&middot;</span>
-                    <span class="viz-topic" id="vizTopic"></span>
+                    <div class="viz-top-left">
+                        <div class="viz-dot"></div>
+                    </div>
+                    <div class="viz-top-pills">
+                        <button class="viz-pill active" data-viz="0">The Courage to Stay Uncertain</button>
+                        <button class="viz-pill" data-viz="1">The Arithmetic of Desire</button>
+                        <button class="viz-pill" data-viz="2">Building Something Real</button>
+                    </div>
                 </div>
                 <div class="viz-text-area">
                     <div class="viz-sentence-wrap" id="vizSentenceWrap">
@@ -1736,17 +1877,24 @@
                     <span class="viz-time" id="vizTime">0:00</span>
                 </div>
             </div>
-            <div class="viz-selector">
-                <button class="viz-pill active" data-viz="0">The Courage to Stay Uncertain</button>
-                <button class="viz-pill" data-viz="1">The Arithmetic of Desire</button>
-                <button class="viz-pill" data-viz="2">Building Something Real</button>
-            </div>
             <audio id="vizAudio" preload="auto"></audio>
         </div>
     </section>
 
-    <!-- Transition: sky → cream -->
-    <div class="sky-fade-into-content"></div>
+    <!-- Transition: sky → cream (with belief marquee inside) -->
+    <div class="sky-fade-into-content">
+        <div class="belief-marquee-section">
+            <div class="belief-marquee-header">
+                <span class="belief-marquee-title">Limiting beliefs operate under the surface but are always being communicated in conversation</span>
+            </div>
+            <div class="belief-marquee-row" id="beliefRow1"></div>
+            <div class="belief-marquee-row reverse" id="beliefRow2"></div>
+            <div class="belief-marquee-footer">
+                <div class="belief-marquee-trust"><span class="trust-star">&#9733;</span> 4.9 &middot; Trusted by 5K+ people</div>
+                <span class="belief-marquee-tagline">Daydream first surfaces beliefs and then systematically shifts your relationship to them</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ══════════════════════════════════════════════ -->
     <!-- 2. SCIENCE (first section after hero) -->
@@ -2227,7 +2375,7 @@
         const vizWrapEl = document.getElementById('vizSentenceWrap');
         const vizProgEl = document.getElementById('vizProgress');
         const vizTimeEl = document.getElementById('vizTime');
-        const vizTopicEl = document.getElementById('vizTopic');
+        // vizTopic removed — pills in top bar show active story
         const vizPlayBtn = document.getElementById('vizPlay');
         const vizShiftEl = document.getElementById('vizShift');
         const vizShiftTextEl = document.getElementById('vizShiftText');
@@ -2320,7 +2468,7 @@
         async function vizLoad(i) {
             vizCur = i; curSentIdx = -1; vizPlaying = false;
             const v = VIZ_DATA[i];
-            vizTopicEl.textContent = v.topic;
+            // Topic shown via active pill
             const resp = await fetch(VIZ_TIMESTAMP_FILES[i]);
             const data = await resp.json();
             tsWords = data.words;
@@ -2355,6 +2503,71 @@
         document.querySelectorAll('.viz-pill').forEach(p => p.addEventListener('click', () => vizLoad(parseInt(p.dataset.viz))));
 
         vizLoad(0);
+    })();
+
+    // ═══════════════════════════════════
+    // Belief Marquee
+    // ═══════════════════════════════════
+    (function initBeliefMarquee() {
+        const beliefs = [
+            // Row 1 — mix of Karthik's + others
+            "I must perform perfectly to prove my worth",
+            "If I go all in and still fail, it will prove I am fundamentally not enough",
+            "Effort might not change anything — I could try and still fail",
+            "My inner life is not real enough to share — I am secretly pretending to be who I say I am",
+            "Tomorrow is safer because nothing can go wrong there",
+            "Attractive/successful people determine my worth",
+            "I need to be certain something is right before I can act on it",
+            "Everyone else got some manual I missed — I'm behind, and the gap might be too big to close",
+            "If I put something imperfect out there, it will confirm I'm not ready for this",
+            "Visibility means people can reject me, not just my work",
+            "Going deep will expose something I can't handle or don't want to find",
+            "Social situations are threatening — I am not safe around other people",
+            "I keep breaking promises to myself so my word doesn't mean anything anymore",
+            "A racing heart or stress means something is wrong with me or I'm failing",
+            // Row 2
+            "No one truly sees or walks the same path I'm on — I am fundamentally alone in what I'm building",
+            "If I imagine the pain ahead clearly enough, starting is not worth the cost",
+            "There are thousands of smarter developers, so why bother",
+            "My dreams can only survive if I protect them from other people's doubt and disbelief",
+            "Choosing myself and my dream means I am taking something away from the people I love",
+            "I can build, but I don't have what it takes to sell or get it into the world",
+            "Being watched means being evaluated for whether I'm smart enough to be here",
+            "When I feel stuck, the feeling itself is proof that I cannot solve this",
+            "Having everything I want is not something I'm actually allowed or able to have",
+            "Not knowing the path forward means I can't do it — smart people don't feel this lost",
+            "My thinking has no original value — I am only ever derivative of others",
+            "A full life requires sacrifice — wanting everything means I'll lose something that matters",
+            "The anxiety might be the engine — high standards through self-destruction is what got me here",
+            "If it was going to happen, it would have happened by now",
+        ];
+
+        function cleanBelief(text) {
+            return text.replace(/\s*[—–-]+\s*/g, ' ').trim();
+        }
+
+        function makeItem(text) {
+            return '<div class="belief-marquee-item"><span class="belief-marquee-text">\u201C' + cleanBelief(text) + '\u201D</span></div><span class="belief-marquee-sep">\u2022</span>';
+        }
+
+        const half = Math.ceil(beliefs.length / 2);
+        const row1Beliefs = beliefs.slice(0, half);
+        const row2Beliefs = beliefs.slice(half);
+
+        // Duplicate items for seamless loop
+        const row1Html = row1Beliefs.map(makeItem).join('') + row1Beliefs.map(makeItem).join('');
+        const row2Html = row2Beliefs.map(makeItem).join('') + row2Beliefs.map(makeItem).join('');
+
+        const r1 = document.getElementById('beliefRow1');
+        const r2 = document.getElementById('beliefRow2');
+        if (r1) r1.innerHTML = row1Html;
+        if (r2) r2.innerHTML = row2Html;
+
+        // Set animation duration based on content width
+        requestAnimationFrame(() => {
+            if (r1 && r1.scrollWidth > 0) r1.style.setProperty('--marquee-dur', Math.max(r1.scrollWidth / 300, 10) + 's');
+            if (r2 && r2.scrollWidth > 0) r2.style.setProperty('--marquee-dur', Math.max(r2.scrollWidth / 300, 10) + 's');
+        });
     })();
 
     // ═══════════════════
