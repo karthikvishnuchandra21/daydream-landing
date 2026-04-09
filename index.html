@@ -330,6 +330,32 @@
             transform: translateX(3px);
         }
 
+        .hero-stores {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+        .hero-store {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.35);
+        }
+        .hero-store-icon {
+            width: 14px;
+            height: 14px;
+            color: rgba(255,255,255,0.4);
+        }
+        body[data-sky-dark="false"] .hero-store {
+            color: rgba(30,25,20,0.35);
+        }
+        body[data-sky-dark="false"] .hero-store-icon {
+            color: rgba(30,25,20,0.4);
+        }
+
         .hero-proof {
             margin-top: 1.5rem;
             display: flex;
@@ -1829,7 +1855,6 @@
         </a>
         <a href="#science">Science</a>
         <a href="#walkthrough">How It Works</a>
-        <a href="#innerterrain">Inner Terrain</a>
         <a href="#mission">Mission</a>
         <a href="#becoming">Becoming</a>
         <a href="https://exp.daydreamers.app/">Get Started</a>
@@ -1847,6 +1872,10 @@
             <h1 class="hero-headline">Become who you<br><em>already know</em> you are</h1>
             <p class="hero-sub">Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be.</p>
             <a href="https://exp.daydreamers.app/" class="hero-cta">Start your first session</a>
+            <div class="hero-stores">
+                <div class="hero-store"><svg class="hero-store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><span>iOS &middot; May 2026</span></div>
+                <div class="hero-store"><svg class="hero-store-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.04l8.43-15.06.03-.06 3.36-6.01c.11-.2.29-.35.51-.38.22-.04.43.04.57.21l.05.06 1.41 2.1-1.42 2.53L7.69 21.5l-3.37 1.9c-.32.18-.72.07-.9-.25-.1-.18-.12-.4-.02-.58l.02-.04-.24-.49zm5.4-2.74L17.15 4.08l1.79-3.19c.11-.2.29-.35.51-.38.22-.04.43.04.57.21l4.7 8.39c.18.32.07.72-.25.9l-.06.03H9.3l-.72 1.27zm.01-5.4h12.02l-6.01-10.73-6.01 10.73z"/></svg><span>Android &middot; June 2026</span></div>
+            </div>
         </div>
 
         <div class="viz-card-wrap">
@@ -1998,9 +2027,7 @@
     <!-- ══════════════════════════════════ -->
     <!-- 5. TERRAIN DEMO (Interactive 3D) -->
     <!-- ══════════════════════════════════ -->
-    <div class="terrain-demo-section" id="innerterrain">
-        <iframe id="terrainIframe" data-src="terrain-3d.html" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer"></iframe>
-    </div>
+    <!-- Inner Terrain section removed -->
 
     <!-- Inline terrain module removed — using iframe to terrain-3d.html instead -->
     <script type="text/plain" id="terrain-module-disabled">
