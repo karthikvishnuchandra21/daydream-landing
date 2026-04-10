@@ -309,7 +309,7 @@
             gap: 0.4rem;
             padding: 0;
             background: none;
-            color: var(--gold);
+            color: #8b7355;
             font-family: 'DM Sans', sans-serif;
             font-size: 0.9rem;
             font-weight: 400;
@@ -321,15 +321,15 @@
             height: 1.5em;
             min-height: 1.5em;
         }
-        .hero-cta:hover { color: #a08050; }
+        .hero-cta:hover { color: #6e5a42; }
         .hero-cta-typed {
-            border-right: 2px solid var(--gold);
+            border-right: 2px solid #8b7355;
             padding-right: 2px;
             animation: ctaBlink 0.8s step-end infinite;
             min-width: 1px;
             display: inline-block;
         }
-        @keyframes ctaBlink { 0%,100%{border-color:var(--gold)}50%{border-color:transparent} }
+        @keyframes ctaBlink { 0%,100%{border-color:#8b7355}50%{border-color:transparent} }
         .hero-cta-arrow {
             transition: transform 0.3s ease;
         }
@@ -1612,6 +1612,7 @@
             .viz-card-wrap { max-width: 100%; }
         }
         @media (max-width: 768px) {
+            .header { display: none !important; }
             .nav-link-desktop { display: none !important; }
             .section-nav .nav-right { display: none !important; }
             .nav-hamburger { display: flex; }
