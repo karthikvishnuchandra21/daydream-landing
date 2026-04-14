@@ -3026,15 +3026,6 @@
 
     function drawCelestialBody(ctx, p, minute, W, H, time) {
         const t = minute/1440;
-        if (p.stars > 0.05) {
-            let mT; if (t>=0.792) mT=(t-0.792)/0.458; else if(t<0.25) mT=(t+0.208)/0.458; else mT=-1;
-            if (mT>=0&&mT<=1) {
-                const mx=W*(0.15+0.7*mT),ma=Math.sin(mT*Math.PI),my=H*0.55-ma*H*0.42,mr=18;
-                ctx.save(); const g=ctx.createRadialGradient(mx,my,mr,mx,my,mr*5); g.addColorStop(0,rgba([255,252,240],0.12*p.stars)); g.addColorStop(1,rgba([255,252,240],0)); ctx.fillStyle=g; ctx.fillRect(mx-mr*6,my-mr*6,mr*12,mr*12);
-                ctx.globalAlpha=Math.min(1,p.stars*1.5); ctx.fillStyle='#fffcf0'; ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.fill();
-                ctx.globalCompositeOperation='destination-out'; ctx.globalAlpha=0.85; ctx.beginPath(); ctx.arc(mx+7,my-3,mr*0.85,0,Math.PI*2); ctx.fill(); ctx.restore();
-            }
-        }
         const sR=360,sS=1140;
         if (minute>=sR&&minute<=sS) {
             const sT=(minute-sR)/(sS-sR),sx=W*(0.15+0.7*sT),sa=Math.sin(sT*Math.PI),sy=H*0.72-sa*H*0.55,hp=1-sa,sr=14+hp*8;
