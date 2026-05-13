@@ -1094,7 +1094,8 @@ section {
   margin: 0 auto 2.5rem;
   line-height: 1.5;
 }
-.lp-final .hero-cta-stack { margin-bottom: 1.5rem; }
+.lp-final .hero-cta-stack { margin-bottom: 1.5rem; align-items: center; }
+.lp-final .android-waitlist { margin-top: 10px; margin-left: auto; margin-right: auto; }
 .lp-final .lp-signin { font-size: 0.95rem; }
 
 /* ============================================================
@@ -1413,11 +1414,6 @@ footer {
           <span class="sep"></span>
           <span class="when">July 2026</span>
         </div>
-        <form class="android-waitlist" id="android-waitlist" onsubmit="submitAndroidWaitlist(event)">
-          <input type="email" name="email" id="android-waitlist-email" required placeholder="you@email.com" aria-label="Email for Android waitlist" autocomplete="email" />
-          <button type="submit" aria-label="Notify me when Android ships">Notify me</button>
-          <span class="android-waitlist-thanks" id="android-waitlist-thanks">Thanks — we'll email you.</span>
-        </form>
       </div>
       </div>
       <div class="hero-trial">
@@ -1557,6 +1553,11 @@ footer {
         <span class="sep"></span>
         <span class="when">July 2026</span>
       </div>
+      <form class="android-waitlist" id="android-waitlist" onsubmit="submitAndroidWaitlist(event)" aria-label="Notify me when Android ships">
+        <input type="email" name="email" id="android-waitlist-email" required placeholder="you@email.com" aria-label="Email for Android waitlist" autocomplete="email" />
+        <button type="submit">Notify me</button>
+        <span class="android-waitlist-thanks" id="android-waitlist-thanks">Thanks — we'll email you when Android ships.</span>
+      </form>
     </div>
     <p class="lp-signin">
       Already have an account? <a class="lp-link" href="https://exp.daydreamers.app/login?mode=signin">Sign in</a>
