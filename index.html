@@ -758,7 +758,7 @@ section {
   transform: translate(-50%, 0) rotate(0deg) scale(1);
   z-index: 3;
   opacity: 1;
-  cursor: default;
+  cursor: pointer;
 }
 .hero-phone.back-left {
   transform: translate(calc(-50% - 18%), 5%) rotate(-3.5deg) scale(0.93);
@@ -1430,7 +1430,7 @@ footer {
     </div>
 
     <div class="lp-hero-product">
-      <div class="hero-phone-stack" role="group" aria-label="App screenshots. Tap a back card to bring it forward">
+      <div class="hero-phone-stack" role="group" aria-label="App screenshots. Tap any card to cycle through them">
         <div class="hero-phone back-left" tabindex="0" role="button" aria-label="Show visualizations screen" style="animation-delay: -8s">
           <img src="screenshots/screenshot-5.png" alt="Visualizations proven to make aligned action easier" />
         </div>
@@ -2044,12 +2044,31 @@ footer {
       requestAnimationFrame(draw);
     })();
 
-    // Hero phone stack: click any back card to bring it forward
+    // Hero phone stack:
+    //  - click a BACK card → it swaps with the front
+    //  - click the FRONT card → the whole stack rotates one step
+    //    (back-left → front, back-right → back-left, front → back-right),
+    //    so clicking the front cycles through all 3 phones in 3 taps
     (function () {
       const stack = document.querySelector('.hero-phone-stack');
       if (!stack) return;
+
+      function rotateStack() {
+        const front = stack.querySelector('.hero-phone.front');
+        const backLeft = stack.querySelector('.hero-phone.back-left');
+        const backRight = stack.querySelector('.hero-phone.back-right');
+        if (!front || !backLeft || !backRight) return;
+        front.classList.remove('front'); front.classList.add('back-right');
+        backLeft.classList.remove('back-left'); backLeft.classList.add('front');
+        backRight.classList.remove('back-right'); backRight.classList.add('back-left');
+      }
+
       function swapToFront(clicked) {
-        if (!clicked || clicked.classList.contains('front')) return;
+        if (!clicked) return;
+        if (clicked.classList.contains('front')) {
+          rotateStack();
+          return;
+        }
         const front = stack.querySelector('.hero-phone.front');
         if (!front) return;
         const clickedPos = clicked.classList.contains('back-left') ? 'back-left' : 'back-right';
@@ -2058,6 +2077,7 @@ footer {
         clicked.classList.remove(clickedPos);
         clicked.classList.add('front');
       }
+
       stack.querySelectorAll('.hero-phone').forEach((card) => {
         card.addEventListener('click', () => swapToFront(card));
         card.addEventListener('keydown', (e) => {
