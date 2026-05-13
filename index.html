@@ -2195,15 +2195,30 @@ footer {
       });
     })();
 
-    // Android waitlist — frontend-only thank-you for now.
-    // TODO: wire to a real backend (Formspree, ConvertKit, etc.) before public launch.
-    function submitAndroidWaitlist(e) {
+    // Android waitlist → POSTs to the dd-beta /api/waitlist endpoint,
+    // which writes into the same Supabase `waitlist` table the rest of the app uses.
+    async function submitAndroidWaitlist(e) {
       e.preventDefault();
       const form = document.getElementById('android-waitlist');
-      const email = document.getElementById('android-waitlist-email').value.trim();
+      const input = document.getElementById('android-waitlist-email');
+      const email = input.value.trim();
       if (!email) return;
-      try { console.log('android-waitlist-signup', email); } catch (_) {}
+      // Optimistic UI — show thanks immediately; signup is fire-and-forget
       form.classList.add('submitted');
+      try {
+        await fetch('https://daydream-mc8d.onrender.com/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            source: 'android-waitlist-landing',
+          }),
+        });
+      } catch (err) {
+        // Network failure — still show thanks (no point alarming the user),
+        // but log so we know to follow up if these stop appearing in Supabase.
+        try { console.warn('[android-waitlist] submit failed:', err); } catch (_) {}
+      }
     }
   </script>
 </body>
