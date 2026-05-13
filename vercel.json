@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/t", "destination": "https://exp.daydreamers.app/?utm_source=tiktok&utm_medium=social", "permanent": false },
+    { "source": "/i", "destination": "https://exp.daydreamers.app/?utm_source=instagram&utm_medium=social", "permanent": false }
+  ]
+}
