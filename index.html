@@ -3375,24 +3375,30 @@ footer {
         syncAudio();
       });
       dots.forEach((d, k) => d.addEventListener('click', () => setStage(k)));
-      // Pause the muted demo cycle while the display is scrolled offscreen — no
-      // reason to burn frames nobody sees. Full (sound-on) sessions keep running:
-      // their frames drive audio caption sync and end detection.
+      // Pause the muted demo cycle while the display is scrolled offscreen OR the
+      // tab is backgrounded — no frames or stage-advance timers nobody sees.
+      // Full (sound-on) sessions keep running: their frames drive audio caption
+      // sync and end detection.
       const demoEl = document.getElementById('hero-demo');
       if (demoEl && !reduced) {
-        let demoWasPaused = false;
-        new IntersectionObserver((entries) => {
-          const visible = entries[0].isIntersecting;
+        let demoOnScreen = true, demoWasPaused = false;
+        const syncDemoRun = () => {
+          const shouldRun = demoOnScreen && !document.hidden;
           const muted = !soundOn && fpMode !== 'full' && cbMode !== 'full' && mfMode !== 'full';
-          if (!visible && muted) {
+          if (!shouldRun && muted && !demoWasPaused) {
             demoWasPaused = true;
             clearTimeout(advanceTimer);
             cbStop(); fpStop(); mfStop();
-          } else if (visible && demoWasPaused) {
+          } else if (shouldRun && demoWasPaused) {
             demoWasPaused = false;
             setStage(current);
           }
+        };
+        new IntersectionObserver((entries) => {
+          demoOnScreen = entries[0].isIntersecting;
+          syncDemoRun();
         }, { threshold: 0.05 }).observe(demoEl);
+        document.addEventListener('visibilitychange', syncDemoRun);
       }
       cbResize();
       setStage(0);
