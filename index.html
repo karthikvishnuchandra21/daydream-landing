@@ -1909,22 +1909,22 @@ footer {
 
       <div class="card-stack" id="card-stack" role="group" aria-label="Daydream app screens">
         <div class="showcase-card active" data-idx="0">
-          <img src="screenshots/opt/screenshot-1.jpg" alt="The You tab, your becoming identity" loading="eager" fetchpriority="high" />
+          <img src="screenshots/opt/screenshot-1.webp" alt="The You tab, your becoming identity" loading="eager" fetchpriority="high" />
         </div>
         <div class="showcase-card behind" data-idx="1">
-          <img src="screenshots/opt/screenshot-3.jpg" alt="Beliefs you can see, your identity terrain" loading="eager" />
+          <img src="screenshots/opt/screenshot-3.webp" alt="Beliefs you can see, your identity terrain" loading="eager" />
         </div>
         <div class="showcase-card hidden" data-idx="2">
-          <img src="screenshots/opt/screenshot-6.jpg" alt="Stories that map your becoming" loading="lazy" />
+          <img src="screenshots/opt/screenshot-6.webp" alt="Stories that map your becoming" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="3">
-          <img src="screenshots/opt/screenshot-2.jpg" alt="Identity shifting cards every morning" loading="lazy" />
+          <img src="screenshots/opt/screenshot-2.webp" alt="Identity shifting cards every morning" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="4">
-          <img src="screenshots/opt/screenshot-4.jpg" alt="Conversations rooted in belief data" loading="lazy" />
+          <img src="screenshots/opt/screenshot-4.webp" alt="Conversations rooted in belief data" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="5">
-          <img src="screenshots/opt/screenshot-5.jpg" alt="Visualizations that make aligned action easier" loading="lazy" />
+          <img src="screenshots/opt/screenshot-5.webp" alt="Visualizations that make aligned action easier" loading="lazy" />
         </div>
       </div>
 
@@ -2431,9 +2431,10 @@ footer {
         };
       }
       function draw(time) {
+        skyQueued = false;
         const ctx = canvas.getContext('2d');
         const W = size.w, H = size.h;
-        if (!W || !H || !state) { requestAnimationFrame(draw); return; }
+        if (!W || !H || !state) { queueDraw(); return; }
         const deltaMs = prevTime ? Math.min(time - prevTime, 100) : 16.67;
         const dt = deltaMs/16.67;
         prevTime = time;
@@ -2457,11 +2458,29 @@ footer {
         drawFireflies(ctx, state.fireflies, time, p.stars, W, H, isReduced);
         drawButterflies(ctx, state.butterflies, time, p.stars, W, H, isReduced, dt);
         drawMotes(ctx, state.motes, time, p.stars, W, H, isReduced, dt);
-        requestAnimationFrame(draw);
+        queueDraw();
       }
+      // The fixed sky canvas is fully covered by opaque paper sections once the
+      // user scrolls past the hero/bridge — painting it there is wasted work.
+      // Pause the loop when neither sky-showing section is in view.
+      let skyOn = true, skyQueued = false;
+      function queueDraw() {
+        if (skyOn && !skyQueued) { skyQueued = true; requestAnimationFrame(draw); }
+      }
+      const skyVis = new Map();
+      const skyIO = new IntersectionObserver((entries) => {
+        entries.forEach((e) => skyVis.set(e.target, e.isIntersecting));
+        const on = [...skyVis.values()].some(Boolean);
+        if (on && !skyOn) { skyOn = true; prevTime = 0; queueDraw(); }
+        else skyOn = on;
+      }, { rootMargin: '120px 0px' });
+      const skyHero = document.querySelector('.lp-hero');
+      const skyProof = document.getElementById('proof');
+      if (skyHero) skyIO.observe(skyHero);
+      if (skyProof) skyIO.observe(skyProof);
       resize();
       window.addEventListener('resize', resize);
-      requestAnimationFrame(draw);
+      queueDraw();
     })();
 
     // Hero phone stack:
@@ -3356,6 +3375,25 @@ footer {
         syncAudio();
       });
       dots.forEach((d, k) => d.addEventListener('click', () => setStage(k)));
+      // Pause the muted demo cycle while the display is scrolled offscreen — no
+      // reason to burn frames nobody sees. Full (sound-on) sessions keep running:
+      // their frames drive audio caption sync and end detection.
+      const demoEl = document.getElementById('hero-demo');
+      if (demoEl && !reduced) {
+        let demoWasPaused = false;
+        new IntersectionObserver((entries) => {
+          const visible = entries[0].isIntersecting;
+          const muted = !soundOn && fpMode !== 'full' && cbMode !== 'full' && mfMode !== 'full';
+          if (!visible && muted) {
+            demoWasPaused = true;
+            clearTimeout(advanceTimer);
+            cbStop(); fpStop(); mfStop();
+          } else if (visible && demoWasPaused) {
+            demoWasPaused = false;
+            setStage(current);
+          }
+        }, { threshold: 0.05 }).observe(demoEl);
+      }
       cbResize();
       setStage(0);
     })();

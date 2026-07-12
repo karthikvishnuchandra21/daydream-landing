@@ -2,5 +2,19 @@
   "redirects": [
     { "source": "/t", "destination": "https://exp.daydreamers.app/?utm_source=tiktok&utm_medium=social", "permanent": false },
     { "source": "/i", "destination": "https://exp.daydreamers.app/?utm_source=instagram&utm_medium=social", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/(audio|screenshots)/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(logo.svg|logo.png|favicon.svg)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    }
   ]
 }
