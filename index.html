@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Daydream. Become so it can arrive.</title>
+<title>Daydream. The daily visualization practice.</title>
 <meta name="description" content="Daydream is deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be." />
-<meta property="og:title" content="Daydream. Become so it can arrive." />
+<meta property="og:title" content="Daydream. The daily visualization practice." />
 <meta property="og:url" content="https://daydreamers.app/" />
 <link rel="canonical" href="https://daydreamers.app/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -60,6 +60,8 @@
   --sky-text-strong: rgba(230,225,245,0.95);
   --sky-text-muted: rgba(200,195,220,0.58);
   --sky-text-faint: rgba(200,195,220,0.38);
+  --sky-accent: #eec985;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.92);
 }
 [data-sky="dawn"] {
   --sky-heading: rgba(255,255,255,1);
@@ -68,6 +70,9 @@
   --sky-text-strong: rgba(255,248,240,0.97);
   --sky-text-muted: rgba(255,240,225,0.6);
   --sky-text-faint: rgba(255,240,225,0.35);
+  /* Luminous gold — the paper-brown --accent goes muddy over the dawn sky */
+  --sky-accent: #f0cd8e;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.95);
 }
 [data-sky="morning"] {
   --sky-heading: rgba(55,45,38,0.9);
@@ -111,6 +116,8 @@
   --sky-text-strong: rgba(255,248,235,0.97);
   --sky-text-muted: rgba(255,240,220,0.62);
   --sky-text-faint: rgba(255,240,220,0.35);
+  --sky-accent: #ffe3a3;
+  --sky-link-on-terrain: rgba(255, 225, 165, 0.95);
 }
 [data-sky="dusk"] {
   --sky-heading: rgba(255,245,248,0.95);
@@ -119,6 +126,8 @@
   --sky-text-strong: rgba(255,255,255,0.95);
   --sky-text-muted: rgba(255,225,235,0.58);
   --sky-text-faint: rgba(255,225,235,0.38);
+  --sky-accent: #f4cf8f;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.94);
 }
 
 /* ============================================================
@@ -464,8 +473,8 @@ section {
    ============================================================ */
 .lp-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 4rem;
   align-items: center;
   min-height: calc(100vh - 4rem);
   min-height: calc(100dvh - 4rem);
@@ -487,6 +496,12 @@ section {
    Inside the hero, text uses sky-aware vars so it stays readable as the sky shifts.
    Outside the hero (paper sections), text uses static dark colors. */
 .lp-hero .lp-h1 { color: var(--sky-heading, var(--text-primary)); }
+/* Gold accent in the H1 — luminous sky-aware gold over the gradient, with a soft
+   warm glow for lift; falls back to paper brown if a theme defines no --sky-accent. */
+.lp-hero .lp-h1 .accent {
+  color: var(--sky-accent, var(--accent));
+  text-shadow: 0 1px 14px rgba(90, 55, 25, 0.28);
+}
 .lp-hero .lp-hero-sub { color: var(--sky-text, var(--text-secondary)); }
 /* Typewriter keeps its own bronze-gold (defined on .typewriter-text) regardless
    of sky theme — visible on both light sky and the dark hills underneath. */
@@ -513,6 +528,14 @@ section {
 }
 .lp-hero .android-soon .sep {
   background: var(--sky-text-on-terrain-faint, var(--sky-text-faint, rgba(45, 52, 54, 0.3)));
+}
+/* "Free for 3 days" under the badge — must be sky-aware like its neighbors,
+   or it vanishes into the dark hills / night sky. */
+.lp-hero .hero-free-trial {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  margin-top: 0.65rem;
+  color: var(--sky-text-on-terrain, var(--sky-text-muted, rgba(45, 52, 54, 0.55)));
 }
 
 /* Typewriter — no pill, no background. Ported from the original .home-input-typewriter:
@@ -919,7 +942,21 @@ section {
 /* ============================================================
    Ritual — three steps
    ============================================================ */
-.lp-ritual { padding-top: 4rem !important; }
+.lp-ritual {
+  padding-top: 4rem !important;
+  background: var(--bg-soft);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-ritual > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
+.lp-ritual-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 0.6rem;
+}
 .lp-ritual-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1006,6 +1043,38 @@ section {
 }
 
 /* ============================================================
+   Champions proof — replaces the lone testimonial in the
+   sky→paper bridge. Frosted cards keep text readable over the
+   fading sky at any time of day.
+   ============================================================ */
+.champ-story {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  padding: 2.75rem 3rem 2.5rem;
+  box-shadow:
+    0 18px 50px rgba(45, 42, 38, 0.10),
+    0 4px 12px rgba(45, 42, 38, 0.05);
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+.champ-story .lp-h2 { margin-bottom: 1.1rem; }
+.champ-story-body {
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin: 0;
+}
+.champ-story-body + .champ-story-body { margin-top: 1rem; }
+
+/* ============================================================
    Science — first cream paper layer (darker cream)
    ============================================================ */
 .lp-science {
@@ -1016,27 +1085,84 @@ section {
   z-index: 2;
 }
 .lp-science > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
-.lp-science-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.75rem;
+/* Open rows, no card chrome — each concept is a live diagram + copy set
+   directly on the quiet paper, separated by hairlines. */
+.sci-rows {
+  max-width: 840px;
+  margin: 0 auto;
   text-align: left;
 }
-.lp-science-card {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 14px;
-  padding: 1.75rem;
-  box-shadow: 0 12px 40px rgba(45, 42, 38, 0.06);
+.sci-row {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 2.5rem 0;
 }
-.lp-science-card p {
+.sci-row + .sci-row { border-top: 1px solid var(--hairline-soft); }
+.sci-fig {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sci-copy h4 { margin-bottom: 0.5rem; }
+.sci-copy strong { font-weight: 600; }
+.sci-copy p {
   font-family: var(--sans);
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--text-primary);
   font-weight: 300;
+  margin: 0;
+}
+/* Frequency ladder — port of the iOS coherence gate diagram */
+.sci-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 290px;
+}
+.sci-ladder-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sci-ladder-row svg { flex: none; }
+.sci-ladder-label .t {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.sci-ladder-label .s {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+.sci-net text {
+  font-family: var(--sans);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  fill: var(--accent);
+}
+.sci-cascade text {
+  font-family: var(--sans);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  fill: var(--accent);
+}
+.sci-cascade text.soft {
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  fill: rgba(0, 0, 0, 0.45);
 }
 
 /* ============================================================
@@ -1161,7 +1287,7 @@ footer {
     grid-template-columns: 1fr;
     gap: 2.5rem;
     min-height: auto;
-    padding-top: 6.5rem !important;
+    padding-top: calc(7rem + env(safe-area-inset-top)) !important;
     padding-bottom: 3.5rem !important;
   }
   .lp-hero-text {
@@ -1172,16 +1298,18 @@ footer {
   .lp-hero-sub { margin-left: auto; margin-right: auto; }
   .typewriter-wrap { justify-content: center; }
   .hero-cta-row { justify-content: center; }
+  .hero-cta-stack { align-items: center; text-align: center; }
   .hero-trial { justify-content: center; flex-wrap: wrap; row-gap: 6px; }
 
   /* On mobile the lower hero content sits HIGHER in the hero — over the light sky,
      NOT the dark hills. So flip back to the dark muted text so it reads on the sky. */
   .lp-hero .hero-trial,
   .lp-hero .lp-signin,
-  .lp-hero .android-soon {
+  .lp-hero .android-soon,
+  .lp-hero .hero-free-trial {
     color: var(--sky-text-muted, var(--text-secondary));
   }
-  .lp-hero .lp-signin .lp-link { color: var(--accent, #8b7355); }
+  .lp-hero .lp-signin .lp-link { color: var(--sky-accent, var(--accent, #8b7355)); }
   .lp-hero .hero-trial .dot-sep,
   .lp-hero .android-soon .sep {
     background: var(--sky-text-faint, rgba(45, 52, 54, 0.3));
@@ -1200,9 +1328,15 @@ footer {
   .card-btn { width: 44px; height: 44px; }
   .card-btn svg { width: 18px; height: 18px; }
 
-  .lp-science-grid {
+  .sci-rows { max-width: 480px; }
+  .sci-row {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1.4rem;
+    padding: 2.25rem 0;
+  }
+  .lp-ritual-grid {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
@@ -1214,11 +1348,12 @@ footer {
    ============================================================ */
 @media (max-width: 768px) {
   section { padding: 4rem 1.25rem; }
-  .lp-quote, .lp-science-card {
+  .lp-quote, .champ-story {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(255, 255, 255, 0.82);
   }
+  .champ-story { padding: 2rem 1.6rem 1.9rem; }
   /* Heavy blur is expensive on mobile per CLAUDE.md — drop it on the overlay too */
   .hamburger-overlay {
     backdrop-filter: none;
@@ -1231,7 +1366,7 @@ footer {
   img.logo-orb { width: 30px; height: 30px; }
   .hamburger-button { width: 40px; height: 40px; left: 1rem; }
 
-  .lp-hero { padding-top: 6rem !important; gap: 2rem; }
+  .lp-hero { padding-top: calc(6.75rem + env(safe-area-inset-top)) !important; gap: 2rem; }
   .lp-h1 { font-size: clamp(2.1rem, 8vw, 2.6rem); line-height: 1.08; }
   .lp-hero-sub { font-size: 1.02rem; line-height: 1.5; }
 
@@ -1275,7 +1410,7 @@ footer {
   .hamburger-button { width: 38px; height: 38px; padding: 8px; left: 0.85rem; }
   .hamburger-line { width: 18px; height: 1.8px; }
 
-  .lp-hero { padding-top: 5.5rem !important; gap: 1.75rem; }
+  .lp-hero { padding-top: calc(6.5rem + env(safe-area-inset-top)) !important; gap: 1.75rem; }
   .lp-h1 { font-size: 2.05rem; line-height: 1.1; margin-bottom: 1.1rem; }
   .lp-hero-sub { font-size: 0.98rem; margin-bottom: 1.25rem; }
 
@@ -1309,13 +1444,16 @@ footer {
   .lp-quotes { padding-top: 2rem !important; padding-bottom: 4rem !important; }
   .lp-quote { padding: 1.5rem 1.4rem; border-radius: 14px; }
   .lp-quote-body { font-size: 1.02rem; }
+  .champ-story { padding: 1.75rem 1.25rem 1.6rem; border-radius: 14px; }
+  .champ-card { padding: 1.25rem 1.3rem; }
+  .lp-ritual-title { font-size: 1.2rem; }
 
   .lp-founder { padding-top: 3rem !important; padding-bottom: 3rem !important; }
   .lp-founder-body { font-size: 1rem; }
 
-  .lp-science-card { padding: 1.4rem 1.25rem; }
   .lp-h4 { font-size: 1.05rem; }
-  .lp-science-card p { font-size: 0.92rem; }
+  .sci-copy p { font-size: 0.92rem; }
+  .sci-row { padding: 1.9rem 0; }
 
   .lp-final { padding-top: 4rem !important; padding-bottom: 5rem !important; }
 
@@ -1333,12 +1471,242 @@ footer {
   .typewriter-text { font-size: 0.9rem; }
   .hero-trial { font-size: 0.74rem; }
 }
+
+/* ============================================================
+   Hero session demo — a live placeholder mock of the 3-part
+   session (coherence breathing → number-8 drill → example viz)
+   running inside a single phone frame. Placeholder pacing and
+   visuals; swap in real exercise content later.
+   ============================================================ */
+.hero-demo-display {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 4 / 4.6;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #232a44 0%, #161b30 45%, #0e1122 100%);
+  box-shadow:
+    0 30px 80px rgba(45, 42, 38, 0.24),
+    0 8px 24px rgba(45, 42, 38, 0.10),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: lp-drift 12s ease-in-out infinite;
+}
+/* Demo unit — player strip (header) + chrome-free display below */
+.demo-unit {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.demo-strip {
+  position: absolute;
+  top: 0.85rem; left: 0.85rem; right: 0.85rem;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.45rem 0.55rem 0.45rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.demo-stage-label {
+  font-family: var(--sans);
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255, 242, 225, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+/* Sound toggle — quiet glass pill on the strip; gently pulses until first tap */
+.demo-sound {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 245, 225, 0.94);
+  font-family: var(--sans);
+  font-size: 0.73rem; font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  animation: sound-nudge 2.8s ease-in-out infinite;
+}
+.demo-sound:hover { background: rgba(255, 255, 255, 0.2); }
+.demo-sound:focus { outline: none; }
+.demo-sound:focus-visible { outline: 2px solid rgba(255, 230, 180, 0.7); outline-offset: 2px; }
+.demo-sound svg { width: 16px; height: 16px; flex-shrink: 0; }
+.demo-sound .demo-sound-label { display: none; } /* icon-only everywhere — no "Tap for sound" text */
+.demo-sound .icon-sound { display: none; }
+.demo-sound.on {
+  animation: none;
+  background: rgba(255, 230, 180, 0.22);
+  border-color: rgba(255, 230, 180, 0.42);
+}
+.demo-sound.on .icon-muted { display: none; }
+.demo-sound.on .icon-sound { display: block; }
+@keyframes sound-nudge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.demo-stage {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 4rem 1.6rem 3.4rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.demo-stage.active { opacity: 1; pointer-events: auto; }
+.demo-instruction {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.35rem; line-height: 1.4;
+  color: rgba(255, 248, 235, 0.92);
+  margin: 2rem 0 0;
+  text-align: center;
+  transition: opacity 0.35s ease;
+}
+.demo-caption {
+  position: absolute; bottom: 1.7rem; left: 2.2rem; right: 2.2rem;
+  font-family: var(--sans);
+  font-size: 0.82rem; line-height: 1.55;
+  color: rgba(220, 215, 235, 0.55);
+  text-align: center;
+  margin: 0;
+}
+/* Stage 1 — Coherence Breath (faithful port of coherence.html: canvas orb + cue type) */
+.coherence-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.coherence-cue {
+  position: absolute; left: 0; right: 0; bottom: 5.8rem;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.cue-word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1;
+  color: #e8d9b8;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+.cue-sub {
+  margin-top: 10px;
+  font-size: 0.6rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(230, 220, 200, 0.55);
+  min-height: 1em;
+}
+/* Stage 2 — The First Practice (canvas orb on ember backdrop + script quotes) */
+.fp-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.fp-quote {
+  position: absolute; left: 2rem; right: 2rem; bottom: 5.8rem;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.06rem; line-height: 1.45;
+  color: rgba(255, 244, 228, 0.92);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.fp-quote.show { opacity: 1; }
+/* Karaoke words in the manifestation cue — unspoken words wait dim, each one
+   brightens the moment it's spoken (iOS viz-screen parity) */
+#mf-cue span { opacity: 0.3; transition: opacity 0.28s ease; }
+#mf-cue span.sung { opacity: 1; }
+/* During full manifestation playback the karaoke text is the centerpiece —
+   center-screen, a touch larger, embers breathing behind it */
+.stage-viz.karaoke #mf-cue {
+  top: 47%; bottom: auto;
+  transform: translateY(-50%);
+  font-size: 1.22rem;
+  line-height: 1.55;
+}
+/* Stage 3 — example visualization lines */
+.demo-viz-lines {
+  display: flex; flex-direction: column;
+  gap: 1.1rem;
+  max-width: 330px;
+  position: relative; z-index: 2; /* above the ember canvas */
+}
+.demo-viz-lines span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.22rem; line-height: 1.5;
+  color: rgba(255, 248, 235, 0.9);
+  opacity: 0; transform: translateY(7px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.demo-viz-lines span:nth-child(2) { transition-delay: 2.6s; }
+.demo-viz-lines span:nth-child(3) { transition-delay: 5.4s; }
+.demo-viz-lines span:nth-child(4) { transition-delay: 8.2s; }
+.stage-viz.play .demo-viz-lines span { opacity: 1; transform: none; }
+/* Step dots — live on the strip, signal the three-part demo */
+.demo-dots {
+  display: flex; align-items: center; gap: 0.5rem;
+  flex-shrink: 0;
+}
+.demo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 245, 225, 0.3);
+  border: none; padding: 0;
+  cursor: pointer;
+  transition: background 0.25s ease, width 0.25s ease;
+}
+.demo-dot:hover { background: rgba(255, 245, 225, 0.55); }
+.demo-dot.active {
+  background: rgba(255, 230, 180, 0.92);
+  width: 20px;
+  border-radius: 999px;
+}
+@media (max-width: 900px) {
+  .demo-unit { max-width: min(100%, 460px); }
+  /* Narrow widths wrap the caption to 4-5 lines — grow the panel ~20% taller
+     and lift the cue/quote text so the two blocks never meet. */
+  .hero-demo-display { aspect-ratio: 4 / 5.6; }
+  .coherence-cue, .fp-quote { bottom: 9.2rem; }
+}
+@media (max-width: 420px) {
+  /* Tight widths: tighter strip */
+  .demo-strip { padding-left: 0.9rem; gap: 0.6rem; }
+  .demo-stage-label { font-size: 0.62rem; letter-spacing: 0.12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-demo-display { animation: none; }
+  .demo-sound { animation: none; }
+  .demo-viz-lines span { transition: none; opacity: 1; transform: none; }
+}
+
 </style>
 </head>
 <body>
   <!-- Animated sky lives at the top, fades into cream paper below -->
   <canvas id="gradient-sky" class="gradient-sky-canvas" aria-hidden="true"></canvas>
-
 
   <!-- ─── Nav ─── -->
   <nav class="nav" id="nav">
@@ -1357,9 +1725,6 @@ footer {
       <a class="nav-link" href="#mission">Mission</a>
       <a class="nav-link nav-link-blog" href="https://daydreamers.app/blog" target="_blank" rel="noopener">Blog</a>
     </div>
-    <div class="nav-right">
-      <a class="nav-login" href="https://exp.daydreamers.app/login?mode=signin">Log in</a>
-    </div>
   </nav>
 
   <!-- Mobile slide-out menu -->
@@ -1373,32 +1738,18 @@ footer {
       <li><a href="#science">Science</a></li>
       <li><a href="#how">How It Works</a></li>
       <li><a href="#mission">Mission</a></li>
-      <li><a class="blog" href="#blog">Blog</a></li>
+      <li><a class="blog" href="https://daydreamers.app/blog" target="_blank" rel="noopener">Blog</a></li>
     </ul>
-    <div class="hamburger-nav-footer">
-      <a class="hamburger-login" href="https://exp.daydreamers.app/login?mode=signin">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-        Log in
-      </a>
-    </div>
   </aside>
 
   <!-- ─── Hero ─── -->
   <section class="lp-hero">
     <div class="lp-hero-text">
-      <h1 class="lp-h1">Become <span class="accent">so it can arrive.</span></h1>
+      <h1 class="lp-h1">Embodiment <span class="accent">through visualization.</span></h1>
       <p class="lp-hero-sub">
-        Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be.
+        Guided visualization and breathing practice for embodying the greatest self.
       </p>
       <div class="hero-cta-row">
-        <div class="typewriter-wrap">
-          <span class="typewriter-text" id="typewriter-text">Think, feel, and act.</span>
-          <a class="typewriter-arrow" href="#science" aria-label="See how Daydream shifts how you think, feel, and act">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </a>
-        </div>
         <div class="hero-cta-stack">
         <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
@@ -1407,73 +1758,139 @@ footer {
             <span class="bottom">App Store</span>
           </div>
         </a>
-        <div class="android-soon" aria-label="Android coming July 2026">
-          <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-            <path d="M21.7 9.07l1.36-2.35a.39.39 0 0 0-.14-.53.39.39 0 0 0-.53.14L21 8.73A10.6 10.6 0 0 0 16 7.5a10.6 10.6 0 0 0-5 1.23L9.61 6.33a.39.39 0 0 0-.53-.14.39.39 0 0 0-.14.53l1.36 2.35A8.74 8.74 0 0 0 5.5 16h21a8.74 8.74 0 0 0-4.8-6.93zM11 13.5a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm10 0a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
-          </svg>
-          <span>Android</span>
-          <span class="sep"></span>
-          <span class="when">July 2026</span>
-        </div>
+        <span class="hero-free-trial">Free daily practice and exercises</span>
       </div>
       </div>
-      <div class="hero-trial">
-        <span>Neuroscience-backed</span>
-        <span class="dot-sep"></span>
-        <span>Belief-mapping</span>
-        <span class="dot-sep"></span>
-        <span>Free 3 days</span>
-      </div>
-      <p class="lp-signin">
-        Already have an account? <a class="lp-link" href="https://exp.daydreamers.app/login?mode=signin">Sign in</a>
-      </p>
     </div>
 
     <div class="lp-hero-product">
-      <div class="hero-phone-stack" role="group" aria-label="App screenshots. Tap any card to cycle through them">
-        <div class="hero-phone back-left" tabindex="0" role="button" aria-label="Show visualizations screen" style="animation-delay: -8s">
-          <img src="screenshots/screenshot-5.png" alt="Visualizations proven to make aligned action easier" />
+      <div class="demo-unit">
+      <div class="hero-demo-display" id="hero-demo" role="group" aria-label="Live preview of a Daydream session: coherence breathing, a visualization drill, then a personal visualization">
+        <!-- Player strip — translucent glass header INSIDE the display:
+             stage name · step dots · sound. The canvas reads through it. -->
+        <div class="demo-strip" id="demo-strip">
+          <span class="demo-stage-label" id="demo-stage-label">Improve Visualization</span>
+          <div class="demo-dots" role="tablist" aria-label="Session preview steps">
+            <button class="demo-dot active" type="button" aria-label="Improve Visualization"></button>
+            <button class="demo-dot" type="button" aria-label="Find Coherence"></button>
+            <button class="demo-dot" type="button" aria-label="Manifestation Meditation"></button>
+          </div>
+          <button class="demo-sound" id="demo-sound" type="button" aria-label="Turn sound on to hear the guided audio">
+            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            <svg class="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="demo-sound-label">Tap for sound</span>
+          </button>
         </div>
-        <div class="hero-phone back-right" tabindex="0" role="button" aria-label="Show conversations screen" style="animation-delay: -4s">
-          <img src="screenshots/screenshot-4.png" alt="Conversations that show you, rooted in belief data" />
+
+        <!-- Stage 1: The First Practice — the EXACT exercise a fresh user gets after
+             tapping Get Started in the app: the 2:43 voice-guided figure-eight
+             mind's-eye warm-up (the app's real bundled audio in audio/first-practice/),
+             gold audio-reactive orb on the ember backdrop, ported from
+             OpeningExerciseScreen.swift / OrbSpeaksKit.swift. Tap sound = full exercise. -->
+        <div class="demo-stage stage-fp active" data-stage="0">
+          <canvas class="fp-canvas" id="fp-canvas" aria-hidden="true"></canvas>
+          <div class="fp-quote" id="fp-quote"></div>
+          <p class="demo-caption">Visualization is a skill just like any other, and can be practiced. In Daydream you will practice basic exercises shown to improve your ability to use the mind's eye.</p>
         </div>
-        <div class="hero-phone front" tabindex="0" role="button" aria-label="Currently showing identity shifting cards screen" style="animation-delay: 0s">
-          <img src="screenshots/screenshot-2.png" alt="Identity shifting cards every morning" />
+
+        <!-- Stage 2: Coherence Breath — faithful port of ~/Desktop/coherence-breath/coherence.html
+             (6s in / 6s out cosine breath, particle orb, octave bells + airy first breaths) -->
+        <div class="demo-stage stage-breath" data-stage="1">
+          <canvas class="coherence-canvas" id="coherence-canvas" aria-hidden="true"></canvas>
+          <div class="coherence-cue" id="coherence-cue">
+            <div class="cue-word" id="cue-word">Arrive</div>
+            <div class="cue-sub" id="cue-sub"></div>
+          </div>
+          <p class="demo-caption">Coherence breathing pulls the brain out of the beta wave state into one with a lower frequency to turn off the fight/flight system and enter a state of creativity and observation.</p>
         </div>
+
+        <!-- Stage 3: Manifestation Meditation — a REAL personalized visualization from
+             the app ("Steady Ground, Growing Roots", Jul 11), warm-up primer cut off.
+             Muted demo drips its opening lines; tap sound = the full 6:46 meditation
+             with captions synced from the record's word timestamps. -->
+        <div class="demo-stage stage-viz" data-stage="2">
+          <canvas class="fp-canvas" id="mf-canvas" aria-hidden="true"></canvas>
+          <div class="demo-viz-lines">
+            <span>Settle into where you're sitting. Let the weight of you be held by whatever is under you.</span>
+            <span>I want you to step forward with me. Not far. Just a little way into the year ahead.</span>
+            <span>Feel where in your body that steadiness sits.</span>
+            <span>This is just how you are now.</span>
+          </div>
+          <div class="fp-quote" id="mf-cue"></div>
+          <p class="demo-caption">Your meditations will use visualization to create new feelings and thoughts to trigger an emotional connection with the life and version of yourself you want to be.</p>
+        </div>
+
+      </div>
       </div>
     </div>
   </section>
 
-  <!-- ─── User feedback (sits in the hero-to-paper transition zone) ─── -->
-  <section class="lp-quotes">
-    <div class="lp-quote">
-      <p class="lp-quote-body">
-        I've learned a lot about identity shifting through using Daydream and it has helped prime my brain before doing things that I previously thought were difficult.
+  <!-- ─── Proof: champions rehearse it first (sits in the hero-to-paper transition zone) ─── -->
+  <section id="proof" class="lp-quotes">
+    <div class="champ-story">
+      <p class="lp-eyebrow">The not so secret, secret</p>
+      <h2 class="lp-h2">The inner becoming occurs <span class="accent">before the outer having.</span></h2>
+      <p class="champ-story-body">
+        Your belief in who you are and what you're capable of is the greatest predictor of the life you create. This is nothing new: the same teaching runs through religious and philosophical texts across the ancient world. But over the past 15 years, modern research has used controlled studies and fMRI imaging to study these truths through observable phenomena.
       </p>
-      <p class="lp-quote-attr">Early user</p>
+      <p class="champ-story-body">
+        Daydream guides you to bring the power of creation back to the self through breathing and visualization, building coherence between your desires and the version of you who has them.
+      </p>
     </div>
+
   </section>
 
-  <!-- ─── Science ─── -->
+  <!-- ─── Science: three open rows, each concept shown as a small live diagram ─── -->
   <section id="science" class="lp-science">
     <div class="lp-section-head">
       <p class="lp-eyebrow">The science, briefly</p>
       <h2 class="lp-h2">Three things your brain <span class="accent">already does.</span></h2>
-      <p class="lp-h2-sub">Daydream just gives them a daily container.</p>
     </div>
-    <div class="lp-science-grid">
-      <div class="lp-science-card">
-        <h4 class="lp-h4">Motor-cortex rehearsal</h4>
-        <p>The same brain regions activate whether you're doing something or vividly imagining it. Olympic athletes have used this for fifty years.</p>
+    <div class="sci-rows">
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <div class="sci-ladder" id="sciLadder" role="img" aria-label="Brainwave diagram: high beta, fight or flight, settles through low beta into alpha, creative and observing">
+            <div class="sci-ladder-row" style="opacity: 0.55">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#b5806c" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">High beta</span><span class="s">fight or flight</span></div>
+            </div>
+            <div class="sci-ladder-row" style="opacity: 0.75">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#bd917e" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">Low beta</span><span class="s">busy mind</span></div>
+            </div>
+            <div class="sci-ladder-row">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#a8834f" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">Alpha</span><span class="s">creative, observing</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">Breath moves the brainwave</h4>
+          <p>Slow, even breathing settles the brain out of high beta, the fight or flight state, into alpha. It also <strong>reduces activity in the default mode network</strong>, the circuitry that loops self-referential chatter and replays the story of who you have been. With that loop quiet, <strong>imagery turns vivid and the mind opens</strong>. Every Daydream session begins here.</p>
+        </div>
       </div>
-      <div class="lp-science-card">
-        <h4 class="lp-h4">Identity-threat theory</h4>
-        <p>Anxiety often guards an old identity. When you rewrite the identity, the threat response calms with it.</p>
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <svg class="sci-net" id="sciNet" viewBox="0 0 300 134" width="300" height="134" role="img" aria-label="A pulse lights the same pathway of nodes for doing and for imagining — and imagining lays down a brand-new node at the end, a new pathway"></svg>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">Imagined reps are real reps</h4>
+          <p>The brain <strong>fires the same networks</strong> whether you do something or vividly imagine it, and vivid imagining can lay down pathway the action hasn't walked yet. Sports science has trained on this for fifty years. Daydream points it at who you're becoming.</p>
+        </div>
       </div>
-      <div class="lp-science-card">
-        <h4 class="lp-h4">Memory reconsolidation</h4>
-        <p>When you revisit a memory and reframe it, your brain literally re-encodes it. Repetition isn't passive. It edits.</p>
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <svg class="sci-cascade" id="sciCascade" viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="A belief feeds a spinning loop of thoughts and feelings — a state of being — which pours down a staircase of actions, habits, lifestyle. The chain is traced back to the belief, the belief is rewritten, and everything below it changes"></svg>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">It starts with a belief</h4>
+          <p>A belief sets off thoughts and feelings, a loop that becomes your state of being. That state drives how you act; actions harden into habits; habits build your lifestyle. Most of us only ever see the bottom of the staircase. Daydream's conversations trace it back up to the source, because <strong>a belief you can see is a belief you can rewrite</strong>. And when it changes, everything downstream changes with it.</p>
+        </div>
       </div>
+
     </div>
   </section>
 
@@ -1492,22 +1909,22 @@ footer {
 
       <div class="card-stack" id="card-stack" role="group" aria-label="Daydream app screens">
         <div class="showcase-card active" data-idx="0">
-          <img src="screenshots/screenshot-1.png" alt="The You tab, your becoming identity" loading="lazy" />
+          <img src="screenshots/opt/screenshot-1.jpg" alt="The You tab, your becoming identity" loading="eager" fetchpriority="high" />
         </div>
         <div class="showcase-card behind" data-idx="1">
-          <img src="screenshots/screenshot-3.png" alt="Beliefs you can see, your identity terrain" loading="lazy" />
+          <img src="screenshots/opt/screenshot-3.jpg" alt="Beliefs you can see, your identity terrain" loading="eager" />
         </div>
         <div class="showcase-card hidden" data-idx="2">
-          <img src="screenshots/screenshot-6.png" alt="Stories that map your becoming" loading="lazy" />
+          <img src="screenshots/opt/screenshot-6.jpg" alt="Stories that map your becoming" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="3">
-          <img src="screenshots/screenshot-2.png" alt="Identity shifting cards every morning" loading="lazy" />
+          <img src="screenshots/opt/screenshot-2.jpg" alt="Identity shifting cards every morning" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="4">
-          <img src="screenshots/screenshot-4.png" alt="Conversations rooted in belief data" loading="lazy" />
+          <img src="screenshots/opt/screenshot-4.jpg" alt="Conversations rooted in belief data" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="5">
-          <img src="screenshots/screenshot-5.png" alt="Visualizations that make aligned action easier" loading="lazy" />
+          <img src="screenshots/opt/screenshot-5.jpg" alt="Visualizations that make aligned action easier" loading="lazy" />
         </div>
       </div>
 
@@ -1517,19 +1934,27 @@ footer {
     </div>
 
     <div class="card-dots" id="card-dots" role="tablist" aria-label="Jump to a specific page"></div>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:3.5rem;">
+      <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
+        <div class="badge-text">
+          <span class="top">Download on the</span>
+          <span class="bottom">App Store</span>
+        </div>
+      </a>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5;">Free daily practice and exercises</span>
+    </div>
   </section>
 
   <!-- ─── Founder ─── -->
   <section id="mission" class="lp-founder">
     <p class="lp-eyebrow">A note from the creator of Daydream</p>
     <p class="lp-founder-body">
-      I built Daydream because every self-improvement method I tried made me feel further from the person I was trying to become. I wanted something that helps me embody the version I already know I want to be, because who else but me would know who I want to be?
+      I built Daydream because every self-improvement method I tried made me feel further from the person I was trying to become. I wanted something that helps me embody the version I already know I want to be.
     </p>
     <p class="lp-founder-body">
-      The idea isn't new. Neville called it living in the end. Dispenza calls it rehearsing the future self. The traditions I grew up around called it visualizing. What's new is that we can finally use technology to make embodiment a daily practice instead of a theory to implement on our own.
-    </p>
-    <p class="lp-founder-body">
-      Daydream is that practice. Not a coach, not a journal, not a meditation app. A few minutes every morning to align you with the version you are becoming.
+      Not a coach, not a journal, not a meditation app. A few minutes every morning to align you with the version you are becoming.
     </p>
     <p class="lp-founder-sig">Karthik</p>
   </section>
@@ -1537,7 +1962,6 @@ footer {
   <!-- ─── Final CTA ─── -->
   <section id="becoming" class="lp-final">
     <h2 class="lp-h2">Begin where you are.</h2>
-    <p class="lp-final-sub">Three days free. iPhone, in your pocket, every morning.</p>
     <div class="hero-cta-stack lp-final-cta-stack">
       <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
@@ -1546,23 +1970,8 @@ footer {
           <span class="bottom">App Store</span>
         </div>
       </a>
-      <div class="android-soon" aria-label="Android coming July 2026">
-        <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-          <path d="M21.7 9.07l1.36-2.35a.39.39 0 0 0-.14-.53.39.39 0 0 0-.53.14L21 8.73A10.6 10.6 0 0 0 16 7.5a10.6 10.6 0 0 0-5 1.23L9.61 6.33a.39.39 0 0 0-.53-.14.39.39 0 0 0-.14.53l1.36 2.35A8.74 8.74 0 0 0 5.5 16h21a8.74 8.74 0 0 0-4.8-6.93zM11 13.5a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm10 0a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
-        </svg>
-        <span>Android</span>
-        <span class="sep"></span>
-        <span class="when">July 2026</span>
-      </div>
-      <form class="android-waitlist" id="android-waitlist" onsubmit="submitAndroidWaitlist(event)" aria-label="Notify me when Android ships">
-        <input type="email" name="email" id="android-waitlist-email" required placeholder="you@email.com" aria-label="Email for Android waitlist" autocomplete="email" />
-        <button type="submit">Notify me</button>
-        <span class="android-waitlist-thanks" id="android-waitlist-thanks">Thanks — we'll email you when Android ships.</span>
-      </form>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5; margin-top:0.5rem;">Free daily practice and exercises</span>
     </div>
-    <p class="lp-signin">
-      Already have an account? <a class="lp-link" href="https://exp.daydreamers.app/login?mode=signin">Sign in</a>
-    </p>
   </section>
 
   <!-- ─── Footer ─── -->
@@ -1580,6 +1989,11 @@ footer {
     </div>
   </footer>
 
+  <!-- Per-frame orb levels for the First Practice audio (app-identical metering) -->
+  <script src="audio/first-practice/primer-levels.js"></script>
+  <!-- Synced caption cues + per-frame voice levels for the manifestation meditation -->
+  <script src="audio/manifestation/manifest-cues.js"></script>
+  <script src="audio/manifestation/manifest-levels.js"></script>
   <script>
     // ───────────────────────────────────────────────────────────
     // GradientSky — ported from client/src/components/Home/GradientSky.jsx
@@ -1623,7 +2037,13 @@ footer {
         }
         return PALETTES[0];
       }
+      // DESIGN LOCK: sky is pinned to 6:50am dawn per Karthik's call (Jul 2026) —
+      // one lighting condition to manage instead of seven. Set to null for live time.
+      const DESIGN_LOCK_MINUTE = 410; // 6:50am
       function getPSTMinute() {
+        // Dev override: the time-of-day slider still previews other times.
+        if (window.__skyLockMinute != null) return window.__skyLockMinute;
+        if (DESIGN_LOCK_MINUTE != null) return DESIGN_LOCK_MINUTE;
         const now = new Date();
         const pstStr = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', hour12: false });
         const parts = pstStr.split(', ')[1]?.split(':') || [];
@@ -2241,6 +2661,964 @@ footer {
         try { console.warn('[android-waitlist] submit failed:', err); } catch (_) {}
       }
     }
+
+    // ───────────────────────────────────────────────────────────
+    // Hero session demo — cycles Settle → Sharpen → Visualize.
+    // Stage 1 is a FAITHFUL port of ~/Desktop/coherence-breath/coherence.html:
+    // 6s-in/6s-out cosine breath, particle orb, sunrise sky arc, octave bells
+    // (hi bell opens each inhale, lo bell each exhale) + airy layer on the
+    // first two breaths. Bells extracted to audio/coherence/*.m4a.
+    // Stages 2–3 remain PLACEHOLDER.
+    // ───────────────────────────────────────────────────────────
+    (function () {
+      const phone = document.getElementById('hero-demo');
+      if (!phone) return;
+      const stages = Array.from(phone.querySelectorAll('.demo-stage'));
+      const dots = Array.from(document.querySelectorAll('#demo-strip .demo-dot'));
+      const label = document.getElementById('demo-stage-label');
+      const vizStage = phone.querySelector('.stage-viz');
+      const LABELS = ['Improve Visualization', 'Find Coherence', 'Manifestation Meditation'];
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ═══ Stage 1: Coherence Breath ═══
+      // Cadence from source: 6s in / 6s out, 12s cycle (5 breaths/min).
+      // Demo shows a short settle lead + 2 full breaths (= the source's "airy" breaths).
+      const CB_CYCLE = 12, CB_INHALE = 6, CB_EXHALE = 6, CB_LEAD = 3, CB_DEMO_CYCLES = 2;
+      // order: [First Practice, Coherence Breath, Manifestation]
+      const DURATIONS = [14500, (CB_LEAD + CB_DEMO_CYCLES * CB_CYCLE) * 1000, 14500];
+
+      const GOLD = [196,168,124], ROSE = [196,154,139], LAV = [180,160,196];
+      // Sunrise arc, verbatim from coherence.html
+      const CB_ARC = [
+        {p:0.00, sky:[18,18,42],   mid:[35,28,55],    hor:[120,75,68],   glow:[160,100,80]},
+        {p:0.28, sky:[75,80,120],  mid:[130,110,135], hor:[210,155,120], glow:[235,185,145]},
+        {p:0.58, sky:[138,135,184],mid:[170,163,204], hor:[212,196,220], glow:[240,220,212]},
+        {p:0.82, sky:[150,175,212],mid:[185,200,228], hor:[225,210,195], glow:[240,225,210]},
+        {p:1.00, sky:[160,185,218],mid:[192,208,232], hor:[228,214,200], glow:[242,228,214]},
+      ];
+      const mix = (a,b,t) => a+(b-a)*t;
+      const lerpC = (a,b,t) => [mix(a[0],b[0],t), mix(a[1],b[1],t), mix(a[2],b[2],t)];
+      const rgbA = (c,a) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+      function skyAt(p) {
+        p = Math.max(0, Math.min(1, p));
+        let i = 0; while (i < CB_ARC.length-1 && p > CB_ARC[i+1].p) i++;
+        const a = CB_ARC[i], b = CB_ARC[Math.min(i+1, CB_ARC.length-1)];
+        const t = b.p > a.p ? (p-a.p)/(b.p-a.p) : 0;
+        return {sky:lerpC(a.sky,b.sky,t), mid:lerpC(a.mid,b.mid,t), hor:lerpC(a.hor,b.hor,t), glow:lerpC(a.glow,b.glow,t)};
+      }
+      // Cosine-eased breath — no sharp turns (verbatim model)
+      function breathAt(t) {
+        if (t < 0) return {b:0, phase:'rest', pos:0, cycle:0};
+        const cyc = Math.floor(t/CB_CYCLE), c = t - cyc*CB_CYCLE;
+        if (c < CB_INHALE) return {b:(1-Math.cos(Math.PI*c/CB_INHALE))/2, phase:'in', pos:c/CB_INHALE, cycle:cyc};
+        const e = c - CB_INHALE;
+        return {b:(1+Math.cos(Math.PI*e/CB_EXHALE))/2, phase:'out', pos:e/CB_EXHALE, cycle:cyc};
+      }
+
+      const cbCanvas = document.getElementById('coherence-canvas');
+      const cbCtx = cbCanvas.getContext('2d');
+      const cueEl = document.getElementById('coherence-cue');
+      const cueWord = document.getElementById('cue-word');
+      const cueSub = document.getElementById('cue-sub');
+      let cbW = 0, cbH = 0;
+      function cbResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        cbW = cbCanvas.clientWidth; cbH = cbCanvas.clientHeight;
+        cbCanvas.width = cbW*dpr; cbCanvas.height = cbH*dpr;
+        cbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', cbResize);
+
+      // Particle field (source uses 230 full-screen; scaled to the panel)
+      const CB_NP = reduced ? 60 : 170;
+      const cbParts = [];
+      for (let i = 0; i < CB_NP; i++) {
+        const kind = i%5===0 ? 'spark' : 'mote';
+        const tint = i%9===0 ? ROSE : (i%7===0 ? LAV : GOLD);
+        cbParts.push({ang:Math.random()*Math.PI*2, spin:(Math.random()*2-1)*0.08*(kind==='spark'?1.6:1),
+          band:Math.pow(Math.random(),0.7), jr:Math.random()*Math.PI*2, js:0.5+Math.random()*1.4,
+          size:kind==='spark'?(1.4+Math.random()*1.8):(0.7+Math.random()*1.4), tint, kind});
+      }
+      const cbGrad = (cx,cy,r,c,a0,a1) => { const g = cbCtx.createRadialGradient(cx,cy,0,cx,cy,r);
+        g.addColorStop(0,rgbA(c,a0)); g.addColorStop(1,rgbA(c,a1)); return g; };
+
+      // drawOrb — verbatim port (converging motes, gold threads, front-lit pearl core)
+      function drawOrb(t, S, b, phase) {
+        const ctx = cbCtx, W = cbW, H = cbH;
+        if (!W || !H) return;
+        const cx = W/2, cy = H/2 - H*0.03, R = Math.min(W,H)*0.5;
+        const bg = ctx.createLinearGradient(0,0,0,H);
+        bg.addColorStop(0, rgbA(lerpC([8,8,14],S.sky,0.28),1)); bg.addColorStop(1, rgbA([6,6,12],1));
+        ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+        const orbR = R*(0.20+0.15*b), outer = R*0.72, conv = 1-b, core = lerpC(S.mid,S.glow,b);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (let i = 3; i >= 1; i--) { const rr = orbR*(1+i*0.65);
+          ctx.fillStyle = cbGrad(cx,cy,rr,core,0.09/i,0); ctx.beginPath(); ctx.arc(cx,cy,rr,0,7); ctx.fill(); }
+        const gspin = (reduced ? 0 : t*0.05);
+        for (const s of cbParts) {
+          const pr = orbR + outer*s.band*Math.pow(conv,1.25);
+          const ang = s.ang + gspin + s.spin*(reduced?0:t)*(0.6+conv*0.8);
+          const x = cx + Math.cos(ang)*pr, y = cy + Math.sin(ang)*pr;
+          const tw = 0.72 + 0.28*Math.sin((reduced?0:t)*s.js + s.jr);
+          const col = phase==='in' ? lerpC(s.tint,GOLD,0.35*b) : lerpC(s.tint,ROSE,0.30*conv);
+          const a = (0.05+0.16*b)*(0.45+0.55*s.band)*tw*(s.kind==='spark'?1.5:1);
+          const sz = s.size*(0.75+0.65*conv)*(s.kind==='spark'?1.15:1);
+          ctx.fillStyle = cbGrad(x,y,sz*3.2,col,Math.min(0.6,a),0); ctx.beginPath(); ctx.arc(x,y,sz*3.2,0,7); ctx.fill();
+        }
+        if (!reduced && b > 0.05) { ctx.globalAlpha = b*0.10; ctx.lineWidth = 0.6;
+          for (let i = 0; i < cbParts.length; i += 6) { const s = cbParts[i];
+            const pr = orbR + outer*s.band*Math.pow(conv,1.25);
+            const ang = s.ang + gspin + s.spin*t*(0.6+conv*0.8);
+            const x = cx + Math.cos(ang)*pr, y = cy + Math.sin(ang)*pr;
+            ctx.strokeStyle = rgbA(GOLD,0.5); ctx.beginPath();
+            ctx.moveTo(x,y); ctx.lineTo(cx+Math.cos(ang)*orbR, cy+Math.sin(ang)*orbR); ctx.stroke(); }
+          ctx.globalAlpha = 1; }
+        const gg = ctx.createRadialGradient(cx,cy,0,cx,cy,orbR);
+        gg.addColorStop(0, rgbA([255,252,246],0.95));
+        gg.addColorStop(0.28, rgbA(lerpC(core,[255,250,242],0.4),0.85));
+        gg.addColorStop(0.7, rgbA(core,0.5)); gg.addColorStop(1, rgbA(core,0.03));
+        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx,cy,orbR,0,7); ctx.fill();
+        ctx.strokeStyle = rgbA(GOLD,0.13+0.14*b); ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(cx,cy,orbR,0,7); ctx.stroke();
+        ctx.restore();
+      }
+
+      let cbStart = 0, cbRAF = null;
+      // 'demo' = 2 breaths then auto-advance · 'full' = the source's complete
+      // 30-breath session (entered by tapping sound on during this stage).
+      // All client-side — same canvas, same four bell samples — so the full
+      // session costs nothing extra to host or serve.
+      let cbMode = 'demo';
+      const CB_FULL_CYCLES = 30, CB_AIR_CYCLES = 2; // source: 30 breaths, airy layer on first 2
+      const cbCycles = () => (cbMode === 'full' ? CB_FULL_CYCLES : CB_DEMO_CYCLES);
+      function cbFrame() {
+        const t = (performance.now() - cbStart)/1000 - CB_LEAD;
+        const st = breathAt(t);
+        if (cbMode === 'full' && st.cycle >= CB_FULL_CYCLES) { cbFinish(); return; }
+        const prog = Math.max(0, Math.min(1, t/(cbCycles()*CB_CYCLE)));
+        // demo: hold the sky in the dawn band · full session: traverse the whole sunrise arc
+        const p = cbMode === 'full' ? prog : 0.24 + 0.18*prog;
+        drawOrb(Math.max(t, 0.0001), skyAt(p), st.b, st.phase);
+        if (t < 0) {
+          cueWord.textContent = 'Arrive'; cueWord.style.color = '#e8d9b8'; cueSub.textContent = '';
+          cueEl.style.opacity = Math.min(1, (t+CB_LEAD)/1.4);
+        } else {
+          cueWord.textContent = st.phase==='in' ? 'Breathe in' : 'Breathe out';
+          cueWord.style.color = st.phase==='in' ? '#e8d9b8' : '#e6c0b0';
+          cueSub.textContent = st.phase==='in' ? 'in' : 'out';
+          const fade = Math.min(1, st.pos/0.14, (1-st.pos)/0.14);
+          cueEl.style.opacity = 0.34 + 0.66*Math.max(0, fade);
+          if (label && cbMode === 'full') {
+            label.textContent = LABELS[1] + ' · ' + Math.min(st.cycle+1, CB_FULL_CYCLES) + ' / ' + CB_FULL_CYCLES;
+          }
+        }
+        cbRAF = requestAnimationFrame(cbFrame);
+      }
+      function cbFinish() {
+        drawOrb(CB_FULL_CYCLES*CB_CYCLE - 0.001, skyAt(1), 0, 'out');
+        cueWord.textContent = 'Complete'; cueWord.style.color = '#f0ece4'; cueSub.textContent = '';
+        cueEl.style.opacity = 1;
+        if (label) label.textContent = LABELS[1] + ' · ' + CB_FULL_CYCLES + ' / ' + CB_FULL_CYCLES;
+        cbMode = 'demo';
+        cbRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(2), 5000);
+      }
+      function cbStop() { if (cbRAF) cancelAnimationFrame(cbRAF); cbRAF = null; }
+
+      // ═══ Bells (WebAudio) — hi bell opens each inhale, lo bell each exhale;
+      //     both demo breaths carry the airy layer, like the source's first two. ═══
+      const CB_AUDIO = {
+        hi: 'audio/coherence/bell-hi.m4a',
+        lo: 'audio/coherence/bell-lo.m4a',
+        bHi: 'audio/coherence/breath-hi.m4a',
+        bLo: 'audio/coherence/breath-lo.m4a',
+      };
+      const BREATH_GAIN = 0.5; // source value — airy layer at half bell volume
+      // WebAudio for precise scheduling; falls back to <audio> tags on file://
+      // (fetch of local files is CORS-blocked there, tags are not).
+      let actx = null, cbBuf = null, cbLoading = null, liveSources = [];
+      let tagMode = false, tagTimers = [], tagAudios = [];
+      function ensureAudio() {
+        if (cbLoading) return cbLoading;
+        try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; }
+        if (!actx || location.protocol === 'file:') {
+          tagMode = true;
+          cbLoading = Promise.resolve();
+          return cbLoading;
+        }
+        const load = async (url) => { const r = await fetch(url); return actx.decodeAudioData(await r.arrayBuffer()); };
+        cbLoading = Promise.all([CB_AUDIO.hi, CB_AUDIO.lo, CB_AUDIO.bHi, CB_AUDIO.bLo].map(load))
+          .then(([hi, lo, bHi, bLo]) => { cbBuf = {hi, lo, bHi, bLo}; })
+          .catch(() => { cbBuf = null; tagMode = true; });
+        return cbLoading;
+      }
+      function playBuf(b, when, gain) {
+        if (!b) return;
+        const s = actx.createBufferSource(); s.buffer = b;
+        const g = actx.createGain(); g.gain.value = gain;
+        s.connect(g); g.connect(actx.destination);
+        s.start(Math.max(when, actx.currentTime));
+        liveSources.push(s);
+      }
+      function tagPlay(url, delayMs, vol) {
+        const tm = setTimeout(() => {
+          const a = new Audio(url); a.volume = Math.min(1, vol);
+          tagAudios.push(a);
+          a.play().catch(() => {});
+        }, Math.max(0, delayMs));
+        tagTimers.push(tm);
+      }
+      function stopBells() {
+        liveSources.forEach(s => { try { s.stop(); } catch (e) {} }); liveSources = [];
+        tagTimers.forEach(clearTimeout); tagTimers = [];
+        tagAudios.forEach(a => { try { a.pause(); } catch (e) {} }); tagAudios = [];
+      }
+      function scheduleBells() {
+        if (current !== 1 || (!cbBuf && !tagMode)) return;
+        stopBells();
+        const tNow = (performance.now() - cbStart)/1000 - CB_LEAD; // breath-clock now
+        for (let i = 0; i < cbCycles(); i++) {
+          const air = i < CB_AIR_CYCLES; // airy layer rides the first two breaths only (source behavior)
+          const inT = i*CB_CYCLE, outT = inT + CB_INHALE;
+          if (inT > tNow - 0.05) {
+            if (tagMode) { tagPlay(CB_AUDIO.hi, (inT-tNow)*1000, 0.9); if (air) tagPlay(CB_AUDIO.bHi, (inT-tNow)*1000, 0.9*BREATH_GAIN); }
+            else { const w = actx.currentTime + (inT - tNow);
+              playBuf(cbBuf.hi, w, 0.9); if (air) playBuf(cbBuf.bHi, w, 0.9*BREATH_GAIN); }
+          }
+          if (outT > tNow - 0.05) {
+            if (tagMode) { tagPlay(CB_AUDIO.lo, (outT-tNow)*1000, 0.9); if (air) tagPlay(CB_AUDIO.bLo, (outT-tNow)*1000, 0.9*BREATH_GAIN); }
+            else { const w = actx.currentTime + (outT - tNow);
+              playBuf(cbBuf.lo, w, 0.9); if (air) playBuf(cbBuf.bLo, w, 0.9*BREATH_GAIN); }
+          }
+        }
+      }
+
+      // ═══ Stage 2: The First Practice — faithful port of the app's opening
+      //     exercise (OpeningExerciseScreen.swift + OrbSpeaksKit.swift):
+      //     ember backdrop, gold audio-reactive orb (#e7c98f), and the REAL
+      //     2:43 figure-eight audio the app ships. Muted demo = orb speaking
+      //     to a synthetic envelope + rotating script quotes; tap sound = the
+      //     full exercise, orb driven by pre-analyzed per-frame levels
+      //     (audio/first-practice/primer-levels.js, app-identical metering). ═══
+      const FP_ACCENT = [231, 201, 143]; // #e7c98f
+      const FP_TITLE = 'let your eyes stay open, or close them'; // app caption, verbatim
+      const FP_QUOTES = [
+        '“Raise your hand and slowly trace a figure eight in the air in front of you.”',
+        '“You might see a faint trail where your finger has been. That’s your mind’s eye, already working.”',
+        '“In Daydream, we’ll use this same skill for something much bigger: visualizing you.”',
+      ];
+      const fpCanvas = document.getElementById('fp-canvas');
+      const fpCtx = fpCanvas.getContext('2d');
+      const fpQuote = document.getElementById('fp-quote');
+      let fpW = 0, fpH = 0;
+      function fpResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        fpW = fpCanvas.clientWidth; fpH = fpCanvas.clientHeight;
+        fpCanvas.width = fpW*dpr; fpCanvas.height = fpH*dpr;
+        fpCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', fpResize);
+
+      const fpRGBA = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+      const osc = (t, D) => (1 - Math.cos(Math.PI * t / D)) / 2; // SwiftUI easeInOut+autoreverse
+
+      // Ghost figure-8 — the "after-image" the narration describes. Fades in
+      // whenever the voice goes quiet (the long tracing pauses), traced by a
+      // soft gold light; fades out when the voice returns.
+      let fpGhost = 0;
+      // Lemniscate (handwritten-8) path — one continuous stroke that flows
+      // diagonally THROUGH the center crossing, like tracing an 8 in the air.
+      function ghostEightPoint(u, cx, cy, r) {
+        const T = u * Math.PI * 2 + Math.PI / 2; // start at the center crossing
+        const d = 1 + Math.sin(T) * Math.sin(T);
+        return [
+          cx + (Math.sin(T) * Math.cos(T) / d) * r * 2.828, // lobes r wide each side
+          cy - (Math.cos(T) / d) * r * 2,                   // 4r tall overall
+        ];
+      }
+      function drawGhostEight(ctx, t, cx, cy, W, H) {
+        if (fpGhost < 0.02) return;
+        const r = Math.min(W, H) * 0.155;
+        ctx.save();
+        ctx.strokeStyle = fpRGBA(FP_ACCENT, 0.11 * fpGhost);
+        ctx.lineWidth = 1.4;
+        ctx.setLineDash([4, 9]);
+        ctx.beginPath();
+        for (let i = 0; i <= 120; i++) {
+          const [tx, ty] = ghostEightPoint(i / 120, cx, cy, r);
+          i === 0 ? ctx.moveTo(tx, ty) : ctx.lineTo(tx, ty);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const [px, py] = ghostEightPoint((t % 7) / 7, cx, cy, r);
+        const dg = ctx.createRadialGradient(px, py, 0, px, py, 10);
+        dg.addColorStop(0, fpRGBA(FP_ACCENT, 0.8 * fpGhost));
+        dg.addColorStop(1, fpRGBA(FP_ACCENT, 0));
+        ctx.fillStyle = dg; ctx.beginPath(); ctx.arc(px, py, 10, 0, 7); ctx.fill();
+        ctx.restore();
+      }
+
+      function drawFP(t, level) {
+        const ctx = fpCtx, W = fpW, H = fpH;
+        if (!W || !H) return;
+        // Ember backdrop — OpeningExerciseBackdrop(.ember)
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, '#33223b'); bg.addColorStop(0.4, '#4a2f47');
+        bg.addColorStop(0.72, '#5f3c49'); bg.addColorStop(1, '#6f4a49');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'screen';
+        const d1 = osc(t, 12), d2 = osc(t, 6.5);
+        const g1x = W*(0.25 + 0.1*d1), g1y = H*(0.3 - 0.06*d1);
+        const g1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, W*0.42);
+        g1.addColorStop(0, 'rgba(240,176,112,0.32)'); g1.addColorStop(1, 'rgba(240,176,112,0)');
+        ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+        const g2x = W*(0.78 - 0.08*d2), g2y = H*(0.62 + 0.05*d2);
+        const g2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, W*0.34);
+        g2.addColorStop(0, 'rgba(231,138,94,0.26)'); g2.addColorStop(1, 'rgba(231,138,94,0)');
+        ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+        // legibility scrim
+        const sc = ctx.createLinearGradient(0, 0, 0, H);
+        sc.addColorStop(0, 'rgba(0,0,0,0.32)'); sc.addColorStop(0.4, 'rgba(0,0,0,0.08)');
+        sc.addColorStop(0.7, 'rgba(0,0,0,0.05)'); sc.addColorStop(1, 'rgba(0,0,0,0.26)');
+        ctx.fillStyle = sc; ctx.fillRect(0, 0, W, H);
+
+        const S = W / 393; // SwiftUI points → px
+        const cx = W/2, cy = H*0.44;
+        const breathe = osc(t, 4.2);
+        drawGhostEight(ctx, t, cx, cy, W, H);
+
+        // ── RippleOrbView port ──
+        const fieldAlpha = 0.12 + 0.88*level;
+        ctx.save();
+        for (let i = 0; i < 3; i++) {          // ripple field: base 45pt, 3.2s easeOut
+          const p = ((t + i*(3.2/3)) % 3.2) / 3.2;
+          const e = 1 - Math.pow(1 - p, 3);
+          ctx.strokeStyle = fpRGBA(FP_ACCENT, 0.55 * 0.8*(1-e) * fieldAlpha);
+          ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.arc(cx, cy, 45*S*(0.9 + 2.0*e), 0, 7); ctx.stroke();
+        }
+        const hr = 84*S*(0.9 + level*0.35 + breathe*0.06);   // halo
+        const hg = ctx.createRadialGradient(cx, cy, 0, cx, cy, hr);
+        hg.addColorStop(0, fpRGBA(FP_ACCENT, 0.32)); hg.addColorStop(0.5, fpRGBA(FP_ACCENT, 0.08)); hg.addColorStop(1, fpRGBA(FP_ACCENT, 0));
+        ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(cx, cy, hr, 0, 7); ctx.fill();
+        const cr = 17*S*((0.94 + breathe*0.14) + level*0.3); // core + glow
+        ctx.shadowColor = fpRGBA(FP_ACCENT, 0.45 + 0.4*level);
+        ctx.shadowBlur = (12 + level*22)*S;
+        const cg = ctx.createRadialGradient(cx, cy - cr*0.16, 0, cx, cy, cr*1.3);
+        cg.addColorStop(0, 'rgba(255,255,255,0.98)'); cg.addColorStop(1, fpRGBA(FP_ACCENT, 0.95));
+        ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 7); ctx.fill();
+        ctx.restore();
+      }
+
+      // Synthetic "speaking" envelope for the muted demo — with a deliberate
+      // quiet window so the ghost-8 gets its moment.
+      function fpFakeLevel(t) {
+        if (t > 6.5 && t < 11) return 0.02;
+        const burst = Math.max(0, Math.sin(t*0.9 + 1.2)) > 0.25 ? 1 : 0.12;
+        const syll = (Math.sin(t*7.3)*0.5 + 0.5) * (Math.sin(t*3.1 + 0.7)*0.5 + 0.5);
+        return Math.min(0.9, burst * (0.18 + syll*0.6));
+      }
+
+      let fpMode = 'demo', fpStart = 0, fpRAF = null, fpLevel = 0, fpQuoteIdx = -1;
+      let fpVoice = null, fpBed = null, fpBedFade = null;
+      function fpFrame() {
+        const t = (performance.now() - fpStart)/1000;
+        let target = 0;
+        if (fpMode === 'full' && fpVoice) {
+          const L = window.PRIMER_LEVELS;
+          const el = fpVoice.currentTime;
+          target = (L && L.levels[Math.floor(el * L.fps)]) || 0;
+          if (label) {
+            const left = Math.max(0, (L ? L.duration : 163.5) - el);
+            const m = Math.floor(left/60), s = String(Math.floor(left%60)).padStart(2, '0');
+            label.textContent = LABELS[0] + ' · ' + m + ':' + s + ' left';
+          }
+          fpQuote.textContent = fpVoice.paused ? 'paused' : FP_TITLE;
+          fpQuote.classList.add('show');
+          if (fpVoice.ended) { fpFinishFull(); return; }
+        } else {
+          target = fpFakeLevel(t);
+          const qi = Math.min(FP_QUOTES.length - 1, Math.floor(t / 4.5));
+          if (qi !== fpQuoteIdx) {
+            fpQuoteIdx = qi;
+            fpQuote.classList.remove('show');
+            setTimeout(() => { fpQuote.textContent = FP_QUOTES[qi]; fpQuote.classList.add('show'); }, 350);
+          }
+        }
+        fpGhost += ((target < 0.07 ? 1 : 0) - fpGhost) * 0.02;
+        fpLevel = fpLevel*0.85 + target*0.15;
+        drawFP(t, fpLevel);
+        fpRAF = requestAnimationFrame(fpFrame);
+      }
+      function fpStop() { if (fpRAF) cancelAnimationFrame(fpRAF); fpRAF = null; }
+      function fpStopAudio() {
+        if (fpBedFade) { clearInterval(fpBedFade); fpBedFade = null; }
+        if (fpVoice) { try { fpVoice.pause(); } catch (e) {} }
+        if (fpBed) { try { fpBed.pause(); } catch (e) {} }
+        fpMode = 'demo';
+      }
+      function fpEnterFull() {
+        clearTimeout(advanceTimer);
+        fpMode = 'full';
+        fpStart = performance.now();
+        if (!fpVoice) {
+          fpVoice = new Audio('audio/first-practice/primer.mp3');
+          fpBed = new Audio('audio/first-practice/bed.m4a');
+          fpBed.loop = true;
+        }
+        fpVoice.currentTime = 0;
+        fpBed.currentTime = 0;
+        fpBed.volume = 0;
+        fpVoice.play().catch(() => {});
+        fpBed.play().catch(() => {});
+        // bed fades in to 0.35 over 2s — same as OrbNarrationPlayer
+        const fadeT0 = performance.now();
+        fpBedFade = setInterval(() => {
+          const k = Math.min(1, (performance.now() - fadeT0)/2000);
+          fpBed.volume = 0.35*k;
+          if (k >= 1) { clearInterval(fpBedFade); fpBedFade = null; }
+        }, 50);
+        if (label) label.textContent = LABELS[0];
+      }
+      function fpFinishFull() {
+        fpStopAudio();
+        fpQuote.textContent = 'Complete';
+        fpRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(1), 2500);
+      }
+      // ═══ Stage 3: Manifestation Meditation — Karthik's real morning viz
+      //     ("Steady Ground, Growing Roots"), warm-up cut at 223.5s so only the
+      //     manifestation plays, ambient bed intact (it's baked into the mix).
+      //     Captions sync from the record's own word timestamps. ═══
+      const mfCueEl = document.getElementById('mf-cue');
+      // Voice-reactive rising embers behind the meditation — motes brighten and
+      // quicken with the narrator, drift calm in the silences.
+      const mfCanvas = document.getElementById('mf-canvas');
+      const mfCtx = mfCanvas.getContext('2d');
+      let mfW = 0, mfH = 0;
+      function mfResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        mfW = mfCanvas.clientWidth; mfH = mfCanvas.clientHeight;
+        mfCanvas.width = mfW*dpr; mfCanvas.height = mfH*dpr;
+        mfCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', mfResize);
+      const mfMotes = [];
+      for (let i = 0; i < 64; i++) mfMotes.push({
+        x: Math.random(), y: Math.random(), s: 0.6 + Math.random()*1.8,
+        v: 0.008 + Math.random()*0.02, ph: Math.random()*7, spark: i%6 === 0,
+      });
+      function drawMF(t, lvl) {
+        const ctx = mfCtx, W = mfW, H = mfH;
+        if (!W || !H) return;
+        // Fire-dark sibling of the First Practice backdrop — same gradient
+        // structure, drifting screen-blend glows, and scrim, but in burning
+        // reds: deep char at the top down to smoldering rust at the base.
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, '#1c0d12'); bg.addColorStop(0.4, '#301216');
+        bg.addColorStop(0.72, '#471b18'); bg.addColorStop(1, '#5c281a');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'screen';
+        const d1 = osc(t, 12), d2 = osc(t, 6.5);
+        const g1x = W*(0.25 + 0.1*d1), g1y = H*(0.3 - 0.06*d1);
+        const g1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, W*0.42);
+        g1.addColorStop(0, 'rgba(255,140,70,0.15)'); g1.addColorStop(1, 'rgba(255,140,70,0)');
+        ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+        const g2x = W*(0.78 - 0.08*d2), g2y = H*(0.62 + 0.05*d2);
+        const g2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, W*0.34);
+        g2.addColorStop(0, 'rgba(235,90,50,0.14)'); g2.addColorStop(1, 'rgba(235,90,50,0)');
+        ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+        const sc = ctx.createLinearGradient(0, 0, 0, H);
+        sc.addColorStop(0, 'rgba(0,0,0,0.32)'); sc.addColorStop(0.4, 'rgba(0,0,0,0.08)');
+        sc.addColorStop(0.7, 'rgba(0,0,0,0.05)'); sc.addColorStop(1, 'rgba(0,0,0,0.26)');
+        ctx.fillStyle = sc; ctx.fillRect(0, 0, W, H);
+        // smoldering heart — warms toward fire-orange as the voice rises
+        const cg = ctx.createRadialGradient(W/2, H*0.62, 0, W/2, H*0.62, W*0.4);
+        cg.addColorStop(0, fpRGBA([255, 150, 80], 0.11 + 0.17*lvl)); cg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (const m of mfMotes) {
+          m.y -= m.v*(0.5 + lvl*1.6)*0.016;
+          if (m.y < -0.05) { m.y = 1.05; m.x = Math.random(); }
+          const x = (m.x + Math.sin(t*0.4 + m.ph)*0.02)*W, y = m.y*H;
+          const tw = 0.6 + 0.4*Math.sin(t*(1 + m.s) + m.ph);
+          const a = (0.10 + 0.5*lvl)*tw*(m.spark ? 1.5 : 0.8);
+          const r = m.s*(m.spark ? 2.6 : 1.8);
+          const g2 = ctx.createRadialGradient(x, y, 0, x, y, r*3);
+          g2.addColorStop(0, fpRGBA(m.spark ? [255,225,170] : GOLD, Math.min(0.8, a)));
+          g2.addColorStop(1, fpRGBA(GOLD, 0));
+          ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(x, y, r*3, 0, 7); ctx.fill();
+        }
+        ctx.restore();
+      }
+      let mfMode = 'demo', mfAudio = null, mfRAF = null, mfCueIdx = -1, mfLevel = 0, mfStart = 0;
+      let mfWordEls = [], mfCueWords = [];
+      function mfFrame() {
+        const t = (performance.now() - mfStart)/1000;
+        let target = 0;
+        if (mfMode === 'full' && mfAudio) {
+          const M = window.MANIFEST_CUES, L = window.MANIFEST_LEVELS;
+          const el = mfAudio.currentTime;
+          target = (L && L.levels[Math.floor(el * L.fps)]) || 0;
+          if (label) {
+            const left = Math.max(0, (M ? M.duration : 406) - el);
+            const m = Math.floor(left/60), s = String(Math.floor(left%60)).padStart(2, '0');
+            label.textContent = LABELS[2] + ' · ' + m + ':' + s + ' left';
+          }
+          if (mfAudio.paused && !mfAudio.ended) {
+            if (mfCueEl.textContent !== 'paused') { mfCueEl.textContent = 'paused'; mfCueEl.classList.add('show'); mfCueIdx = -1; mfWordEls = []; }
+          } else if (M) {
+            let idx = mfCueIdx;
+            while (idx + 1 < M.cues.length && M.cues[idx + 1].t <= el) idx++;
+            if (idx !== mfCueIdx && idx >= 0) {
+              mfCueIdx = idx;
+              const cue = M.cues[idx];
+              mfCueEl.classList.remove('show');
+              mfWordEls = [];
+              setTimeout(() => {
+                // word-for-word karaoke, like the iOS viz screen: each word is a
+                // span that brightens exactly when it's spoken
+                mfCueEl.innerHTML = cue.words
+                  .map(w => '<span>' + w.w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
+                  .join(' ');
+                mfWordEls = Array.from(mfCueEl.children);
+                mfCueWords = cue.words;
+                mfCueEl.classList.add('show');
+              }, 280);
+            }
+            for (let k = 0; k < mfWordEls.length; k++) {
+              mfWordEls[k].classList.toggle('sung', mfCueWords[k].t <= el);
+            }
+          }
+          if (mfAudio.ended) { mfFinishFull(); return; }
+        } else {
+          target = fpFakeLevel(t); // muted demo: embers breathe to a synthetic voice
+        }
+        mfLevel = mfLevel*0.88 + target*0.12;
+        drawMF(t, mfLevel);
+        mfRAF = requestAnimationFrame(mfFrame);
+      }
+      function mfStop() { if (mfRAF) cancelAnimationFrame(mfRAF); mfRAF = null; }
+      function mfStopAudio() {
+        if (mfAudio) { try { mfAudio.pause(); } catch (e) {} }
+        mfMode = 'demo';
+        mfCueIdx = -1;
+      }
+      function mfEnterFull() {
+        clearTimeout(advanceTimer);
+        mfMode = 'full';
+        mfCueIdx = -1;
+        vizStage.classList.remove('play'); // demo drip lines fade out; cues take over
+        vizStage.classList.add('karaoke'); // karaoke text moves center-screen
+        if (!mfAudio) mfAudio = new Audio('audio/manifestation/manifest.m4a');
+        mfAudio.currentTime = 0;
+        mfAudio.play().catch(() => {});
+        if (label) label.textContent = LABELS[2];
+      }
+      function mfFinishFull() {
+        mfStopAudio();
+        mfCueEl.classList.remove('show');
+        setTimeout(() => { mfCueEl.textContent = 'Complete'; mfCueEl.classList.add('show'); }, 300);
+        mfRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(0), 5000);
+      }
+
+      // App parity: tap the display to pause/resume during a full exercise
+      phone.addEventListener('click', () => {
+        if (current === 0 && fpMode === 'full' && fpVoice) {
+          if (fpVoice.paused) { fpVoice.play().catch(() => {}); if (fpBed) fpBed.play().catch(() => {}); }
+          else { fpVoice.pause(); if (fpBed) fpBed.pause(); }
+        }
+        if (current === 2 && mfMode === 'full' && mfAudio) {
+          if (mfAudio.paused) { mfAudio.play().catch(() => {}); }
+          else { mfAudio.pause(); }
+        }
+      });
+
+      // ═══ Sound toggle — stage 1 uses the WebAudio bells above;
+      //     stages 2–3 use plain files (PLACEHOLDER, still empty). ═══
+      const AUDIO_SRC = ['', '', '']; // [unused for stage 1, eight-drill audio, example-viz audio]
+      const audioEl = new Audio();
+      audioEl.preload = 'auto';
+      let soundOn = false;
+      const soundBtn = document.getElementById('demo-sound');
+      function syncAudio() {
+        stopBells();
+        audioEl.pause();
+        if (!soundOn) return;
+        if (current === 1) {
+          ensureAudio().then(() => {
+            if (soundOn && current === 1) {
+              if (actx && actx.state === 'suspended') actx.resume();
+              scheduleBells();
+            }
+          });
+          return;
+        }
+        const src = AUDIO_SRC[current];
+        if (!src) return;
+        if (!audioEl.src.endsWith(src)) audioEl.src = src;
+        audioEl.currentTime = 0;
+        audioEl.play().catch(() => {});
+      }
+
+      let current = -1;
+      let advanceTimer = null;
+      function setStage(i) {
+        current = i;
+        cbMode = 'demo'; // any stage change exits a full breath session
+        stages.forEach((s, k) => s.classList.toggle('active', k === i));
+        dots.forEach((d, k) => d.classList.toggle('active', k === i));
+        if (label) label.textContent = LABELS[i];
+        cbStop();
+        fpStop();
+        fpStopAudio();
+        mfStop();
+        mfStopAudio();
+        fpQuote.classList.remove('show');
+        mfCueEl.classList.remove('show');
+        vizStage.classList.remove('play');
+        vizStage.classList.remove('karaoke');
+        if (i === 0) {
+          fpResize();
+          fpStart = performance.now();
+          fpQuoteIdx = -1;
+          fpGhost = 0;
+          if (!reduced) fpFrame();
+          else { // static frame: mid-speech orb + first quote
+            drawFP(2, 0.45);
+            fpQuote.textContent = FP_QUOTES[0];
+            fpQuote.classList.add('show');
+          }
+        }
+        if (i === 1) {
+          cbResize();
+          cbStart = performance.now();
+          if (!reduced) cbFrame();
+          else { // static mid-inhale frame
+            drawOrb(3, skyAt(0.3), 0.5, 'in');
+            cueWord.textContent = 'Breathe in'; cueSub.textContent = 'in';
+            cueEl.style.opacity = 1;
+          }
+        }
+        if (i === 2) {
+          mfResize();
+          mfStart = performance.now();
+          requestAnimationFrame(() => vizStage.classList.add('play'));
+          if (!reduced) mfFrame();
+          else drawMF(2, 0.4);
+        }
+        syncAudio();
+        clearTimeout(advanceTimer);
+        if (!reduced) {
+          advanceTimer = setTimeout(() => setStage((current + 1) % stages.length), DURATIONS[i]);
+        }
+      }
+      if (soundBtn) soundBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // strip sits inside the display — don't trigger tap-to-pause
+        soundOn = !soundOn;
+        soundBtn.classList.toggle('on', soundOn);
+        soundBtn.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on to hear the guided audio');
+        const lbl = soundBtn.querySelector('.demo-sound-label');
+        if (lbl) lbl.textContent = soundOn ? 'Sound on' : 'Tap for sound';
+        // Tapping sound ON during a stage = opting into that stage's FULL
+        // exercise (30-breath session / the real 2:43 First Practice audio),
+        // with no auto-advance until it completes. Tapping OFF returns to the
+        // short muted demo cycle.
+        if (soundOn && current === 0 && !reduced) {
+          fpEnterFull();
+        } else if (soundOn && current === 1 && !reduced) {
+          cbMode = 'full';
+          clearTimeout(advanceTimer);
+          cbStop();
+          cbStart = performance.now();
+          if (label) label.textContent = LABELS[1];
+          cbFrame();
+        } else if (soundOn && current === 2 && !reduced) {
+          mfEnterFull();
+          return; // syncAudio would pause nothing relevant; cues already running
+        } else if (!soundOn && fpMode === 'full') {
+          setStage(0); // exits full mode, resumes the demo cycle
+          return;      // setStage already ran syncAudio
+        } else if (!soundOn && cbMode === 'full') {
+          setStage(1);
+          return;
+        } else if (!soundOn && mfMode === 'full') {
+          setStage(2);
+          return;
+        }
+        syncAudio();
+      });
+      dots.forEach((d, k) => d.addEventListener('click', () => setStage(k)));
+      cbResize();
+      setStage(0);
+    })();
+  </script>
+
+  <!-- ─── Science diagrams: frequency ladder / rehearsal orbs / reconsolidation retrace.
+       One rAF loop, paused offscreen; reduced-motion gets static end states. ─── -->
+  <script>
+    (() => {
+      const section = document.getElementById('science');
+      if (!section) return;
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      const wave = (len, midY, wavelength, amp, phase, warp) => {
+        let d = '';
+        for (let x = 0; x <= len; x += 1.5) {
+          let y = midY + Math.sin(phase + (2 * Math.PI * x) / wavelength) * amp;
+          if (warp) y += warp(x);
+          d += (x ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+        }
+        return d;
+      };
+
+      // Frequency ladder — same params as the iOS gate: beta jitters, alpha rolls.
+      const ladder = [...document.querySelectorAll('#sciLadder path')];
+      const ladderRows = [
+        { wavelength: 7,  speed: 7.5 },
+        { wavelength: 14, speed: 4.0 },
+        { wavelength: 30, speed: 1.8 },
+      ];
+      const drawLadder = (t) => ladder.forEach((p, i) => {
+        const r = ladderRows[i];
+        p.setAttribute('d', wave(132, 10, r.wavelength, 6, -t * r.speed));
+      });
+
+      // Rehearsal network — the pulse lights an 8-node pathway for DOING; IMAGINING
+      // re-runs it with one substituted node and CREATES its final node + edge live
+      // (new pathways). Nodes/edges built into the svg here.
+      const net = document.getElementById('sciNet');
+      const SVGNS = 'http://www.w3.org/2000/svg';
+      const mk = (name, attrs) => {
+        const e = document.createElementNS(SVGNS, name);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        net.appendChild(e);
+        return e;
+      };
+      const NODES = [
+        [22, 74], [52, 46], [58, 98], [92, 68], [124, 40], [126, 102], [158, 70],
+        [190, 44], [194, 106], [222, 74], [252, 48], [256, 100], [284, 76],
+      ];
+      const NEW_NODE = [286, 40]; // exists only once IMAGINING creates it
+      const EDGES = [
+        [0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [3, 5], [4, 6], [5, 6], [6, 7],
+        [6, 8], [7, 9], [8, 9], [7, 10], [8, 11], [9, 12], [10, 12], [11, 12],
+      ];
+      const PATH_DO = [0, 2, 3, 4, 6, 7, 9, 12];
+      const PATH_IM = [0, 2, 3, 5, 6, 7, 9, -1]; // -1 = the created node
+      const edgeKey = (a, b) => Math.min(a, b) + '-' + Math.max(a, b);
+      const edgeEls = {};
+      EDGES.forEach(([a, b]) => {
+        edgeEls[edgeKey(a, b)] = mk('line', {
+          x1: NODES[a][0], y1: NODES[a][1], x2: NODES[b][0], y2: NODES[b][1],
+          stroke: '#8b7355', 'stroke-width': 1, opacity: 0.2,
+        });
+      });
+      const newEdge = mk('line', {
+        x1: NODES[9][0], y1: NODES[9][1], x2: NODES[9][0], y2: NODES[9][1],
+        stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0, 'stroke-linecap': 'round',
+      });
+      const glowEls = NODES.map(([x, y]) => mk('circle', { cx: x, cy: y, r: 10, fill: '#c4a87c', opacity: 0 }));
+      const nodeEls = NODES.map(([x, y]) => mk('circle', { cx: x, cy: y, r: 4.5, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2, opacity: 0.7 }));
+      const newGlow = mk('circle', { cx: NEW_NODE[0], cy: NEW_NODE[1], r: 11, fill: '#c4a87c', opacity: 0 });
+      const newNodeEl = mk('circle', { cx: NEW_NODE[0], cy: NEW_NODE[1], r: 0, fill: '#cfb98a', stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0 });
+      const netLabel = mk('text', { x: 150, y: 16, 'text-anchor': 'middle' });
+      const clamp01 = (u) => Math.min(1, Math.max(0, u));
+      const drawNet = (t) => {
+        const TRAVEL = 2.2, NHOLD = 0.9, NFADE = 0.5, HALF = TRAVEL + NHOLD + NFADE;
+        const c = t % (HALF * 2);
+        const second = c >= HALF;
+        const lc = second ? c - HALF : c;
+        const path = second ? PATH_IM : PATH_DO;
+        netLabel.textContent = second ? 'IMAGINING' : 'DOING';
+        netLabel.setAttribute('opacity', lc < NFADE ? (lc / NFADE).toFixed(2) : lc > TRAVEL + NHOLD ? (1 - (lc - TRAVEL - NHOLD) / NFADE).toFixed(2) : '1');
+        const prog = clamp01(lc / TRAVEL) * (path.length - 1);
+        const dim = lc > TRAVEL + NHOLD ? 1 - (lc - TRAVEL - NHOLD) / NFADE : 1;
+        // reset to base
+        glowEls.forEach((g) => g.setAttribute('opacity', '0'));
+        nodeEls.forEach((n) => n.setAttribute('fill', '#ECEEE5'));
+        for (const k in edgeEls) { edgeEls[k].setAttribute('opacity', '0.2'); edgeEls[k].setAttribute('stroke', '#8b7355'); }
+        // light the pathway
+        path.forEach((n, i) => {
+          const lit = clamp01((prog - i) * 2 + 1) * dim;
+          if (n === -1) return; // created node handled below
+          glowEls[n].setAttribute('opacity', (lit * 0.45).toFixed(2));
+          nodeEls[n].setAttribute('fill', lit > 0.4 ? '#cfb98a' : '#ECEEE5');
+          if (i > 0 && path[i - 1] !== -1 && n !== -1) {
+            const e = edgeEls[edgeKey(path[i - 1], n)];
+            if (e) {
+              const le = clamp01((prog - i) * 2 + 1) * dim;
+              e.setAttribute('opacity', (0.2 + le * 0.55).toFixed(2));
+              if (le > 0.3) e.setAttribute('stroke', '#a8834f');
+            }
+          }
+        });
+        // IMAGINING's final hop: the edge draws itself and the node comes into being
+        if (second) {
+          const dp = clamp01(prog - 6);
+          newEdge.setAttribute('x2', (NODES[9][0] + (NEW_NODE[0] - NODES[9][0]) * dp).toFixed(1));
+          newEdge.setAttribute('y2', (NODES[9][1] + (NEW_NODE[1] - NODES[9][1]) * dp).toFixed(1));
+          newEdge.setAttribute('opacity', (dp > 0 ? 0.75 * dim : 0).toFixed(2));
+          const pop = clamp01((prog - 6.5) * 2.5);
+          newNodeEl.setAttribute('r', (4.5 * pop).toFixed(2));
+          newNodeEl.setAttribute('opacity', (pop * dim).toFixed(2));
+          newGlow.setAttribute('opacity', (pop * 0.5 * dim).toFixed(2));
+        } else {
+          newEdge.setAttribute('opacity', '0');
+          newNodeEl.setAttribute('opacity', '0');
+          newGlow.setAttribute('opacity', '0');
+        }
+      };
+
+      // Belief cascade — a belief feeds the thoughts⇄feelings loop (a state of
+      // being), which pours down a staircase: actions → habits → lifestyle.
+      // Four acts: it runs rose (belief barely visible) → traced BACK up to the
+      // source → belief seen + rewritten gold → everything below changes.
+      const csSvg = document.getElementById('sciCascade');
+      const mkC = (name, attrs) => {
+        const e = document.createElementNS(SVGNS, name);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        csSvg.appendChild(e);
+        return e;
+      };
+      const lerp3 = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
+      const blend = (a, b, u) => 'rgb(' + lerp3(a, b, u).map(Math.round).join(',') + ')';
+      const ROSE = [181, 128, 108], GOLD = [168, 131, 79];
+      const CREAM = [236, 238, 229], ROSEF = [195, 152, 133], GOLDF = [207, 185, 138];
+      const mix = (u) => blend(ROSE, GOLD, u);
+      const ease = (u) => u <= 0 ? 0 : u >= 1 ? 1 : u * u * (3 - 2 * u);
+      const polyAt = (pts, u) => {
+        const segs = []; let L = 0;
+        for (let i = 0; i < pts.length - 1; i++) { const l = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]); segs.push(l); L += l; }
+        let d = Math.max(0, Math.min(1, u)) * L;
+        for (let i = 0; i < segs.length; i++) {
+          if (d <= segs[i]) { const r = segs[i] ? d / segs[i] : 0; return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * r, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * r]; }
+          d -= segs[i];
+        }
+        return pts[pts.length - 1];
+      };
+      const csText = (x, y, s, soft) => {
+        const txt = mkC('text', { x, y, 'text-anchor': 'middle', ...(soft ? { class: 'soft' } : {}) });
+        txt.textContent = s;
+        return txt;
+      };
+      // connectors: belief → loop, then the staircase
+      mkC('path', { d: 'M33 30 C50 40 58 50 66 62', fill: 'none', stroke: '#8b7355', 'stroke-width': 1, opacity: 0.3 });
+      [[106, 92, 155, 95], [168, 99, 204, 109], [219, 115, 254, 124]].forEach(([x1, y1, x2, y2]) =>
+        mkC('line', { x1, y1, x2, y2, stroke: '#8b7355', 'stroke-width': 1, opacity: 0.3 }));
+      // the loop: two dots cycling on a ring; its halo is the state of being
+      const loopHalo = mkC('circle', { cx: 88, cy: 86, r: 26, fill: '#b5806c', opacity: 0.1 });
+      const loopRing = mkC('circle', { cx: 88, cy: 86, r: 20, fill: 'none', stroke: 'rgba(139,115,85,0.45)', 'stroke-width': 1 });
+      const loopDots = [mkC('circle', { r: 3.2, fill: '#8b7355' }), mkC('circle', { r: 3.2, fill: '#8b7355' })];
+      let loopAng = 0, loopPrevT = 0;
+      // the staircase: actions → habits → lifestyle, each step lower and larger
+      const CS_DOWN = [[162, 96, 6, 'ACTIONS'], [212, 112, 7, 'HABITS'], [264, 128, 9, 'LIFESTYLE']];
+      const csHalos = CS_DOWN.map(([x, y, r]) => mkC('circle', { cx: x, cy: y, r: r + 7, fill: '#c4a87c', opacity: 0 }));
+      const csNodes = CS_DOWN.map(([x, y, r]) => mkC('circle', { cx: x, cy: y, r, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2 }));
+      // the belief, dashed and faint until it is seen
+      const bHalo = mkC('circle', { cx: 30, cy: 26, r: 11, fill: '#c4a87c', opacity: 0 });
+      const bNode = mkC('circle', { cx: 30, cy: 26, r: 4.5, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2, 'stroke-dasharray': '2 3', opacity: 0.5 });
+      const bRipple = mkC('circle', { cx: 30, cy: 26, r: 8, fill: 'none', stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0 });
+      const bLabel = csText(30, 12, 'BELIEF');
+      csText(88, 56, 'THOUGHTS'); csText(88, 120, 'FEELINGS');
+      csText(88, 136, 'STATE OF BEING', true);
+      CS_DOWN.forEach(([x, y, , lbl]) => csText(x, y - 16, lbl));
+      const csPulse = mkC('circle', { r: 3, opacity: 0 });
+      const CS_FWD = [[30, 26], [66, 62], [88, 86], [108, 90], [162, 96], [212, 112], [264, 128]];
+      const drawCascade = (t) => {
+        const cyc = t % 11;
+        const back = 1 - clamp01((cyc - 9.8) / 1.2); // everything eases home at the end
+        const seen = clamp01((cyc - 4.4) / 0.5) * back;
+        const beliefGold = clamp01((cyc - 5.1) / 0.5) * back;
+        csPulse.setAttribute('opacity', '0');
+        csHalos.forEach((h) => h.setAttribute('opacity', '0'));
+        bHalo.setAttribute('opacity', '0');
+        let pt = null, pc = mix(0);
+        // act I: the state pours down the staircase, rose
+        for (let k = 0; k < 2; k++) {
+          const p = (cyc - k * 1.6) / 1.6;
+          if (cyc < 3.2 && p > 0 && p < 1) pt = polyAt(CS_FWD.slice(2), ease(p));
+        }
+        // act II: the trace climbs BACK up the staircase to the source
+        const bp = clamp01((cyc - 3.2) / 1.2);
+        if (bp > 0 && bp < 1) { pt = polyAt([...CS_FWD].reverse(), ease(bp)); pc = '#8b7355'; }
+        // act IV: the gold pulse runs the whole way down
+        const gp = clamp01((cyc - 5.1) / 1.9);
+        if (gp > 0 && gp < 1) { pt = polyAt(CS_FWD, ease(gp)); pc = mix(1); }
+        const loopG = (cyc > 5.1 ? clamp01((ease(gp) - 0.3) * 4) : 0) * back;
+        csNodes.forEach((n, i) => {
+          const gi = (cyc > 5.1 ? clamp01((ease(gp) - [0.62, 0.78, 0.95][i]) * 14) : 0) * back;
+          n.setAttribute('fill', blend(CREAM, GOLDF, gi));
+          n.setAttribute('stroke', gi > 0.3 ? mix(1) : '#8b7355');
+        });
+        // act III: the belief is seen (dashed → solid, rose) then rewritten (gold)
+        bNode.setAttribute('fill', blend(lerp3(CREAM, ROSEF, seen), GOLDF, beliefGold));
+        bNode.setAttribute('stroke', beliefGold > 0.2 ? mix(beliefGold) : '#8b7355');
+        bNode.setAttribute('opacity', (0.5 + 0.5 * seen).toFixed(2));
+        if (seen > 0.5) bNode.removeAttribute('stroke-dasharray');
+        else bNode.setAttribute('stroke-dasharray', '2 3');
+        bLabel.setAttribute('opacity', (0.45 + 0.55 * seen).toFixed(2));
+        const rp = clamp01((cyc - 5.1) / 0.7);
+        bRipple.setAttribute('r', (8 + rp * 15).toFixed(1));
+        bRipple.setAttribute('opacity', (rp > 0 && rp < 1 ? (1 - rp) * 0.7 : 0).toFixed(2));
+        // the loop: agitated and rose while the old belief runs, slow and gold after
+        const dt = Math.min(0.05, Math.max(0, t - loopPrevT)); loopPrevT = t;
+        loopAng += dt * (3.6 - 2.1 * loopG);
+        const wob = (1 - loopG) * 2;
+        loopDots.forEach((d, k) => {
+          const a = loopAng + k * Math.PI;
+          const r = 20 + wob * Math.sin(t * 7 + k * 3);
+          d.setAttribute('cx', (88 + Math.cos(a) * r).toFixed(1));
+          d.setAttribute('cy', (86 + Math.sin(a) * r * 0.9).toFixed(1));
+          d.setAttribute('fill', mix(loopG));
+        });
+        loopRing.setAttribute('stroke', loopG > 0.15 ? mix(loopG) : 'rgba(139,115,85,0.45)');
+        loopHalo.setAttribute('fill', mix(loopG));
+        loopHalo.setAttribute('opacity', (0.08 + 0.04 * (0.5 + 0.5 * Math.sin(t * 2.3))).toFixed(3));
+        if (pt) {
+          csPulse.setAttribute('opacity', '0.9');
+          csPulse.setAttribute('cx', pt[0].toFixed(1)); csPulse.setAttribute('cy', pt[1].toFixed(1));
+          csPulse.setAttribute('fill', pc);
+          CS_DOWN.forEach(([x, y], i) => { if (Math.hypot(pt[0] - x, pt[1] - y) < 14) csHalos[i].setAttribute('opacity', '0.35'); });
+          if (Math.hypot(pt[0] - 30, pt[1] - 26) < 14) bHalo.setAttribute('opacity', '0.35');
+        }
+        // quiet glow while the rewritten cascade holds
+        if (cyc > 7.2 && cyc < 9.8) {
+          const s = 0.1 + 0.05 * Math.sin(t * 2);
+          csHalos.forEach((h) => h.setAttribute('opacity', s.toFixed(2)));
+        }
+      };
+
+      const drawAll = (t) => { drawLadder(t); drawNet(t); drawCascade(t); };
+      // static: net shows IMAGINING mid-hold (created node visible); cascade shows
+      // the rewritten state (belief seen + staircase gold)
+      const drawStatic = () => { drawLadder(0); drawNet(3.6 + 2.2 + 0.3); drawCascade(8); };
+
+      let visible = false, rafId = null;
+      const t0 = performance.now();
+      const frame = (now) => {
+        if (!visible || still.matches) { rafId = null; return; }
+        drawAll((now - t0) / 1000);
+        rafId = requestAnimationFrame(frame);
+      };
+      const start = () => {
+        if (still.matches) { drawStatic(); return; }
+        if (!rafId) rafId = requestAnimationFrame(frame);
+      };
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        if (visible) start();
+      }, { threshold: 0.1 }).observe(section);
+      still.addEventListener('change', () => { if (still.matches) drawStatic(); else if (visible) start(); });
+      drawStatic();
+    })();
   </script>
 </body>
 </html>
