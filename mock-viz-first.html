@@ -1,0 +1,3770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daydream. The daily visualization practice.</title>
+<meta name="description" content="Daydream is deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be." />
+<meta property="og:title" content="Daydream. Become so it can arrive." />
+<meta property="og:url" content="https://daydreamers.app/" />
+<link rel="canonical" href="https://daydreamers.app/" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<meta property="og:description" content="Deep visualization sessions that surface hidden beliefs, rewire patterns, and close the gap between who you are and who you want to be." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#F2F4EE" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Variables — mirrors client/src/index.css design tokens
+   ============================================================ */
+:root {
+  --bg: #F2F4EE;
+  --bg-soft: #ECEEE5;
+  --bg-cream: #F7F6F0;
+  --accent: #8b7355;
+  --accent-light: #c4a87c;
+  --accent-deep: #6b5942;
+  --accent-bg-active: rgba(139, 115, 85, 0.18);
+  --text-primary: #2d3436;
+  --text-secondary: rgba(0, 0, 0, 0.5);
+  --border: rgba(45, 42, 38, 0.10);
+  --border-light: rgba(45, 42, 38, 0.18);
+  --hairline-soft: rgba(45, 42, 38, 0.06);
+  --highlight: rgba(139, 115, 85, 0.06);
+  --highlight-hover: rgba(45, 42, 38, 0.08);
+  --overlay: rgba(45, 42, 38, 0.45);
+  --sky-heading: #2d3436;
+  --sky-text: rgba(0, 0, 0, 0.62);
+  --hamburger-left: 1.25rem;
+  --hamburger-size: 44px;
+  --hamburger-gap: 16px;
+  --hamburger-clearance: calc(var(--hamburger-left) + var(--hamburger-size) + var(--hamburger-gap));
+
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ============================================================
+   Sky-aware text colors — ported from client/src/index.css.
+   <html> gets data-sky="night|dawn|morning|midday|afternoon|golden|dusk"
+   set by JS based on current PST time, so text stays readable as the
+   gradient sky cycles.
+   ============================================================ */
+[data-sky="night"] {
+  --sky-heading: rgba(230,225,245,0.95);
+  --sky-heading-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  --sky-text: rgba(200,195,220,0.85);
+  --sky-text-strong: rgba(230,225,245,0.95);
+  --sky-text-muted: rgba(200,195,220,0.58);
+  --sky-text-faint: rgba(200,195,220,0.38);
+  --sky-accent: #eec985;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.92);
+}
+[data-sky="dawn"] {
+  --sky-heading: rgba(255,255,255,1);
+  --sky-heading-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  --sky-text: rgba(255,245,235,0.9);
+  --sky-text-strong: rgba(255,248,240,0.97);
+  --sky-text-muted: rgba(255,240,225,0.6);
+  --sky-text-faint: rgba(255,240,225,0.35);
+  /* Luminous gold — the paper-brown --accent goes muddy over the dawn sky */
+  --sky-accent: #f0cd8e;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.95);
+}
+[data-sky="morning"] {
+  --sky-heading: rgba(55,45,38,0.9);
+  --sky-heading-shadow: none;
+  --sky-text: rgba(55,45,38,0.85);
+  --sky-text-strong: rgba(45,38,30,0.95);
+  --sky-text-muted: rgba(55,45,38,0.55);
+  --sky-text-faint: rgba(55,45,38,0.3);
+  /* Daytime: lower hero content overlaps dark hills, so the readable color there
+     is LIGHT cream (not dark text). Used by hero-trial, signin, android-soon. */
+  --sky-text-on-terrain: rgba(255, 248, 230, 0.88);
+  --sky-text-on-terrain-faint: rgba(255, 248, 230, 0.55);
+  --sky-link-on-terrain: rgba(255, 230, 180, 0.92);
+}
+[data-sky="midday"] {
+  --sky-heading: rgba(40,50,60,0.9);
+  --sky-heading-shadow: none;
+  --sky-text: rgba(40,50,60,0.82);
+  --sky-text-strong: rgba(35,40,48,0.95);
+  --sky-text-muted: rgba(40,50,60,0.52);
+  --sky-text-faint: rgba(40,50,60,0.3);
+  --sky-text-on-terrain: rgba(250, 252, 255, 0.88);
+  --sky-text-on-terrain-faint: rgba(250, 252, 255, 0.55);
+  --sky-link-on-terrain: rgba(255, 235, 190, 0.92);
+}
+[data-sky="afternoon"] {
+  --sky-heading: rgba(55,48,40,0.9);
+  --sky-heading-shadow: none;
+  --sky-text: rgba(55,48,40,0.82);
+  --sky-text-strong: rgba(45,40,32,0.95);
+  --sky-text-muted: rgba(55,48,40,0.52);
+  --sky-text-faint: rgba(55,48,40,0.3);
+  --sky-text-on-terrain: rgba(255, 250, 235, 0.88);
+  --sky-text-on-terrain-faint: rgba(255, 250, 235, 0.55);
+  --sky-link-on-terrain: rgba(255, 230, 180, 0.92);
+}
+[data-sky="golden"] {
+  --sky-heading: rgba(255,255,255,1);
+  --sky-heading-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  --sky-text: rgba(255,255,255,0.92);
+  --sky-text-strong: rgba(255,248,235,0.97);
+  --sky-text-muted: rgba(255,240,220,0.62);
+  --sky-text-faint: rgba(255,240,220,0.35);
+  --sky-accent: #ffe3a3;
+  --sky-link-on-terrain: rgba(255, 225, 165, 0.95);
+}
+[data-sky="dusk"] {
+  --sky-heading: rgba(255,245,248,0.95);
+  --sky-heading-shadow: 0 1px 8px rgba(0,0,0,0.25);
+  --sky-text: rgba(255,255,255,0.82);
+  --sky-text-strong: rgba(255,255,255,0.95);
+  --sky-text-muted: rgba(255,225,235,0.58);
+  --sky-text-faint: rgba(255,225,235,0.38);
+  --sky-accent: #f4cf8f;
+  --sky-link-on-terrain: rgba(255, 219, 156, 0.94);
+}
+
+/* ============================================================
+   Reset + base
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.5;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+button, a, [role="button"], input, textarea, select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   Animated sky — canvas-rendered time-of-day gradient
+   Constrained to the top of the page (hero region only).
+   ============================================================ */
+/* Canvas is fixed to the viewport — matches LandingPage.css behavior.
+   The gradient stays behind everything; opaque sections below the hero cover it,
+   so the "transition" is a section bg change, not a hard canvas edge. */
+.gradient-sky-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* Subtle paper grain — adds the "darker whites / lighter whites" organic feel
+   when overlaid on the cream sections. Fixed so it doesn't scroll. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.11  0 0 0 0 0.07  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ============================================================
+   Nav — horizontal on desktop, hamburger on mobile.
+   Transparent over the sky → frosted cream when scrolled.
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Matches daydreamers.app .section-nav padding exactly: 0.85rem 2rem.
+     Real iOS Safari places the page viewport below the status bar automatically
+     (no viewport-fit=cover used on the live site either). */
+  padding: 0.85rem 2rem;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+}
+/* Desktop: hamburger hidden, brand on left, links absolutely centered, login on right.
+   Centering the links absolutely keeps them truly viewport-centered regardless of the
+   widths of the brand and login flanking them. */
+.nav-links {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.nav.scrolled {
+  background: rgba(242, 244, 238, 0.92);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border-bottom-color: var(--hairline-soft);
+  padding: 0.85rem 2rem;
+}
+/* Over the cream backdrop, text flips back to static dark colors */
+.nav.scrolled .logo-word { color: var(--text-primary); }
+.nav.scrolled .nav-link { color: var(--text-secondary); }
+.nav.scrolled .nav-link:hover { color: var(--text-primary); }
+.nav.scrolled .nav-link.active { color: var(--text-primary); }
+.nav.scrolled .nav-login { color: var(--text-primary); }
+.nav.scrolled .hamburger-line { background: var(--text-primary); }
+
+.nav-brand {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--text-primary);
+}
+/* Real orb logo (SVG from live daydreamers.app — same asset for parity). */
+img.logo-orb {
+  width: 34px;
+  height: 34px;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.logo-word {
+  /* Values mirror daydreamers.app .header-logo-text exactly:
+     font-size: 1.2rem; font-weight: 300; letter-spacing: 0.03em; */
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: var(--sky-heading, var(--text-primary));
+  transition: color 0.32s ease;
+}
+
+.nav-links {
+  display: flex; align-items: center;
+  gap: 2.5rem;
+}
+/* Nav links — mirrors daydreamers.app .section-nav a exactly:
+   DM Sans, 0.82rem, weight 400, letter-spacing 0.02em, padding 0.2rem 0. */
+.nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--sky-text-muted, var(--text-secondary));
+  position: relative;
+  padding: 0.2rem 0;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-link:hover { color: var(--sky-heading, var(--text-primary)); }
+.nav-link.active { color: var(--sky-heading, var(--text-primary)); font-weight: 500; }
+.nav-link.active::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1.5px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+/* Blog link — distinct italic Cormorant, green tint (matches live exactly) */
+.nav-link-blog {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  color: rgba(80, 120, 80, 0.85);
+}
+.nav-link-blog:hover { color: rgba(60, 100, 60, 0.95); }
+
+.nav-right {
+  display: flex; align-items: center; gap: 1.25rem;
+}
+/* Log in — same DM Sans as nav links, weight 500, color slightly stronger */
+.nav-login {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--sky-heading, var(--text-primary));
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-login:hover { color: var(--sky-text-strong, var(--text-primary)); }
+
+/* Hamburger button — mirrors daydreamers.app .nav-hamburger exactly:
+   no border, no background, just 3 thin lines with subtle padding. */
+.hamburger-button {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+  transition: opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .hamburger-button:hover { opacity: 0.7; }
+}
+.hamburger-line {
+  display: block;
+  width: 20px; height: 1.5px;
+  background: var(--sky-heading, var(--text-primary));
+  border-radius: 1px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.32s ease;
+}
+.hamburger-button.open .hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger-button.open .hamburger-line:nth-child(2) { opacity: 0; }
+.hamburger-button.open .hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Slide-out menu */
+.hamburger-overlay {
+  position: fixed; inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.hamburger-overlay.open { opacity: 1; pointer-events: auto; }
+
+.hamburger-nav {
+  position: fixed; top: 0; left: 0;
+  width: 280px; max-width: 85vw;
+  height: 100vh; height: 100dvh;
+  background: var(--bg-cream);
+  z-index: 999;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 20px rgba(45, 42, 38, 0.18);
+  display: flex; flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+}
+.hamburger-nav.open { transform: translateX(0); }
+.hamburger-nav-header {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.hamburger-nav-list { list-style: none; padding: 0.5rem 0; flex: 1; }
+.hamburger-nav-list li a {
+  display: flex; align-items: center;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.hamburger-nav-list li a:hover { background: var(--highlight); color: var(--accent); }
+.hamburger-nav-list li a.blog { font-family: var(--serif); font-style: italic; color: #6b8453; }
+.hamburger-nav-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
+.hamburger-login {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+.hamburger-login:hover { background: var(--highlight); color: var(--text-primary); border-color: var(--border-light); }
+
+body.menu-open { overflow: hidden; }
+
+/* ============================================================
+   Section primitives — match LandingPage.css conventions
+   ============================================================ */
+section {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.lp-eyebrow {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 auto 1rem;
+}
+
+.lp-h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 4.8vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem;
+}
+.lp-h1 .accent {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.lp-h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 0.85rem;
+}
+.lp-h2 .accent { font-style: italic; color: var(--accent); }
+.lp-h2-sub {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.lp-h3 {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+.lp-h4 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin: 0 0 0.85rem;
+  letter-spacing: 0.005em;
+}
+
+.lp-section-head {
+  text-align: center;
+  margin: 0 auto 4.5rem;
+  max-width: 640px;
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.lp-hero {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 4rem;
+  align-items: center;
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100dvh - 4rem);
+  padding-top: 9rem !important;
+  padding-bottom: 5rem !important;
+}
+.lp-hero-text { max-width: 520px; }
+.lp-hero-sub {
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  line-height: 1.55;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin: 0 0 2.5rem;
+  max-width: 460px;
+}
+
+/* Hero is the only section that sits OVER the gradient sky.
+   Inside the hero, text uses sky-aware vars so it stays readable as the sky shifts.
+   Outside the hero (paper sections), text uses static dark colors. */
+.lp-hero .lp-h1 { color: var(--sky-heading, var(--text-primary)); }
+/* Gold accent in the H1 — luminous sky-aware gold over the gradient, with a soft
+   warm glow for lift; falls back to paper brown if a theme defines no --sky-accent. */
+.lp-hero .lp-h1 .accent {
+  color: var(--sky-accent, var(--accent));
+  text-shadow: 0 1px 14px rgba(90, 55, 25, 0.28);
+}
+.lp-hero .lp-hero-sub { color: var(--sky-text, var(--text-secondary)); }
+/* Typewriter keeps its own bronze-gold (defined on .typewriter-text) regardless
+   of sky theme — visible on both light sky and the dark hills underneath. */
+.lp-hero .typewriter-text { color: #8b6914; }
+.lp-hero .typewriter-arrow { color: #8b6914; }
+/* Lower hero elements (trial, signin, android-soon) overlap the canvas terrain.
+   During daytime themes they use a LIGHT cream color (--sky-text-on-terrain) so
+   they pop against the dark hills. Other themes (night/dawn/golden/dusk) fall
+   through to --sky-text-muted which is already light. No text-shadows. */
+.lp-hero .hero-trial {
+  color: var(--sky-text-on-terrain, var(--sky-text-muted, rgba(45, 52, 54, 0.55)));
+}
+.lp-hero .hero-trial .dot-sep {
+  background: var(--sky-text-on-terrain-faint, var(--sky-text-faint, rgba(45, 52, 54, 0.3)));
+}
+.lp-hero .lp-signin {
+  color: var(--sky-text-on-terrain, var(--sky-text-muted, rgba(45, 52, 54, 0.55)));
+}
+.lp-hero .lp-signin .lp-link {
+  color: var(--sky-link-on-terrain, var(--accent, #8b7355));
+}
+.lp-hero .android-soon {
+  color: var(--sky-text-on-terrain, var(--sky-text-muted, rgba(45, 52, 54, 0.55)));
+}
+.lp-hero .android-soon .sep {
+  background: var(--sky-text-on-terrain-faint, var(--sky-text-faint, rgba(45, 52, 54, 0.3)));
+}
+/* "Free for 3 days" under the badge — must be sky-aware like its neighbors,
+   or it vanishes into the dark hills / night sky. */
+.lp-hero .hero-free-trial {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  margin-top: 0.65rem;
+  color: var(--sky-text-on-terrain, var(--sky-text-muted, rgba(45, 52, 54, 0.55)));
+}
+
+/* Typewriter — no pill, no background. Ported from the original .home-input-typewriter:
+   fixed-width container so neighbors never shift, cursor is a ::after pseudo. */
+/* WRAP is block-level (display: flex with fit-content width) so the typewriter
+   ALWAYS sits on its own row above the App Store badge — never side-by-side
+   on wide screens. min-width holds external layout stable as the text grows /
+   shrinks; inside, the text+cursor+arrow flow inline so the arrow follows. */
+.typewriter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 310px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 1.75rem;
+}
+.typewriter-text {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  /* Darker bronze gold — reads on both light sky AND the dark hills underneath */
+  color: #8b6914;
+  white-space: nowrap;
+}
+.typewriter-text::after {
+  content: '';
+  display: inline-block;
+  width: 1.5px;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: currentColor;
+  margin-left: 2px;
+  animation: typewriter-caret 0.6s step-end infinite;
+}
+@keyframes typewriter-caret { 50% { opacity: 0; } }
+.typewriter-arrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-deep);
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform 0.22s ease, color 0.22s ease;
+}
+.typewriter-arrow:hover { transform: translateX(3px); color: var(--accent); }
+.typewriter-arrow svg {
+  width: 20px; height: 20px;
+  stroke-width: 1.5;
+}
+
+/* App Store badge */
+.appstore-badge {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: #000;
+  color: #fff;
+  padding: 13px 22px 13px 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px -10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.appstore-badge:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.5); }
+.appstore-badge svg { width: 26px; height: 26px; }
+.appstore-badge .badge-text { display: flex; flex-direction: column; line-height: 1.05; }
+.appstore-badge .badge-text .top { font-size: 0.66rem; letter-spacing: 0.04em; opacity: 0.85; font-family: var(--sans); }
+.appstore-badge .badge-text .bottom { font-size: 1.18rem; font-weight: 500; letter-spacing: -0.01em; font-family: var(--sans); }
+
+/* Hero CTA row: typewriter LEFT, App Store + Android stack RIGHT — side-by-side
+   so the typewriter's arrow points toward the App Store badge. Below 640px the
+   layout flips to column and the arrow rotates 90° to keep pointing at the badge. */
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+.typewriter-arrow svg { transition: transform 0.3s ease; }
+@media (max-width: 640px) {
+  .hero-cta-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  /* Arrow rotates to point DOWN at the badge when stacked */
+  .typewriter-arrow svg { transform: rotate(90deg); }
+}
+.hero-cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: fit-content;
+}
+
+/* Android coming soon line — subtle, always sits directly under the iOS badge */
+.android-soon {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--sky-text-muted, rgba(45, 52, 54, 0.55));
+  letter-spacing: -0.003em;
+}
+.android-soon svg { width: 14px; height: 14px; opacity: 0.7; flex-shrink: 0; }
+.android-soon .sep {
+  display: inline-block;
+  width: 2.5px; height: 2.5px; border-radius: 50%;
+  background: rgba(45, 52, 54, 0.45);
+  opacity: 0.7;
+  margin: 0 1px;
+}
+.android-soon .when { opacity: 0.7; }
+
+/* ─── Android waitlist (small inline email capture) ─── */
+.android-waitlist {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 4px 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(45, 42, 38, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: 'DM Sans', sans-serif;
+  max-width: 320px;
+}
+.android-waitlist input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text-primary, #2d3436);
+  padding: 4px 0;
+}
+.android-waitlist input::placeholder { color: rgba(45, 42, 38, 0.4); }
+.android-waitlist button {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--accent, #8b7355);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+  white-space: nowrap;
+}
+.android-waitlist button:hover { background: var(--accent-deep, #6b5942); transform: translateY(-1px); }
+.android-waitlist-thanks {
+  display: none;
+  font-size: 0.82rem;
+  color: var(--accent-deep, #6b5942);
+  padding: 4px 4px;
+}
+.android-waitlist.submitted input,
+.android-waitlist.submitted button { display: none; }
+.android-waitlist.submitted .android-waitlist-thanks { display: inline; }
+
+/* Three trust bullets under the badge — matches the original lp-science-blurb position */
+.hero-trial {
+  display: flex; align-items: center; gap: 8px;
+  margin: 1.5rem 0 1rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.hero-trial .dot-sep {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(45, 52, 54, 0.45);
+  opacity: 0.55;
+}
+
+.lp-signin {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.lp-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .lp-link:hover { opacity: 0.7; }
+}
+
+/* Hero product visual — 3-phone stack with click-to-front swap.
+   Front phone has the gentle lp-drift animation (matches the original card-stack feel). */
+.lp-hero-product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  perspective: 1400px;
+}
+.hero-phone-stack {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 9 / 14;
+}
+.hero-phone {
+  position: absolute;
+  top: 0; left: 50%;
+  width: 78%;
+  aspect-ratio: 9 / 19;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #0f0d0c;
+  box-shadow:
+    0 30px 80px rgba(45, 42, 38, 0.22),
+    0 8px 24px rgba(45, 42, 38, 0.10);
+  cursor: pointer;
+  transition:
+    transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.4s ease,
+    box-shadow 0.4s ease;
+  will-change: transform, opacity;
+}
+.hero-phone img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+/* Drift on all three. The animation-delay is set INLINE per element (see HTML)
+   so it stays stable across class swaps — no animation desync on click. */
+.hero-phone {
+  animation: lp-drift 12s ease-in-out infinite;
+}
+.hero-phone.front {
+  transform: translate(-50%, 0) rotate(0deg) scale(1);
+  z-index: 3;
+  opacity: 1;
+  cursor: pointer;
+}
+.hero-phone.back-left {
+  transform: translate(calc(-50% - 18%), 5%) rotate(-3.5deg) scale(0.93);
+  z-index: 1;
+  opacity: 0.75;
+  filter: blur(0.4px);
+}
+.hero-phone.back-right {
+  transform: translate(calc(-50% + 18%), 5%) rotate(3.5deg) scale(0.93);
+  z-index: 1;
+  opacity: 0.85;
+}
+/* Hover effects only on devices with real hover capability (avoid sticky touch state) */
+@media (hover: hover) {
+  .hero-phone.back-left:hover {
+    transform: translate(calc(-50% - 22%), 3%) rotate(-5deg) scale(0.96);
+    opacity: 0.95;
+    filter: blur(0);
+  }
+  .hero-phone.back-right:hover {
+    transform: translate(calc(-50% + 22%), 3%) rotate(5deg) scale(0.96);
+    opacity: 1;
+  }
+}
+
+@keyframes lp-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-phone, .showcase-card { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   Showcase — second cream paper layer (lighter cream)
+   ============================================================ */
+.lp-showcase {
+  text-align: center;
+  background: var(--bg-cream);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-showcase > .lp-section-head,
+.lp-showcase > .card-dots { max-width: 1180px; margin-left: auto; margin-right: auto; }
+
+.card-showcase {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 4.5rem;        /* room for the side arrows */
+}
+.card-stack {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 1.75rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.showcase-card {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 340px;
+  position: relative;
+  aspect-ratio: 1320 / 2868;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #0f0d0c;
+  box-shadow:
+    0 30px 70px rgba(45, 42, 38, 0.20),
+    0 8px 22px rgba(45, 42, 38, 0.09);
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.4s ease;
+  will-change: transform, opacity;
+  display: none;
+}
+.showcase-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.showcase-card.visible { display: block; animation: showcase-fade-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes showcase-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Hover lift only on hover-capable devices */
+@media (hover: hover) {
+  .showcase-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 36px 80px rgba(45, 42, 38, 0.22),
+      0 12px 24px rgba(45, 42, 38, 0.12);
+  }
+}
+
+/* Side arrows — Daydream aesthetic: warm cream circle, accent chevron, hairline border */
+.card-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(247, 245, 238, 0.78);
+  backdrop-filter: blur(12px) saturate(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
+  border: 1px solid rgba(139, 115, 85, 0.18);
+  box-shadow:
+    0 6px 18px rgba(60, 45, 25, 0.10),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  cursor: pointer;
+  color: var(--accent-deep);
+}
+.card-btn:hover {
+  background: rgba(255, 252, 244, 0.92);
+  border-color: rgba(139, 115, 85, 0.36);
+  box-shadow:
+    0 10px 26px rgba(139, 115, 85, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  color: var(--accent);
+}
+.card-btn.prev { left: 0; }
+.card-btn.next { right: 0; }
+.card-btn.prev:hover { transform: translateY(-50%) translateX(-3px); }
+.card-btn.next:hover { transform: translateY(-50%) translateX(3px); }
+.card-btn:active { transform: translateY(-50%) scale(0.95); }
+.card-btn svg {
+  width: 22px; height: 22px;
+  stroke-width: 1.4;       /* thinner stroke = more refined */
+}
+
+/* Page indicator dots — represents pages, not individual cards */
+.card-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.75rem;
+}
+.card-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(139, 115, 85, 0.22);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.22s ease, width 0.22s ease;
+}
+.card-dot:hover { background: rgba(139, 115, 85, 0.42); }
+.card-dot.active {
+  background: var(--accent);
+  width: 26px;
+  border-radius: 999px;
+}
+
+/* ============================================================
+   Ritual — three steps
+   ============================================================ */
+.lp-ritual {
+  padding-top: 4rem !important;
+  background: var(--bg-soft);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-ritual > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
+.lp-ritual-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 0.6rem;
+}
+.lp-ritual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.75rem;
+  align-items: start;
+}
+.lp-ritual-step {
+  display: flex; flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+}
+.lp-ritual-num {
+  font-family: var(--serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.lp-ritual-step p {
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* ============================================================
+   Quote
+   ============================================================ */
+/* Quote section is the BRIDGE — its background fades from translucent (showing the
+   gradient sky) at the top to solid cream paper at the bottom. The card sits over this
+   fade so the transition from sky to paper reads as a single smooth gesture. */
+.lp-quotes {
+  padding-top: 3rem !important;
+  padding-bottom: 5rem !important;
+  margin-top: -1rem;
+  background: linear-gradient(
+    180deg,
+    rgba(247, 246, 240, 0) 0%,
+    rgba(247, 246, 240, 0.18) 18%,
+    rgba(247, 246, 240, 0.45) 42%,
+    rgba(236, 238, 229, 0.75) 70%,
+    var(--bg-soft) 100%
+  );
+  position: relative;
+  z-index: 2;
+  max-width: none;
+}
+.lp-quotes > .lp-quote {
+  max-width: 720px;
+}
+.lp-quote {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  padding: 2.25rem 2.75rem;
+  box-shadow:
+    0 18px 50px rgba(45, 42, 38, 0.10),
+    0 4px 12px rgba(45, 42, 38, 0.05);
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+.lp-quote-body {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  font-style: italic;
+}
+.lp-quote-attr {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+/* ============================================================
+   Champions proof — replaces the lone testimonial in the
+   sky→paper bridge. Frosted cards keep text readable over the
+   fading sky at any time of day.
+   ============================================================ */
+.champ-story {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  padding: 2.75rem 3rem 2.5rem;
+  box-shadow:
+    0 18px 50px rgba(45, 42, 38, 0.10),
+    0 4px 12px rgba(45, 42, 38, 0.05);
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+.champ-story .lp-h2 { margin-bottom: 1.1rem; }
+.champ-story-body {
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin: 0;
+}
+.champ-story-body + .champ-story-body { margin-top: 1rem; }
+
+/* ============================================================
+   Science — first cream paper layer (darker cream)
+   ============================================================ */
+.lp-science {
+  text-align: center;
+  background: var(--bg-soft);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-science > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
+/* Open rows, no card chrome — each concept is a live diagram + copy set
+   directly on the quiet paper, separated by hairlines. */
+.sci-rows {
+  max-width: 840px;
+  margin: 0 auto;
+  text-align: left;
+}
+.sci-row {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 2.5rem 0;
+}
+.sci-row + .sci-row { border-top: 1px solid var(--hairline-soft); }
+.sci-fig {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sci-copy h4 { margin-bottom: 0.5rem; }
+.sci-copy strong { font-weight: 600; }
+.sci-copy p {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  font-weight: 300;
+  margin: 0;
+}
+/* Frequency ladder — port of the iOS coherence gate diagram */
+.sci-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 290px;
+}
+.sci-ladder-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sci-ladder-row svg { flex: none; }
+.sci-ladder-label .t {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.sci-ladder-label .s {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+.sci-net text {
+  font-family: var(--sans);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  fill: var(--accent);
+}
+.sci-cascade text {
+  font-family: var(--sans);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  fill: var(--accent);
+}
+.sci-cascade text.soft {
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  fill: rgba(0, 0, 0, 0.45);
+}
+
+/* ============================================================
+   Founder — third cream paper layer (darker again)
+   ============================================================ */
+.lp-founder {
+  text-align: center;
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+  background: var(--bg-soft);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-founder > * { max-width: 720px; margin-left: auto; margin-right: auto; }
+.lp-founder-body {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.4rem);
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--text-primary);
+  /* Horizontal margin auto so the 720px max-width column actually centers */
+  margin: 0 auto 1.5rem;
+  font-style: italic;
+}
+.lp-founder-sig {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 2rem auto 0;
+  letter-spacing: 0.06em;
+  font-style: normal;
+}
+
+/* ============================================================
+   Final CTA — fourth paper layer (lighter cream)
+   ============================================================ */
+.lp-final {
+  text-align: center;
+  padding-top: 6rem !important;
+  padding-bottom: 8rem !important;
+  background: linear-gradient(180deg, var(--bg-cream) 0%, var(--bg) 100%);
+  max-width: none;
+  position: relative;
+  z-index: 2;
+}
+.lp-final > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
+.lp-final .lp-h2 { margin-bottom: 1rem; }
+.lp-final-sub {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.5;
+}
+.lp-final .hero-cta-stack { margin-bottom: 1.5rem; align-items: center; }
+.lp-final .android-waitlist { margin-top: 10px; margin-left: auto; margin-right: auto; }
+.lp-final .lp-signin { font-size: 0.95rem; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--hairline-soft);
+  padding: 2.25rem 2rem;
+  background: var(--bg);
+  position: relative;
+  z-index: 2;
+}
+.footer-inner {
+  max-width: 1180px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-brand {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+.footer-brand .logo-orb { width: 18px; height: 18px; }
+.footer-links {
+  display: flex; gap: 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.footer-links a { transition: color 0.18s ease; }
+.footer-links a:hover { color: var(--text-primary); }
+
+/* ============================================================
+   Tablet (≤900px) — collapse desktop nav, stack hero
+   ============================================================ */
+@media (max-width: 900px) {
+  /* Mobile nav mirrors daydreamers.app exactly:
+     - .section-nav { justify-content: center } on small screens
+     - .nav-hamburger pinned absolute left, brand centers in flex flow
+     - padding stays modest because real iOS Safari positions the viewport
+       below the system status bar on its own (no env() padding hack needed) */
+  .nav {
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+  }
+  .nav.scrolled { padding: 0.65rem 1.5rem; }
+  .nav-links { display: none; }
+  .nav-right { display: none; }
+  .hamburger-button {
+    display: inline-flex;
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .nav-brand { gap: 0.45rem; }
+  .logo-word { font-size: 1.45rem; }
+  img.logo-orb { width: 34px; height: 34px; }
+
+  .lp-hero {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    min-height: auto;
+    padding-top: calc(7rem + env(safe-area-inset-top)) !important;
+    padding-bottom: 3.5rem !important;
+  }
+  .lp-hero-text {
+    text-align: center;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .lp-hero-sub { margin-left: auto; margin-right: auto; }
+  .typewriter-wrap { justify-content: center; }
+  .hero-cta-row { justify-content: center; }
+  .hero-cta-stack { align-items: center; text-align: center; }
+  .hero-trial { justify-content: center; flex-wrap: wrap; row-gap: 6px; }
+
+  /* On mobile the lower hero content sits HIGHER in the hero — over the light sky,
+     NOT the dark hills. So flip back to the dark muted text so it reads on the sky. */
+  .lp-hero .hero-trial,
+  .lp-hero .lp-signin,
+  .lp-hero .android-soon,
+  .lp-hero .hero-free-trial {
+    color: var(--sky-text-muted, var(--text-secondary));
+  }
+  .lp-hero .lp-signin .lp-link { color: var(--sky-accent, var(--accent, #8b7355)); }
+  .lp-hero .hero-trial .dot-sep,
+  .lp-hero .android-soon .sep {
+    background: var(--sky-text-faint, rgba(45, 52, 54, 0.3));
+  }
+  .android-soon { margin-left: auto; margin-right: auto; }
+  .lp-signin { margin-top: 0.25rem; }
+
+  .hero-phone-stack {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .card-showcase { padding: 0 3.5rem; }
+  .card-stack { gap: 1.25rem; }
+  .showcase-card { max-width: none; }
+  .card-btn { width: 44px; height: 44px; }
+  .card-btn svg { width: 18px; height: 18px; }
+
+  .sci-rows { max-width: 480px; }
+  .sci-row {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    padding: 2.25rem 0;
+  }
+  .lp-ritual-grid {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ============================================================
+   Phone (≤768px) — drop expensive effects, hold typography tight
+   ============================================================ */
+@media (max-width: 768px) {
+  section { padding: 4rem 1.25rem; }
+  .lp-quote, .champ-story {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.82);
+  }
+  .champ-story { padding: 2rem 1.6rem 1.9rem; }
+  /* Heavy blur is expensive on mobile per CLAUDE.md — drop it on the overlay too */
+  .hamburger-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(45, 42, 38, 0.55);
+  }
+  .nav { padding: 0.75rem 1.25rem; }
+  .nav.scrolled { padding: 0.55rem 1.25rem; }
+  .logo-word { font-size: 1.32rem; }
+  img.logo-orb { width: 30px; height: 30px; }
+  .hamburger-button { width: 40px; height: 40px; left: 1rem; }
+
+  .lp-hero { padding-top: calc(6.75rem + env(safe-area-inset-top)) !important; gap: 2rem; }
+  .lp-h1 { font-size: clamp(2.1rem, 8vw, 2.6rem); line-height: 1.08; }
+  .lp-hero-sub { font-size: 1.02rem; line-height: 1.5; }
+
+  /* Typewriter scales down — min-width lives on the WRAP so neighbors stay stable */
+  .typewriter-wrap { min-width: 250px; }
+  .typewriter-text { font-size: 1rem; }
+  .typewriter-arrow svg { width: 18px; height: 18px; }
+
+  .appstore-badge { padding: 11px 18px 11px 14px; }
+  .appstore-badge svg { width: 22px; height: 22px; }
+  .appstore-badge .badge-text .top { font-size: 0.6rem; }
+  .appstore-badge .badge-text .bottom { font-size: 1.04rem; }
+
+  .hero-trial { font-size: 0.8rem; gap: 6px; }
+
+  .lp-h2 { font-size: clamp(1.7rem, 5.5vw, 2.1rem); }
+  .lp-h2-sub { font-size: 0.98rem; }
+  .lp-section-head { margin-bottom: 3rem; }
+
+  .card-showcase { padding: 0 2.75rem; max-width: 480px; }
+  .card-stack { gap: 1rem; }
+
+  .lp-founder { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+  .lp-founder-body { font-size: 1.1rem; line-height: 1.5; }
+
+  .lp-final { padding-top: 4.5rem !important; padding-bottom: 6rem !important; }
+  .lp-final-sub { font-size: 0.98rem; }
+
+  footer { padding: 1.5rem 1.25rem; }
+}
+
+/* ============================================================
+   Small phone (≤480px) — collapse to single-column polish
+   ============================================================ */
+@media (max-width: 480px) {
+  section { padding: 3rem 1.1rem; }
+  .nav { padding: 0.6rem 1rem; }
+  .nav.scrolled { padding: 0.5rem 1rem; }
+  .logo-word { font-size: 1.22rem; }
+  img.logo-orb { width: 27px; height: 27px; }
+  .hamburger-button { width: 38px; height: 38px; padding: 8px; left: 0.85rem; }
+  .hamburger-line { width: 18px; height: 1.8px; }
+
+  .lp-hero { padding-top: calc(6.5rem + env(safe-area-inset-top)) !important; gap: 1.75rem; }
+  .lp-h1 { font-size: 2.05rem; line-height: 1.1; margin-bottom: 1.1rem; }
+  .lp-hero-sub { font-size: 0.98rem; margin-bottom: 1.25rem; }
+
+  /* Typewriter shrinks for narrow widths; the fixed-width container still prevents shift */
+  .typewriter-wrap { gap: 0.5rem; margin-bottom: 1.5rem; min-width: 210px; }
+  .typewriter-text { font-size: 0.95rem; }
+  .typewriter-arrow svg { width: 16px; height: 16px; }
+
+  /* App Store badge stays one row but trims margins */
+  .appstore-badge { padding: 10px 16px 10px 12px; gap: 9px; }
+  .appstore-badge svg { width: 20px; height: 20px; }
+  .appstore-badge .badge-text .bottom { font-size: 0.98rem; }
+  .android-soon { font-size: 0.74rem; }
+
+  /* Trial bullets scale down + allow row wrap with small gap */
+  .hero-trial { font-size: 0.78rem; gap: 5px; row-gap: 4px; }
+
+  .lp-h2 { font-size: 1.65rem; }
+  .lp-h2-sub { font-size: 0.94rem; }
+  .lp-section-head { margin-bottom: 2.25rem; }
+
+  /* Card showcase mobile — single tile, side arrows close in */
+  .card-showcase { padding: 0 2.5rem; max-width: 360px; }
+  .card-btn { width: 40px; height: 40px; }
+  .card-btn svg { width: 16px; height: 16px; }
+  .card-dots { margin-top: 1.25rem; }
+
+  /* Hero phone stack on small phones — narrower */
+  .hero-phone-stack { max-width: 280px; }
+
+  .lp-quotes { padding-top: 2rem !important; padding-bottom: 4rem !important; }
+  .lp-quote { padding: 1.5rem 1.4rem; border-radius: 14px; }
+  .lp-quote-body { font-size: 1.02rem; }
+  .champ-story { padding: 1.75rem 1.25rem 1.6rem; border-radius: 14px; }
+  .champ-card { padding: 1.25rem 1.3rem; }
+  .lp-ritual-title { font-size: 1.2rem; }
+
+  .lp-founder { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+  .lp-founder-body { font-size: 1rem; }
+
+  .lp-h4 { font-size: 1.05rem; }
+  .sci-copy p { font-size: 0.92rem; }
+  .sci-row { padding: 1.9rem 0; }
+
+  .lp-final { padding-top: 4rem !important; padding-bottom: 5rem !important; }
+
+  footer { padding: 1.25rem 1rem; }
+  .footer-inner { justify-content: center; text-align: center; flex-direction: column; gap: 0.75rem; }
+  .footer-links { gap: 1.1rem; font-size: 0.8rem; flex-wrap: wrap; justify-content: center; }
+}
+
+/* Tiny phones (≤360px) — final safety net */
+@media (max-width: 360px) {
+  .logo-word { font-size: 1.1rem; }
+  img.logo-orb { width: 24px; height: 24px; }
+  .lp-h1 { font-size: 1.85rem; }
+  .typewriter-wrap { min-width: 190px; }
+  .typewriter-text { font-size: 0.9rem; }
+  .hero-trial { font-size: 0.74rem; }
+}
+
+/* ============================================================
+   Hero session demo — a live placeholder mock of the 3-part
+   session (coherence breathing → number-8 drill → example viz)
+   running inside a single phone frame. Placeholder pacing and
+   visuals; swap in real exercise content later.
+   ============================================================ */
+.hero-demo-display {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 4 / 4.6;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #232a44 0%, #161b30 45%, #0e1122 100%);
+  box-shadow:
+    0 30px 80px rgba(45, 42, 38, 0.24),
+    0 8px 24px rgba(45, 42, 38, 0.10),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: lp-drift 12s ease-in-out infinite;
+}
+/* Demo unit — player strip (header) + chrome-free display below */
+.demo-unit {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.demo-strip {
+  position: absolute;
+  top: 0.85rem; left: 0.85rem; right: 0.85rem;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.45rem 0.55rem 0.45rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.demo-stage-label {
+  font-family: var(--sans);
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255, 242, 225, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+/* Sound toggle — quiet glass pill on the strip; gently pulses until first tap */
+.demo-sound {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 245, 225, 0.94);
+  font-family: var(--sans);
+  font-size: 0.73rem; font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  animation: sound-nudge 2.8s ease-in-out infinite;
+}
+.demo-sound:hover { background: rgba(255, 255, 255, 0.2); }
+.demo-sound:focus { outline: none; }
+.demo-sound:focus-visible { outline: 2px solid rgba(255, 230, 180, 0.7); outline-offset: 2px; }
+.demo-sound svg { width: 16px; height: 16px; flex-shrink: 0; }
+.demo-sound .demo-sound-label { display: none; } /* icon-only everywhere — no "Tap for sound" text */
+.demo-sound .icon-sound { display: none; }
+.demo-sound.on {
+  animation: none;
+  background: rgba(255, 230, 180, 0.22);
+  border-color: rgba(255, 230, 180, 0.42);
+}
+.demo-sound.on .icon-muted { display: none; }
+.demo-sound.on .icon-sound { display: block; }
+@keyframes sound-nudge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.demo-stage {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 4rem 1.6rem 3.4rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.demo-stage.active { opacity: 1; pointer-events: auto; }
+.demo-instruction {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.35rem; line-height: 1.4;
+  color: rgba(255, 248, 235, 0.92);
+  margin: 2rem 0 0;
+  text-align: center;
+  transition: opacity 0.35s ease;
+}
+.demo-caption {
+  position: absolute; bottom: 1.7rem; left: 2.2rem; right: 2.2rem;
+  font-family: var(--sans);
+  font-size: 0.82rem; line-height: 1.55;
+  color: rgba(220, 215, 235, 0.55);
+  text-align: center;
+  margin: 0;
+}
+/* Stage 1 — Coherence Breath (faithful port of coherence.html: canvas orb + cue type) */
+.coherence-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.coherence-cue {
+  position: absolute; left: 0; right: 0; bottom: 5.8rem;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.cue-word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1;
+  color: #e8d9b8;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+.cue-sub {
+  margin-top: 10px;
+  font-size: 0.6rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(230, 220, 200, 0.55);
+  min-height: 1em;
+}
+/* Stage 2 — The First Practice (canvas orb on ember backdrop + script quotes) */
+.fp-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.fp-quote {
+  position: absolute; left: 2rem; right: 2rem; bottom: 5.8rem;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.06rem; line-height: 1.45;
+  color: rgba(255, 244, 228, 0.92);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.fp-quote.show { opacity: 1; }
+/* Karaoke words in the manifestation cue — unspoken words wait dim, each one
+   brightens the moment it's spoken (iOS viz-screen parity) */
+#mf-cue span { opacity: 0.3; transition: opacity 0.28s ease; }
+#mf-cue span.sung { opacity: 1; }
+/* During full manifestation playback the karaoke text is the centerpiece —
+   center-screen, a touch larger, embers breathing behind it */
+.stage-viz.karaoke #mf-cue {
+  top: 47%; bottom: auto;
+  transform: translateY(-50%);
+  font-size: 1.22rem;
+  line-height: 1.55;
+}
+/* Stage 3 — example visualization lines */
+.demo-viz-lines {
+  display: flex; flex-direction: column;
+  gap: 1.1rem;
+  max-width: 330px;
+  position: relative; z-index: 2; /* above the ember canvas */
+}
+.demo-viz-lines span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.22rem; line-height: 1.5;
+  color: rgba(255, 248, 235, 0.9);
+  opacity: 0; transform: translateY(7px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.demo-viz-lines span:nth-child(2) { transition-delay: 2.6s; }
+.demo-viz-lines span:nth-child(3) { transition-delay: 5.4s; }
+.demo-viz-lines span:nth-child(4) { transition-delay: 8.2s; }
+.stage-viz.play .demo-viz-lines span { opacity: 1; transform: none; }
+/* Step dots — live on the strip, signal the three-part demo */
+.demo-dots {
+  display: flex; align-items: center; gap: 0.5rem;
+  flex-shrink: 0;
+}
+.demo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 245, 225, 0.3);
+  border: none; padding: 0;
+  cursor: pointer;
+  transition: background 0.25s ease, width 0.25s ease;
+}
+.demo-dot:hover { background: rgba(255, 245, 225, 0.55); }
+.demo-dot.active {
+  background: rgba(255, 230, 180, 0.92);
+  width: 20px;
+  border-radius: 999px;
+}
+@media (max-width: 900px) {
+  .demo-unit { max-width: min(100%, 460px); }
+  /* Narrow widths wrap the caption to 4-5 lines — grow the panel ~20% taller
+     and lift the cue/quote text so the two blocks never meet. */
+  .hero-demo-display { aspect-ratio: 4 / 5.6; }
+  .coherence-cue, .fp-quote { bottom: 9.2rem; }
+}
+@media (max-width: 420px) {
+  /* Tight widths: tighter strip */
+  .demo-strip { padding-left: 0.9rem; gap: 0.6rem; }
+  .demo-stage-label { font-size: 0.62rem; letter-spacing: 0.12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-demo-display { animation: none; }
+  .demo-sound { animation: none; }
+  .demo-viz-lines span { transition: none; opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   DEV ONLY — sky time slider. Strip this block before shipping.
+   ============================================================ */
+.sky-debug {
+  position: fixed;
+  bottom: 14px; right: 14px;
+  z-index: 3000;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  background: rgba(28, 26, 24, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-family: 'DM Sans', sans-serif;
+}
+.sky-live {
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #9fdb9f;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.sky-live.locked { color: #e8c98a; }
+.sky-live:hover { background: rgba(255, 255, 255, 0.16); }
+.sky-debug input[type="range"] {
+  width: 170px;
+  accent-color: #c4a87c;
+  cursor: pointer;
+}
+.sky-time {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.85);
+  min-width: 108px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .sky-debug input[type="range"] { width: 110px; }
+  .sky-time { min-width: 92px; }
+}
+</style>
+</head>
+<body>
+  <!-- Animated sky lives at the top, fades into cream paper below -->
+  <canvas id="gradient-sky" class="gradient-sky-canvas" aria-hidden="true"></canvas>
+
+  <!-- DEV ONLY: time-of-day slider — preview/lock the sky. Strip before shipping. -->
+  <div class="sky-debug" id="sky-debug">
+    <button class="sky-live" id="sky-live" type="button">live</button>
+    <input type="range" id="sky-slider" min="0" max="1439" step="5" value="720" aria-label="Time of day" />
+    <span class="sky-time" id="sky-time">--:--</span>
+  </div>
+
+
+  <!-- ─── Nav ─── -->
+  <nav class="nav" id="nav">
+    <button class="hamburger-button" id="hamburger-button" aria-label="Menu" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+    <a class="nav-brand" href="/" aria-label="Daydream home">
+      <img class="logo-orb" src="logo.svg" alt="" aria-hidden="true" />
+      <span class="logo-word">daydream</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#science">Science</a>
+      <a class="nav-link active" href="#how">How It Works</a>
+      <a class="nav-link" href="#mission">Mission</a>
+      <a class="nav-link nav-link-blog" href="https://daydreamers.app/blog" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </nav>
+
+  <!-- Mobile slide-out menu -->
+  <div class="hamburger-overlay" id="hamburger-overlay" aria-hidden="true"></div>
+  <aside class="hamburger-nav" id="hamburger-nav" aria-hidden="true">
+    <div class="hamburger-nav-header">
+      <img class="logo-orb" src="logo.svg" alt="" aria-hidden="true" />
+      <span class="logo-word">daydream</span>
+    </div>
+    <ul class="hamburger-nav-list">
+      <li><a href="#science">Science</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#mission">Mission</a></li>
+      <li><a class="blog" href="#blog">Blog</a></li>
+    </ul>
+  </aside>
+
+  <!-- ─── Hero ─── -->
+  <section class="lp-hero">
+    <div class="lp-hero-text">
+      <h1 class="lp-h1">Embodiment <span class="accent">through visualization.</span></h1>
+      <p class="lp-hero-sub">
+        Guided visualization and breathing practice for embodying the greatest self.
+      </p>
+      <div class="hero-cta-row">
+        <div class="hero-cta-stack">
+        <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
+          <div class="badge-text">
+            <span class="top">Download on the</span>
+            <span class="bottom">App Store</span>
+          </div>
+        </a>
+        <span class="hero-free-trial">Free daily practice and exercises</span>
+      </div>
+      </div>
+    </div>
+
+    <div class="lp-hero-product">
+      <div class="demo-unit">
+      <div class="hero-demo-display" id="hero-demo" role="group" aria-label="Live preview of a Daydream session: coherence breathing, a visualization drill, then a personal visualization">
+        <!-- Player strip — translucent glass header INSIDE the display:
+             stage name · step dots · sound. The canvas reads through it. -->
+        <div class="demo-strip" id="demo-strip">
+          <span class="demo-stage-label" id="demo-stage-label">Improve Visualization</span>
+          <div class="demo-dots" role="tablist" aria-label="Session preview steps">
+            <button class="demo-dot active" type="button" aria-label="Improve Visualization"></button>
+            <button class="demo-dot" type="button" aria-label="Find Coherence"></button>
+            <button class="demo-dot" type="button" aria-label="Manifestation Meditation"></button>
+          </div>
+          <button class="demo-sound" id="demo-sound" type="button" aria-label="Turn sound on to hear the guided audio">
+            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            <svg class="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="demo-sound-label">Tap for sound</span>
+          </button>
+        </div>
+
+        <!-- Stage 1: The First Practice — the EXACT exercise a fresh user gets after
+             tapping Get Started in the app: the 2:43 voice-guided figure-eight
+             mind's-eye warm-up (the app's real bundled audio in audio/first-practice/),
+             gold audio-reactive orb on the ember backdrop, ported from
+             OpeningExerciseScreen.swift / OrbSpeaksKit.swift. Tap sound = full exercise. -->
+        <div class="demo-stage stage-fp active" data-stage="0">
+          <canvas class="fp-canvas" id="fp-canvas" aria-hidden="true"></canvas>
+          <div class="fp-quote" id="fp-quote"></div>
+          <p class="demo-caption">Visualization is a skill just like any other, and can be practiced. In Daydream you will practice basic exercises shown to improve your ability to use the mind's eye.</p>
+        </div>
+
+        <!-- Stage 2: Coherence Breath — faithful port of ~/Desktop/coherence-breath/coherence.html
+             (6s in / 6s out cosine breath, particle orb, octave bells + airy first breaths) -->
+        <div class="demo-stage stage-breath" data-stage="1">
+          <canvas class="coherence-canvas" id="coherence-canvas" aria-hidden="true"></canvas>
+          <div class="coherence-cue" id="coherence-cue">
+            <div class="cue-word" id="cue-word">Arrive</div>
+            <div class="cue-sub" id="cue-sub"></div>
+          </div>
+          <p class="demo-caption">Coherence breathing pulls the brain out of the beta wave state into one with a lower frequency to turn off the fight/flight system and enter a state of creativity and observation.</p>
+        </div>
+
+        <!-- Stage 3: Manifestation Meditation — a REAL personalized visualization from
+             the app ("Steady Ground, Growing Roots", Jul 11), warm-up primer cut off.
+             Muted demo drips its opening lines; tap sound = the full 6:46 meditation
+             with captions synced from the record's word timestamps. -->
+        <div class="demo-stage stage-viz" data-stage="2">
+          <canvas class="fp-canvas" id="mf-canvas" aria-hidden="true"></canvas>
+          <div class="demo-viz-lines">
+            <span>Settle into where you're sitting. Let the weight of you be held by whatever is under you.</span>
+            <span>I want you to step forward with me. Not far. Just a little way into the year ahead.</span>
+            <span>Feel where in your body that steadiness sits.</span>
+            <span>This is just how you are now.</span>
+          </div>
+          <div class="fp-quote" id="mf-cue"></div>
+          <p class="demo-caption">Your meditations will use visualization to create new feelings and thoughts to trigger an emotional connection with the life and version of yourself you want to be.</p>
+        </div>
+
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Proof: champions rehearse it first (sits in the hero-to-paper transition zone) ─── -->
+  <section id="proof" class="lp-quotes">
+    <div class="champ-story">
+      <p class="lp-eyebrow">The not so secret, secret</p>
+      <h2 class="lp-h2">The inner becoming occurs <span class="accent">before the outer having.</span></h2>
+      <p class="champ-story-body">
+        Your belief in who you are and what you're capable of is the greatest predictor of the life you create. This is nothing new: the same teaching runs through religious and philosophical texts across the ancient world. But over the past 15 years, modern research has used controlled studies and fMRI imaging to study these truths through observable phenomena.
+      </p>
+      <p class="champ-story-body">
+        Daydream guides you to bring the power of creation back to the self through breathing and visualization, building coherence between your desires and the version of you who has them.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- ─── Science: three open rows, each concept shown as a small live diagram ─── -->
+  <section id="science" class="lp-science">
+    <div class="lp-section-head">
+      <p class="lp-eyebrow">The science, briefly</p>
+      <h2 class="lp-h2">Three things your brain <span class="accent">already does.</span></h2>
+    </div>
+    <div class="sci-rows">
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <div class="sci-ladder" id="sciLadder" role="img" aria-label="Brainwave diagram: high beta, fight or flight, settles through low beta into alpha, creative and observing">
+            <div class="sci-ladder-row" style="opacity: 0.55">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#b5806c" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">High beta</span><span class="s">fight or flight</span></div>
+            </div>
+            <div class="sci-ladder-row" style="opacity: 0.75">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#bd917e" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">Low beta</span><span class="s">busy mind</span></div>
+            </div>
+            <div class="sci-ladder-row">
+              <svg viewBox="0 0 132 20" width="132" height="20" aria-hidden="true"><path fill="none" stroke="#a8834f" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <div class="sci-ladder-label"><span class="t">Alpha</span><span class="s">creative, observing</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">Breath moves the brainwave</h4>
+          <p>Slow, even breathing settles the brain out of high beta, the fight or flight state, into alpha. It also <strong>reduces activity in the default mode network</strong>, the circuitry that loops self-referential chatter and replays the story of who you have been. With that loop quiet, <strong>imagery turns vivid and the mind opens</strong>. Every Daydream session begins here.</p>
+        </div>
+      </div>
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <svg class="sci-net" id="sciNet" viewBox="0 0 300 134" width="300" height="134" role="img" aria-label="A pulse lights the same pathway of nodes for doing and for imagining — and imagining lays down a brand-new node at the end, a new pathway"></svg>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">Imagined reps are real reps</h4>
+          <p>The brain <strong>fires the same networks</strong> whether you do something or vividly imagine it, and vivid imagining can lay down pathway the action hasn't walked yet. Sports science has trained on this for fifty years. Daydream points it at who you're becoming.</p>
+        </div>
+      </div>
+
+      <div class="sci-row">
+        <div class="sci-fig">
+          <svg class="sci-cascade" id="sciCascade" viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="A belief feeds a spinning loop of thoughts and feelings — a state of being — which pours down a staircase of actions, habits, lifestyle. The chain is traced back to the belief, the belief is rewritten, and everything below it changes"></svg>
+        </div>
+        <div class="sci-copy">
+          <h4 class="lp-h4">It starts with a belief</h4>
+          <p>A belief sets off thoughts and feelings, a loop that becomes your state of being. That state drives how you act; actions harden into habits; habits build your lifestyle. Most of us only ever see the bottom of the staircase. Daydream's conversations trace it back up to the source, because <strong>a belief you can see is a belief you can rewrite</strong>. And when it changes, everything downstream changes with it.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Showcase: single hand-crafted card with prev/next controls ─── -->
+  <section id="how" class="lp-showcase">
+    <div class="lp-section-head">
+      <p class="lp-eyebrow">What it looks like</p>
+      <h2 class="lp-h2">One purpose. <span class="accent">Embodiment.</span></h2>
+      <p class="lp-h2-sub">Every card, every story, every conversation points at the same thing: feeling like the version of you that's already becoming.</p>
+    </div>
+
+    <div class="card-showcase">
+      <button class="card-btn prev" id="card-prev" aria-label="Previous screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <div class="card-stack" id="card-stack" role="group" aria-label="Daydream app screens">
+        <div class="showcase-card active" data-idx="0">
+          <img src="screenshots/opt/screenshot-1.webp" alt="The You tab, your becoming identity" loading="eager" fetchpriority="high" />
+        </div>
+        <div class="showcase-card behind" data-idx="1">
+          <img src="screenshots/opt/screenshot-3.webp" alt="Beliefs you can see, your identity terrain" loading="eager" />
+        </div>
+        <div class="showcase-card hidden" data-idx="2">
+          <img src="screenshots/opt/screenshot-6.webp" alt="Stories that map your becoming" loading="lazy" />
+        </div>
+        <div class="showcase-card hidden" data-idx="3">
+          <img src="screenshots/opt/screenshot-2.webp" alt="Identity shifting cards every morning" loading="lazy" />
+        </div>
+        <div class="showcase-card hidden" data-idx="4">
+          <img src="screenshots/opt/screenshot-4.webp" alt="Conversations rooted in belief data" loading="lazy" />
+        </div>
+        <div class="showcase-card hidden" data-idx="5">
+          <img src="screenshots/opt/screenshot-5.webp" alt="Visualizations that make aligned action easier" loading="lazy" />
+        </div>
+      </div>
+
+      <button class="card-btn next" id="card-next" aria-label="Next screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <div class="card-dots" id="card-dots" role="tablist" aria-label="Jump to a specific page"></div>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:3.5rem;">
+      <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
+        <div class="badge-text">
+          <span class="top">Download on the</span>
+          <span class="bottom">App Store</span>
+        </div>
+      </a>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5;">Free daily practice and exercises</span>
+    </div>
+  </section>
+
+  <!-- ─── Founder ─── -->
+  <section id="mission" class="lp-founder">
+    <p class="lp-eyebrow">A note from the creator of Daydream</p>
+    <p class="lp-founder-body">
+      I built Daydream because every self-improvement method I tried made me feel further from the person I was trying to become. I wanted something that helps me embody the version I already know I want to be.
+    </p>
+    <p class="lp-founder-body">
+      Not a coach, not a journal, not a meditation app. A few minutes every morning to align you with the version you are becoming.
+    </p>
+    <p class="lp-founder-sig">Karthik</p>
+  </section>
+
+  <!-- ─── Final CTA ─── -->
+  <section id="becoming" class="lp-final">
+    <h2 class="lp-h2">Begin where you are.</h2>
+    <div class="hero-cta-stack lp-final-cta-stack">
+      <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
+        <div class="badge-text">
+          <span class="top">Download on the</span>
+          <span class="bottom">App Store</span>
+        </div>
+      </a>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5; margin-top:0.5rem;">Free daily practice and exercises</span>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="logo-orb" src="logo.svg" alt="" aria-hidden="true" />
+        <span>daydream</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://exp.daydreamers.app/privacy.html">Privacy</a>
+        <a href="https://exp.daydreamers.app/terms.html">Terms</a>
+        <a href="mailto:hello@daydreamers.app">hello@daydreamers.app</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Per-frame orb levels for the First Practice audio (app-identical metering) -->
+  <script src="audio/first-practice/primer-levels.js"></script>
+  <!-- Synced caption cues + per-frame voice levels for the manifestation meditation -->
+  <script src="audio/manifestation/manifest-cues.js"></script>
+  <script src="audio/manifestation/manifest-levels.js"></script>
+  <script>
+    // ───────────────────────────────────────────────────────────
+    // GradientSky — ported from client/src/components/Home/GradientSky.jsx
+    // Canvas-based animated 24h sky with terrain, sun/moon, particles.
+    // ───────────────────────────────────────────────────────────
+    (function () {
+      const canvas = document.getElementById('gradient-sky');
+      if (!canvas) return;
+
+      const lerp = (a, b, t) => a + (b - a) * Math.max(0, Math.min(1, t));
+      const lerpRGB = (a, b, t) => a.map((v, i) => Math.round(lerp(v, b[i], t)));
+      const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+      const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+      const PALETTES = [
+        { sky:[8,8,22], mid:[12,12,30], horizon:[18,16,38], glow:[20,18,35], fog:[15,14,28], mountain:[10,10,22], hill:[8,8,18], stars:0.8 },
+        { sky:[18,18,42], mid:[35,28,55], horizon:[120,75,68], glow:[160,100,80], fog:[80,55,60], mountain:[22,28,30], hill:[18,24,22], stars:0.15 },
+        { sky:[75,80,120], mid:[130,110,135], horizon:[210,155,120], glow:[235,185,145], fog:[190,160,140], mountain:[48,62,48], hill:[40,55,40], stars:0 },
+        { sky:[155,180,215], mid:[180,200,228], horizon:[225,210,195], glow:[240,225,210], fog:[215,208,200], mountain:[65,95,62], hill:[58,88,55], stars:0 },
+        { sky:[175,205,238], mid:[195,218,242], horizon:[228,232,240], glow:[235,238,242], fog:[220,225,232], mountain:[82,108,80], hill:[75,100,74], stars:0 },
+        { sky:[175,200,232], mid:[195,210,235], horizon:[225,218,208], glow:[232,225,215], fog:[215,210,200], mountain:[92,95,78], hill:[82,82,68], stars:0 },
+        { sky:[160,155,180], mid:[185,160,155], horizon:[235,185,130], glow:[240,195,140], fog:[210,175,140], mountain:[75,55,50], hill:[60,42,38], stars:0 },
+        { sky:[85,55,85], mid:[130,75,80], horizon:[220,140,95], glow:[230,160,100], fog:[170,110,85], mountain:[40,28,35], hill:[30,20,28], stars:0.05 },
+        { sky:[35,25,52], mid:[55,38,62], horizon:[110,70,78], glow:[90,58,65], fog:[60,42,55], mountain:[22,18,30], hill:[16,14,24], stars:0.4 },
+        { sky:[8,8,22], mid:[12,12,30], horizon:[22,18,38], glow:[25,20,35], fog:[18,16,30], mountain:[10,10,22], hill:[8,8,18], stars:0.7 },
+      ];
+      const TIMES = [0, 300, 390, 480, 600, 840, 1020, 1110, 1170, 1260, 1440];
+
+      function getPalette(minute) {
+        for (let i = 0; i < TIMES.length - 1; i++) {
+          if (minute < TIMES[i + 1]) {
+            const t = (minute - TIMES[i]) / (TIMES[i + 1] - TIMES[i]);
+            const a = PALETTES[i], b = PALETTES[Math.min(i + 1, PALETTES.length - 1)];
+            const result = {};
+            for (const key in a) {
+              if (Array.isArray(a[key])) result[key] = lerpRGB(a[key], b[key], t);
+              else result[key] = lerp(a[key], b[key], t);
+            }
+            return result;
+          }
+        }
+        return PALETTES[0];
+      }
+      // DESIGN LOCK: sky is pinned to 6:50am dawn per Karthik's call (Jul 2026) —
+      // one lighting condition to manage instead of seven. Set to null for live time.
+      const DESIGN_LOCK_MINUTE = 410; // 6:50am
+      function getPSTMinute() {
+        // Dev override: the time-of-day slider still previews other times.
+        if (window.__skyLockMinute != null) return window.__skyLockMinute;
+        if (DESIGN_LOCK_MINUTE != null) return DESIGN_LOCK_MINUTE;
+        const now = new Date();
+        const pstStr = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', hour12: false });
+        const parts = pstStr.split(', ')[1]?.split(':') || [];
+        const hour = parseInt(parts[0], 10) || 0;
+        const minute = parseInt(parts[1], 10) || 0;
+        return hour * 60 + minute;
+      }
+      function getSkyTheme(minute) {
+        if (minute === undefined) minute = getPSTMinute();
+        if (minute >= 1200 || minute < 300) return 'night';
+        if (minute < 420) return 'dawn';
+        if (minute < 600) return 'morning';
+        if (minute < 840) return 'midday';
+        if (minute < 1020) return 'afternoon';
+        if (minute < 1140) return 'golden';
+        return 'dusk';
+      }
+      // Apply data-sky to <html> so all sky-aware text colors update with the time of day.
+      function applySkyTheme() {
+        document.documentElement.setAttribute('data-sky', getSkyTheme());
+      }
+      applySkyTheme();
+      setInterval(applySkyTheme, 60000);
+
+      // ── Dev tool: time-of-day slider — preview + lock the sky at any minute.
+      //    Lock persists in localStorage across refreshes. Not for production.
+      (function () {
+        const slider = document.getElementById('sky-slider');
+        const timeEl = document.getElementById('sky-time');
+        const liveBtn = document.getElementById('sky-live');
+        if (!slider || !timeEl || !liveBtn) return;
+        const fmt = (m) => {
+          const h = Math.floor(m / 60), mm = String(m % 60).padStart(2, '0');
+          const hh = ((h + 11) % 12) + 1;
+          return hh + ':' + mm + (h >= 12 ? 'pm' : 'am');
+        };
+        function render() {
+          const overridden = window.__skyLockMinute != null;
+          const m = overridden ? window.__skyLockMinute : getPSTMinute();
+          slider.value = m;
+          timeEl.textContent = fmt(m) + ' · ' + getSkyTheme(m);
+          liveBtn.classList.toggle('locked', overridden);
+          liveBtn.textContent = overridden ? 'preview' : (DESIGN_LOCK_MINUTE != null ? 'locked' : 'live');
+          liveBtn.title = overridden
+            ? 'Previewing another time — click to return to the design lock'
+            : (DESIGN_LOCK_MINUTE != null ? 'Design-locked to 6:50am dawn — drag slider to preview other times' : 'Following real time — drag slider to lock');
+        }
+        slider.addEventListener('input', () => {
+          window.__skyLockMinute = parseInt(slider.value, 10);
+          localStorage.setItem('skyLockMinute', slider.value);
+          applySkyTheme();
+          render();
+        });
+        liveBtn.addEventListener('click', () => {
+          window.__skyLockMinute = null;
+          localStorage.removeItem('skyLockMinute');
+          applySkyTheme();
+          render();
+        });
+        // With a design lock in place, stale slider previews don't persist across refreshes.
+        if (DESIGN_LOCK_MINUTE == null) {
+          const saved = localStorage.getItem('skyLockMinute');
+          if (saved != null) window.__skyLockMinute = parseInt(saved, 10);
+        } else {
+          localStorage.removeItem('skyLockMinute');
+        }
+        applySkyTheme();
+        render();
+        setInterval(render, 30000);
+      })();
+
+      function createStars(W, H) {
+        const stars = [];
+        for (let i = 0; i < 120; i++) stars.push({
+          x: Math.random()*W, y: Math.random()*H*0.55,
+          r: 0.4 + Math.random()*1.2,
+          twinkleSpeed: 0.5 + Math.random()*2,
+          twinklePhase: Math.random()*Math.PI*2,
+        });
+        return stars;
+      }
+      function createClouds(H) {
+        const clouds = [];
+        for (let i = 0; i < 6; i++) clouds.push({
+          x: Math.random()*2000 - 300, y: H * (0.05 + Math.random()*0.35),
+          width: 180 + Math.random()*350, height: 15 + Math.random()*30,
+          speed: 0.06 + Math.random()*0.12, opacity: 0.025 + Math.random()*0.05,
+          phase: Math.random()*Math.PI*2,
+        });
+        return clouds;
+      }
+      function createFogWisps() {
+        const wisps = [];
+        for (let i = 0; i < 6; i++) wisps.push({
+          x: Math.random()*2000 - 500, y: 0.7 + Math.random()*0.08,
+          width: 200 + Math.random()*400, height: 15 + Math.random()*25,
+          speed: 0.08 + Math.random()*0.1, opacity: 0.04 + Math.random()*0.06,
+          phase: Math.random()*Math.PI*2,
+        });
+        return wisps;
+      }
+      function createFireflies() {
+        const flies = [];
+        for (let i = 0; i < 25; i++) flies.push({
+          x: Math.random(), y: 0.6 + Math.random()*0.3,
+          speed: 0.0001 + Math.random()*0.0003,
+          phaseX: Math.random()*Math.PI*2, phaseY: Math.random()*Math.PI*2,
+          radius: 1 + Math.random()*1.5,
+          pulseSpeed: 1 + Math.random()*2, pulsePhase: Math.random()*Math.PI*2,
+        });
+        return flies;
+      }
+      const BUTTERFLY_COLORS = [[110,140,90],[140,125,85],[130,155,105],[165,145,110]];
+      function createButterflies() {
+        const bflies = [];
+        for (let i = 0; i < 12; i++) bflies.push({
+          x: Math.random()*1.2 - 0.1, y: 0.52 + Math.random()*0.28,
+          size: 3 + Math.random()*5,
+          driftSpeedX: 0.00008 + Math.random()*0.00015,
+          driftSpeedY: 0.00005 + Math.random()*0.0001,
+          flapSpeed: 3 + Math.random()*4,
+          phaseX: Math.random()*Math.PI*2, phaseY: Math.random()*Math.PI*2,
+          flapPhase: Math.random()*Math.PI*2, wobble: Math.random()*Math.PI*2,
+          direction: Math.random() > 0.5 ? 1 : -1,
+          colorIdx: Math.floor(Math.random()*4),
+        });
+        return bflies;
+      }
+      function createMotes() {
+        const motes = [];
+        for (let i = 0; i < 35; i++) motes.push({
+          x: Math.random(), y: 0.3 + Math.random()*0.5,
+          size: 0.8 + Math.random()*2,
+          driftX: (Math.random() - 0.5)*0.00006,
+          driftY: -0.00002 - Math.random()*0.00004,
+          phaseX: Math.random()*Math.PI*2, phaseY: Math.random()*Math.PI*2,
+          shimmerSpeed: 1 + Math.random()*3, shimmerPhase: Math.random()*Math.PI*2,
+        });
+        return motes;
+      }
+
+      function generateTerrainPath(baseY, amplitude, segments, seed, W) {
+        const points = [];
+        for (let i = 0; i <= segments; i++) {
+          const x = (i/segments)*W;
+          let y = baseY;
+          y += Math.sin(i*0.08 + seed)*amplitude*0.5;
+          y += Math.sin(i*0.04 + seed*1.7)*amplitude*0.8;
+          y += Math.sin(i*0.15 + seed*0.3)*amplitude*0.2;
+          y += Math.sin(i*0.02 + seed*2.5)*amplitude*0.4;
+          points.push({ x, y });
+        }
+        return points;
+      }
+      function createTerrain(W, H) {
+        const segments = Math.ceil(W/8);
+        return [
+          { points: generateTerrainPath(H*0.62, H*0.08, segments, 1.2, W), colorKey:'mountain', opacity:0.6 },
+          { points: generateTerrainPath(H*0.67, H*0.06, segments, 3.7, W), colorKey:'mountain', opacity:0.8 },
+          { points: generateTerrainPath(H*0.73, H*0.04, segments, 5.1, W), colorKey:'hill', opacity:0.9 },
+          { points: generateTerrainPath(H*0.78, H*0.03, segments, 8.4, W), colorKey:'hill', opacity:1.0 },
+        ];
+      }
+
+      function drawStars(ctx, stars, time, opacity, isReduced) {
+        if (opacity < 0.01) return;
+        ctx.save();
+        for (const s of stars) {
+          const flicker = isReduced ? 0.6 : 0.5 + 0.5*Math.sin(time*0.001*s.twinkleSpeed + s.twinklePhase);
+          ctx.globalAlpha = opacity*flicker*0.8;
+          ctx.fillStyle = '#fff';
+          ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+      function getSunIntensity(minute) {
+        if (minute < 360 || minute > 660) return 0;
+        if (minute <= 510) return (minute - 360)/150;
+        return 1 - (minute - 510)/150;
+      }
+      function drawStarburst(ctx, sunX, sunY, sunR, sunArc, minute, time) {
+        const intensity = getSunIntensity(minute);
+        if (intensity <= 0) return;
+        const alpha = intensity*(0.3 + sunArc*0.4);
+        ctx.save();
+        const bloom = ctx.createRadialGradient(sunX, sunY, sunR, sunX, sunY, sunR*8);
+        bloom.addColorStop(0, rgba([255,230,160], alpha*0.25));
+        bloom.addColorStop(0.4, rgba([255,210,130], alpha*0.08));
+        bloom.addColorStop(1, rgba([255,200,100], 0));
+        ctx.fillStyle = bloom;
+        ctx.fillRect(sunX - sunR*9, sunY - sunR*9, sunR*18, sunR*18);
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(sunX - sunR*10, sunY - sunR*10, sunR*20, sunR*20);
+        ctx.arc(sunX, sunY, sunR, 0, Math.PI*2, true);
+        ctx.clip('evenodd');
+        const rayLen = sunR*(4 + sunArc*3);
+        const wobble = time*0.0002;
+        for (let i = 0; i < 8; i++) {
+          const angle = (i/8)*Math.PI*2 + wobble;
+          const tipX = sunX + Math.cos(angle)*rayLen;
+          const tipY = sunY + Math.sin(angle)*rayLen;
+          const spread = sunR*0.35;
+          const perpX = -Math.sin(angle)*spread;
+          const perpY = Math.cos(angle)*spread;
+          ctx.globalAlpha = alpha*0.5;
+          const rayGrad = ctx.createLinearGradient(sunX, sunY, tipX, tipY);
+          rayGrad.addColorStop(0, rgba([255,240,180], 0.7));
+          rayGrad.addColorStop(0.6, rgba([255,220,140], 0.2));
+          rayGrad.addColorStop(1, rgba([255,210,120], 0));
+          ctx.fillStyle = rayGrad;
+          ctx.beginPath();
+          ctx.moveTo(sunX + perpX, sunY + perpY);
+          ctx.lineTo(tipX, tipY);
+          ctx.lineTo(sunX - perpX, sunY - perpY);
+          ctx.closePath(); ctx.fill();
+          ctx.globalAlpha = alpha*0.35;
+          ctx.strokeStyle = rgba([255,250,210], 0.6);
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(sunX + Math.cos(angle)*sunR*0.2, sunY + Math.sin(angle)*sunR*0.2);
+          ctx.lineTo(sunX + Math.cos(angle)*rayLen*0.7, sunY + Math.sin(angle)*rayLen*0.7);
+          ctx.stroke();
+        }
+        const secLen = rayLen*0.5;
+        for (let i = 0; i < 16; i++) {
+          const angle = (i/16)*Math.PI*2 + wobble + Math.PI/16;
+          ctx.globalAlpha = alpha*0.18;
+          ctx.strokeStyle = rgba([255,235,170], 0.4);
+          ctx.lineWidth = 0.7;
+          ctx.beginPath();
+          ctx.moveTo(sunX + Math.cos(angle)*sunR*0.5, sunY + Math.sin(angle)*sunR*0.5);
+          ctx.lineTo(sunX + Math.cos(angle)*secLen, sunY + Math.sin(angle)*secLen);
+          ctx.stroke();
+        }
+        ctx.restore();
+        ctx.restore();
+      }
+      function drawCelestialBody(ctx, p, minute, W, H, time) {
+        // Moon removed — sun arc only (matches updated original)
+        const sunRise = 360, sunSet = 1140;
+        if (minute >= sunRise && minute <= sunSet) {
+          const sunT = (minute - sunRise)/(sunSet - sunRise);
+          const sunX = W*(0.15 + 0.7*sunT);
+          const sunArc = Math.sin(sunT*Math.PI);
+          const sunY = H*0.72 - sunArc*H*0.55;
+          const horizonProximity = 1 - sunArc;
+          const sunR = 14 + horizonProximity*8;
+          const sunColor = [255, Math.round(lerp(180,240,sunArc)), Math.round(lerp(80,200,sunArc))];
+          const glowColor = [255, Math.round(lerp(150,230,sunArc)), Math.round(lerp(60,160,sunArc))];
+          const glowIntensity = 0.08 + horizonProximity*0.25;
+          const glowRadius = sunR*(8 + horizonProximity*8);
+          ctx.save();
+          const sunGlow = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, glowRadius);
+          sunGlow.addColorStop(0, rgba(glowColor, glowIntensity));
+          sunGlow.addColorStop(0.3, rgba(glowColor, glowIntensity*0.3));
+          sunGlow.addColorStop(1, rgba(glowColor, 0));
+          ctx.fillStyle = sunGlow; ctx.fillRect(0, 0, W, H);
+          const discOpacity = 0.5 + horizonProximity*0.45;
+          ctx.globalAlpha = discOpacity;
+          ctx.fillStyle = rgb(sunColor);
+          ctx.shadowColor = rgba(glowColor, 0.3 + horizonProximity*0.3);
+          ctx.shadowBlur = 30 + horizonProximity*30;
+          ctx.beginPath(); ctx.arc(sunX, sunY, sunR, 0, Math.PI*2); ctx.fill();
+          ctx.restore();
+          drawStarburst(ctx, sunX, sunY, sunR, sunArc, minute, time);
+        }
+      }
+      function drawClouds(ctx, clouds, time, W, H, isReduced, dt) {
+        ctx.save();
+        for (const c of clouds) {
+          if (!isReduced) {
+            c.x += c.speed*dt;
+            if (c.x > W + 300) { c.x = -c.width - 200; c.y = H*(0.05 + Math.random()*0.35); }
+          }
+          const yOff = isReduced ? 0 : Math.sin(time*0.00025 + c.phase)*6;
+          ctx.globalAlpha = c.opacity;
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.ellipse(c.x, c.y + yOff, c.width, c.height, 0, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+      function drawFogWisps(ctx, fogWisps, p, time, W, H, isReduced, dt) {
+        ctx.save();
+        for (const w of fogWisps) {
+          if (!isReduced) { w.x += w.speed*dt; if (w.x > W + 300) w.x = -w.width - 200; }
+          const yOff = isReduced ? 0 : Math.sin(time*0.0002 + w.phase)*8;
+          ctx.globalAlpha = w.opacity;
+          ctx.fillStyle = rgba(p.fog, 1);
+          ctx.beginPath();
+          ctx.ellipse(w.x, H*w.y + yOff, w.width, w.height, 0, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+      function drawTerrainLayers(ctx, terrainLayers, fogWisps, p, time, W, H, isReduced, dt) {
+        const fogGrad = ctx.createLinearGradient(0, H*0.55, 0, H*0.75);
+        fogGrad.addColorStop(0, rgba(p.fog, 0));
+        fogGrad.addColorStop(0.5, rgba(p.fog, 0.15));
+        fogGrad.addColorStop(1, rgba(p.fog, 0.05));
+        ctx.fillStyle = fogGrad;
+        ctx.fillRect(0, H*0.55, W, H*0.2);
+        for (const layer of terrainLayers) {
+          const color = p[layer.colorKey];
+          ctx.save();
+          ctx.globalAlpha = layer.opacity;
+          const terrainGrad = ctx.createLinearGradient(0, H*0.55, 0, H);
+          terrainGrad.addColorStop(0, rgba(color, 0.9));
+          terrainGrad.addColorStop(1, rgb(color));
+          ctx.fillStyle = terrainGrad;
+          ctx.beginPath();
+          ctx.moveTo(0, H);
+          for (const pt of layer.points) ctx.lineTo(pt.x, pt.y);
+          ctx.lineTo(W, H); ctx.closePath(); ctx.fill();
+          ctx.restore();
+        }
+        drawFogWisps(ctx, fogWisps, p, time, W, H, isReduced, dt);
+      }
+      function drawFireflies(ctx, fireflies, time, starOpacity, W, H, isReduced) {
+        if (isReduced || starOpacity < 0.15) return;
+        const intensity = Math.min(1, (starOpacity - 0.15)/0.5);
+        ctx.save();
+        for (const f of fireflies) {
+          const fx = (f.x*W + Math.sin(time*f.speed*3 + f.phaseX)*40) % W;
+          const fy = f.y*H + Math.sin(time*f.speed*2 + f.phaseY)*20;
+          const pulse = 0.3 + 0.7*Math.pow(Math.sin(time*0.001*f.pulseSpeed + f.pulsePhase)*0.5 + 0.5, 2);
+          ctx.globalAlpha = intensity*pulse*0.6;
+          const glow = ctx.createRadialGradient(fx, fy, 0, fx, fy, f.radius*8);
+          glow.addColorStop(0, 'rgba(200,220,120,0.4)');
+          glow.addColorStop(1, 'rgba(200,220,120,0)');
+          ctx.fillStyle = glow;
+          ctx.fillRect(fx - f.radius*8, fy - f.radius*8, f.radius*16, f.radius*16);
+          ctx.globalAlpha = intensity*pulse;
+          ctx.fillStyle = '#e8f0a0';
+          ctx.beginPath(); ctx.arc(fx, fy, f.radius, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+      function drawSingleButterfly(ctx, x, y, size, flapAngle, color, alpha) {
+        ctx.save(); ctx.translate(x, y); ctx.globalAlpha = alpha;
+        const wingSpread = 0.3 + 0.7*Math.abs(flapAngle);
+        ctx.save(); ctx.scale(-wingSpread, 1);
+        ctx.fillStyle = rgba(color, 1);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-size*0.6, -size*1.2, -size*1.4, -size*0.6, -size*0.3, size*0.1);
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-size*0.5, size*0.2, -size*1.0, size*0.8, -size*0.1, size*0.5);
+        ctx.fill(); ctx.restore();
+        ctx.save(); ctx.scale(wingSpread, 1);
+        ctx.fillStyle = rgba(color, 1);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(size*0.6, -size*1.2, size*1.4, -size*0.6, size*0.3, size*0.1);
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(size*0.5, size*0.2, size*1.0, size*0.8, size*0.1, size*0.5);
+        ctx.fill(); ctx.restore();
+        ctx.fillStyle = rgba(color.map(c => Math.max(0, c - 40)), 1);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, size*0.1, size*0.4, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      }
+      function drawButterflies(ctx, butterflies, time, starOpacity, W, H, isReduced, dt) {
+        if (isReduced || starOpacity > 0.3) return;
+        const intensity = Math.min(1, (0.3 - starOpacity)/0.25);
+        for (const b of butterflies) {
+          const bx = (b.x + Math.sin(time*b.driftSpeedX*3 + b.phaseX)*0.08)*W;
+          const by = b.y*H + Math.sin(time*b.driftSpeedY*2 + b.phaseY)*25;
+          b.x += b.direction*0.00004*dt;
+          if (b.x > 1.15) { b.x = -0.1; b.y = 0.52 + Math.random()*0.28; }
+          if (b.x < -0.15) { b.x = 1.1; b.y = 0.52 + Math.random()*0.28; }
+          const flapAngle = Math.sin(time*0.001*b.flapSpeed + b.flapPhase);
+          const color = BUTTERFLY_COLORS[b.colorIdx];
+          const alpha = intensity*(0.25 + 0.15*Math.sin(time*0.0005 + b.wobble));
+          drawSingleButterfly(ctx, bx, by, b.size, flapAngle, color, alpha);
+        }
+      }
+      function drawMotes(ctx, motes, time, starOpacity, W, H, isReduced, dt) {
+        if (isReduced || starOpacity < 0.15) return;
+        const intensity = Math.min(1, (starOpacity - 0.15)/0.5);
+        ctx.save();
+        for (const m of motes) {
+          m.x += m.driftX*dt; m.y += m.driftY*dt;
+          if (m.y < 0.25) { m.y = 0.82; m.x = Math.random(); }
+          if (m.x > 1.1) m.x = -0.05;
+          if (m.x < -0.1) m.x = 1.05;
+          const mx = m.x*W + Math.sin(time*0.0004 + m.phaseX)*15;
+          const my = m.y*H + Math.sin(time*0.0003 + m.phaseY)*10;
+          const shimmer = Math.pow(Math.sin(time*0.001*m.shimmerSpeed + m.shimmerPhase)*0.5 + 0.5, 3);
+          const alpha = intensity*shimmer*0.5;
+          if (alpha < 0.02) continue;
+          ctx.globalAlpha = alpha;
+          const glow = ctx.createRadialGradient(mx, my, 0, mx, my, m.size*4);
+          glow.addColorStop(0, 'rgba(235,215,170,0.6)');
+          glow.addColorStop(1, 'rgba(235,215,170,0)');
+          ctx.fillStyle = glow;
+          ctx.fillRect(mx - m.size*4, my - m.size*4, m.size*8, m.size*8);
+          ctx.globalAlpha = alpha*1.5;
+          ctx.fillStyle = '#f0e8d0';
+          ctx.beginPath(); ctx.arc(mx, my, m.size*0.6, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      let state = null;
+      let size = { w: 0, h: 0 };
+      let prevTime = 0;
+      const reducedMotion = { current: window.matchMedia('(prefers-reduced-motion: reduce)').matches };
+      window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => { reducedMotion.current = e.matches; });
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = window.innerWidth;
+        const cssH = window.innerHeight;
+        canvas.width = cssW*dpr;
+        canvas.height = cssH*dpr;
+        canvas.style.width = cssW + 'px';
+        canvas.style.height = cssH + 'px';
+        canvas.getContext('2d').scale(dpr, dpr);
+        size = { w: cssW, h: cssH };
+        state = {
+          stars: createStars(cssW, cssH),
+          clouds: createClouds(cssH),
+          fogWisps: createFogWisps(),
+          fireflies: createFireflies(),
+          butterflies: createButterflies(),
+          motes: createMotes(),
+          terrainLayers: createTerrain(cssW, cssH),
+        };
+      }
+      function draw(time) {
+        skyQueued = false;
+        const ctx = canvas.getContext('2d');
+        const W = size.w, H = size.h;
+        if (!W || !H || !state) { queueDraw(); return; }
+        const deltaMs = prevTime ? Math.min(time - prevTime, 100) : 16.67;
+        const dt = deltaMs/16.67;
+        prevTime = time;
+        const minute = getPSTMinute();
+        const p = getPalette(minute);
+        const isReduced = reducedMotion.current;
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, rgb(p.sky));
+        grad.addColorStop(0.35, rgb(p.mid));
+        grad.addColorStop(0.65, rgb(p.horizon));
+        grad.addColorStop(1, rgb(p.glow));
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+        const horizonGlow = ctx.createRadialGradient(W*0.5, H*0.68, 0, W*0.5, H*0.68, W*0.55);
+        horizonGlow.addColorStop(0, rgba(p.horizon, 0.2));
+        horizonGlow.addColorStop(1, rgba(p.horizon, 0));
+        ctx.fillStyle = horizonGlow; ctx.fillRect(0, 0, W, H);
+        drawStars(ctx, state.stars, time, p.stars, isReduced);
+        drawCelestialBody(ctx, p, minute, W, H, time);
+        drawClouds(ctx, state.clouds, time, W, H, isReduced, dt);
+        drawTerrainLayers(ctx, state.terrainLayers, state.fogWisps, p, time, W, H, isReduced, dt);
+        drawFireflies(ctx, state.fireflies, time, p.stars, W, H, isReduced);
+        drawButterflies(ctx, state.butterflies, time, p.stars, W, H, isReduced, dt);
+        drawMotes(ctx, state.motes, time, p.stars, W, H, isReduced, dt);
+        queueDraw();
+      }
+      // The fixed sky canvas is fully covered by opaque paper sections once the
+      // user scrolls past the hero/bridge — painting it there is wasted work.
+      // Pause the loop when neither sky-showing section is in view.
+      let skyOn = true, skyQueued = false;
+      function queueDraw() {
+        if (skyOn && !skyQueued) { skyQueued = true; requestAnimationFrame(draw); }
+      }
+      const skyVis = new Map();
+      const skyIO = new IntersectionObserver((entries) => {
+        entries.forEach((e) => skyVis.set(e.target, e.isIntersecting));
+        const on = [...skyVis.values()].some(Boolean);
+        if (on && !skyOn) { skyOn = true; prevTime = 0; queueDraw(); }
+        else skyOn = on;
+      }, { rootMargin: '120px 0px' });
+      const skyHero = document.querySelector('.lp-hero');
+      const skyProof = document.getElementById('proof');
+      if (skyHero) skyIO.observe(skyHero);
+      if (skyProof) skyIO.observe(skyProof);
+      resize();
+      window.addEventListener('resize', resize);
+      queueDraw();
+    })();
+
+    // Hero phone stack:
+    //  - click a BACK card → it swaps with the front
+    //  - click the FRONT card → the whole stack rotates one step
+    //    (back-left → front, back-right → back-left, front → back-right),
+    //    so clicking the front cycles through all 3 phones in 3 taps
+    (function () {
+      const stack = document.querySelector('.hero-phone-stack');
+      if (!stack) return;
+
+      function rotateStack() {
+        const front = stack.querySelector('.hero-phone.front');
+        const backLeft = stack.querySelector('.hero-phone.back-left');
+        const backRight = stack.querySelector('.hero-phone.back-right');
+        if (!front || !backLeft || !backRight) return;
+        front.classList.remove('front'); front.classList.add('back-right');
+        backLeft.classList.remove('back-left'); backLeft.classList.add('front');
+        backRight.classList.remove('back-right'); backRight.classList.add('back-left');
+      }
+
+      function swapToFront(clicked) {
+        if (!clicked) return;
+        if (clicked.classList.contains('front')) {
+          rotateStack();
+          return;
+        }
+        const front = stack.querySelector('.hero-phone.front');
+        if (!front) return;
+        const clickedPos = clicked.classList.contains('back-left') ? 'back-left' : 'back-right';
+        front.classList.remove('front');
+        front.classList.add(clickedPos);
+        clicked.classList.remove(clickedPos);
+        clicked.classList.add('front');
+      }
+
+      stack.querySelectorAll('.hero-phone').forEach((card) => {
+        card.addEventListener('click', () => swapToFront(card));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); swapToFront(card); }
+        });
+      });
+    })();
+
+    // Typewriter — ported from HomeInput.jsx pattern. Variable-speed type,
+    // fast delete, no surrounding layout shift (container holds fixed width).
+    (function () {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const phrases = [
+        'Think, feel, and act.',
+        'Show up differently.',
+        'Embodiment, every morning.',
+        'Become before becoming.',
+      ];
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = phrases[0];
+        return;
+      }
+      let pi = 0, ci = phrases[0].length, typing = false;
+      el.textContent = phrases[0];
+      function tick() {
+        const w = phrases[pi];
+        if (typing) {
+          ci++;
+          el.textContent = w.substring(0, ci);
+          if (ci >= w.length) {
+            typing = false;
+            return setTimeout(tick, 1500);
+          }
+          return setTimeout(tick, 45 + Math.random() * 30);
+        }
+        ci--;
+        el.textContent = w.substring(0, ci);
+        if (ci <= 0) {
+          pi = (pi + 1) % phrases.length;
+          typing = true;
+          return setTimeout(tick, 300);
+        }
+        setTimeout(tick, 25);
+      }
+      // Start by holding the first phrase, then begin deleting
+      setTimeout(tick, 1500);
+    })();
+
+    // Card showcase — paginated. Desktop shows 3 cards per page; mobile shows 1.
+    (function () {
+      const stack = document.getElementById('card-stack');
+      const prevBtn = document.getElementById('card-prev');
+      const nextBtn = document.getElementById('card-next');
+      const dotsContainer = document.getElementById('card-dots');
+      if (!stack || !prevBtn || !nextBtn || !dotsContainer) return;
+      const cards = Array.from(stack.querySelectorAll('.showcase-card'));
+      if (!cards.length) return;
+      let current = 0;
+      const getCardsPerPage = () => (window.innerWidth >= 768 ? 3 : 1);
+      const getPageCount = () => Math.ceil(cards.length / getCardsPerPage());
+      function renderDots() {
+        const pages = getPageCount();
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < pages; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'card-dot' + (i === current ? ' active' : '');
+          btn.type = 'button';
+          btn.setAttribute('aria-label', `Page ${i + 1} of ${pages}`);
+          btn.addEventListener('click', () => { current = i; render(); });
+          dotsContainer.appendChild(btn);
+        }
+      }
+      function render() {
+        const perPage = getCardsPerPage();
+        const pages = getPageCount();
+        if (current >= pages) current = 0;
+        cards.forEach((card, i) => {
+          const cardPage = Math.floor(i / perPage);
+          card.classList.toggle('visible', cardPage === current);
+        });
+        renderDots();
+      }
+      prevBtn.addEventListener('click', () => {
+        const pages = getPageCount();
+        current = (current - 1 + pages) % pages;
+        render();
+      });
+      nextBtn.addEventListener('click', () => {
+        const pages = getPageCount();
+        current = (current + 1) % pages;
+        render();
+      });
+      let resizeT;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeT);
+        resizeT = setTimeout(render, 150);
+      });
+      render();
+    })();
+
+    // Scroll-aware nav
+    (function () {
+      const nav = document.getElementById('nav');
+      if (!nav) return;
+      const SCROLL_THRESHOLD = 60;
+      function update() {
+        if (window.scrollY > SCROLL_THRESHOLD) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+      }
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+    })();
+
+
+    // Mobile hamburger
+    (function () {
+      const btn = document.getElementById('hamburger-button');
+      const overlay = document.getElementById('hamburger-overlay');
+      const panel = document.getElementById('hamburger-nav');
+      if (!btn || !overlay || !panel) return;
+      function setOpen(open) {
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        overlay.classList.toggle('open', open);
+        overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+        panel.classList.toggle('open', open);
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        document.body.classList.toggle('menu-open', open);
+      }
+      btn.addEventListener('click', () => setOpen(!btn.classList.contains('open')));
+      overlay.addEventListener('click', () => setOpen(false));
+      panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && btn.classList.contains('open')) setOpen(false);
+      });
+    })();
+
+    // Android waitlist → POSTs to the dd-beta /api/waitlist endpoint,
+    // which writes into the same Supabase `waitlist` table the rest of the app uses.
+    async function submitAndroidWaitlist(e) {
+      e.preventDefault();
+      const form = document.getElementById('android-waitlist');
+      const input = document.getElementById('android-waitlist-email');
+      const email = input.value.trim();
+      if (!email) return;
+      // Optimistic UI — show thanks immediately; signup is fire-and-forget
+      form.classList.add('submitted');
+      try {
+        await fetch('https://daydream-mc8d.onrender.com/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            source: 'android-waitlist-landing',
+          }),
+        });
+      } catch (err) {
+        // Network failure — still show thanks (no point alarming the user),
+        // but log so we know to follow up if these stop appearing in Supabase.
+        try { console.warn('[android-waitlist] submit failed:', err); } catch (_) {}
+      }
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Hero session demo — cycles Settle → Sharpen → Visualize.
+    // Stage 1 is a FAITHFUL port of ~/Desktop/coherence-breath/coherence.html:
+    // 6s-in/6s-out cosine breath, particle orb, sunrise sky arc, octave bells
+    // (hi bell opens each inhale, lo bell each exhale) + airy layer on the
+    // first two breaths. Bells extracted to audio/coherence/*.m4a.
+    // Stages 2–3 remain PLACEHOLDER.
+    // ───────────────────────────────────────────────────────────
+    (function () {
+      const phone = document.getElementById('hero-demo');
+      if (!phone) return;
+      const stages = Array.from(phone.querySelectorAll('.demo-stage'));
+      const dots = Array.from(document.querySelectorAll('#demo-strip .demo-dot'));
+      const label = document.getElementById('demo-stage-label');
+      const vizStage = phone.querySelector('.stage-viz');
+      const LABELS = ['Improve Visualization', 'Find Coherence', 'Manifestation Meditation'];
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ═══ Stage 1: Coherence Breath ═══
+      // Cadence from source: 6s in / 6s out, 12s cycle (5 breaths/min).
+      // Demo shows a short settle lead + 2 full breaths (= the source's "airy" breaths).
+      const CB_CYCLE = 12, CB_INHALE = 6, CB_EXHALE = 6, CB_LEAD = 3, CB_DEMO_CYCLES = 2;
+      // order: [First Practice, Coherence Breath, Manifestation]
+      const DURATIONS = [14500, (CB_LEAD + CB_DEMO_CYCLES * CB_CYCLE) * 1000, 14500];
+
+      const GOLD = [196,168,124], ROSE = [196,154,139], LAV = [180,160,196];
+      // Sunrise arc, verbatim from coherence.html
+      const CB_ARC = [
+        {p:0.00, sky:[18,18,42],   mid:[35,28,55],    hor:[120,75,68],   glow:[160,100,80]},
+        {p:0.28, sky:[75,80,120],  mid:[130,110,135], hor:[210,155,120], glow:[235,185,145]},
+        {p:0.58, sky:[138,135,184],mid:[170,163,204], hor:[212,196,220], glow:[240,220,212]},
+        {p:0.82, sky:[150,175,212],mid:[185,200,228], hor:[225,210,195], glow:[240,225,210]},
+        {p:1.00, sky:[160,185,218],mid:[192,208,232], hor:[228,214,200], glow:[242,228,214]},
+      ];
+      const mix = (a,b,t) => a+(b-a)*t;
+      const lerpC = (a,b,t) => [mix(a[0],b[0],t), mix(a[1],b[1],t), mix(a[2],b[2],t)];
+      const rgbA = (c,a) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+      function skyAt(p) {
+        p = Math.max(0, Math.min(1, p));
+        let i = 0; while (i < CB_ARC.length-1 && p > CB_ARC[i+1].p) i++;
+        const a = CB_ARC[i], b = CB_ARC[Math.min(i+1, CB_ARC.length-1)];
+        const t = b.p > a.p ? (p-a.p)/(b.p-a.p) : 0;
+        return {sky:lerpC(a.sky,b.sky,t), mid:lerpC(a.mid,b.mid,t), hor:lerpC(a.hor,b.hor,t), glow:lerpC(a.glow,b.glow,t)};
+      }
+      // Cosine-eased breath — no sharp turns (verbatim model)
+      function breathAt(t) {
+        if (t < 0) return {b:0, phase:'rest', pos:0, cycle:0};
+        const cyc = Math.floor(t/CB_CYCLE), c = t - cyc*CB_CYCLE;
+        if (c < CB_INHALE) return {b:(1-Math.cos(Math.PI*c/CB_INHALE))/2, phase:'in', pos:c/CB_INHALE, cycle:cyc};
+        const e = c - CB_INHALE;
+        return {b:(1+Math.cos(Math.PI*e/CB_EXHALE))/2, phase:'out', pos:e/CB_EXHALE, cycle:cyc};
+      }
+
+      const cbCanvas = document.getElementById('coherence-canvas');
+      const cbCtx = cbCanvas.getContext('2d');
+      const cueEl = document.getElementById('coherence-cue');
+      const cueWord = document.getElementById('cue-word');
+      const cueSub = document.getElementById('cue-sub');
+      let cbW = 0, cbH = 0;
+      function cbResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        cbW = cbCanvas.clientWidth; cbH = cbCanvas.clientHeight;
+        cbCanvas.width = cbW*dpr; cbCanvas.height = cbH*dpr;
+        cbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', cbResize);
+
+      // Particle field (source uses 230 full-screen; scaled to the panel)
+      const CB_NP = reduced ? 60 : 170;
+      const cbParts = [];
+      for (let i = 0; i < CB_NP; i++) {
+        const kind = i%5===0 ? 'spark' : 'mote';
+        const tint = i%9===0 ? ROSE : (i%7===0 ? LAV : GOLD);
+        cbParts.push({ang:Math.random()*Math.PI*2, spin:(Math.random()*2-1)*0.08*(kind==='spark'?1.6:1),
+          band:Math.pow(Math.random(),0.7), jr:Math.random()*Math.PI*2, js:0.5+Math.random()*1.4,
+          size:kind==='spark'?(1.4+Math.random()*1.8):(0.7+Math.random()*1.4), tint, kind});
+      }
+      const cbGrad = (cx,cy,r,c,a0,a1) => { const g = cbCtx.createRadialGradient(cx,cy,0,cx,cy,r);
+        g.addColorStop(0,rgbA(c,a0)); g.addColorStop(1,rgbA(c,a1)); return g; };
+
+      // drawOrb — verbatim port (converging motes, gold threads, front-lit pearl core)
+      function drawOrb(t, S, b, phase) {
+        const ctx = cbCtx, W = cbW, H = cbH;
+        if (!W || !H) return;
+        const cx = W/2, cy = H/2 - H*0.03, R = Math.min(W,H)*0.5;
+        const bg = ctx.createLinearGradient(0,0,0,H);
+        bg.addColorStop(0, rgbA(lerpC([8,8,14],S.sky,0.28),1)); bg.addColorStop(1, rgbA([6,6,12],1));
+        ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+        const orbR = R*(0.20+0.15*b), outer = R*0.72, conv = 1-b, core = lerpC(S.mid,S.glow,b);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (let i = 3; i >= 1; i--) { const rr = orbR*(1+i*0.65);
+          ctx.fillStyle = cbGrad(cx,cy,rr,core,0.09/i,0); ctx.beginPath(); ctx.arc(cx,cy,rr,0,7); ctx.fill(); }
+        const gspin = (reduced ? 0 : t*0.05);
+        for (const s of cbParts) {
+          const pr = orbR + outer*s.band*Math.pow(conv,1.25);
+          const ang = s.ang + gspin + s.spin*(reduced?0:t)*(0.6+conv*0.8);
+          const x = cx + Math.cos(ang)*pr, y = cy + Math.sin(ang)*pr;
+          const tw = 0.72 + 0.28*Math.sin((reduced?0:t)*s.js + s.jr);
+          const col = phase==='in' ? lerpC(s.tint,GOLD,0.35*b) : lerpC(s.tint,ROSE,0.30*conv);
+          const a = (0.05+0.16*b)*(0.45+0.55*s.band)*tw*(s.kind==='spark'?1.5:1);
+          const sz = s.size*(0.75+0.65*conv)*(s.kind==='spark'?1.15:1);
+          ctx.fillStyle = cbGrad(x,y,sz*3.2,col,Math.min(0.6,a),0); ctx.beginPath(); ctx.arc(x,y,sz*3.2,0,7); ctx.fill();
+        }
+        if (!reduced && b > 0.05) { ctx.globalAlpha = b*0.10; ctx.lineWidth = 0.6;
+          for (let i = 0; i < cbParts.length; i += 6) { const s = cbParts[i];
+            const pr = orbR + outer*s.band*Math.pow(conv,1.25);
+            const ang = s.ang + gspin + s.spin*t*(0.6+conv*0.8);
+            const x = cx + Math.cos(ang)*pr, y = cy + Math.sin(ang)*pr;
+            ctx.strokeStyle = rgbA(GOLD,0.5); ctx.beginPath();
+            ctx.moveTo(x,y); ctx.lineTo(cx+Math.cos(ang)*orbR, cy+Math.sin(ang)*orbR); ctx.stroke(); }
+          ctx.globalAlpha = 1; }
+        const gg = ctx.createRadialGradient(cx,cy,0,cx,cy,orbR);
+        gg.addColorStop(0, rgbA([255,252,246],0.95));
+        gg.addColorStop(0.28, rgbA(lerpC(core,[255,250,242],0.4),0.85));
+        gg.addColorStop(0.7, rgbA(core,0.5)); gg.addColorStop(1, rgbA(core,0.03));
+        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx,cy,orbR,0,7); ctx.fill();
+        ctx.strokeStyle = rgbA(GOLD,0.13+0.14*b); ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(cx,cy,orbR,0,7); ctx.stroke();
+        ctx.restore();
+      }
+
+      let cbStart = 0, cbRAF = null;
+      // 'demo' = 2 breaths then auto-advance · 'full' = the source's complete
+      // 30-breath session (entered by tapping sound on during this stage).
+      // All client-side — same canvas, same four bell samples — so the full
+      // session costs nothing extra to host or serve.
+      let cbMode = 'demo';
+      const CB_FULL_CYCLES = 30, CB_AIR_CYCLES = 2; // source: 30 breaths, airy layer on first 2
+      const cbCycles = () => (cbMode === 'full' ? CB_FULL_CYCLES : CB_DEMO_CYCLES);
+      function cbFrame() {
+        const t = (performance.now() - cbStart)/1000 - CB_LEAD;
+        const st = breathAt(t);
+        if (cbMode === 'full' && st.cycle >= CB_FULL_CYCLES) { cbFinish(); return; }
+        const prog = Math.max(0, Math.min(1, t/(cbCycles()*CB_CYCLE)));
+        // demo: hold the sky in the dawn band · full session: traverse the whole sunrise arc
+        const p = cbMode === 'full' ? prog : 0.24 + 0.18*prog;
+        drawOrb(Math.max(t, 0.0001), skyAt(p), st.b, st.phase);
+        if (t < 0) {
+          cueWord.textContent = 'Arrive'; cueWord.style.color = '#e8d9b8'; cueSub.textContent = '';
+          cueEl.style.opacity = Math.min(1, (t+CB_LEAD)/1.4);
+        } else {
+          cueWord.textContent = st.phase==='in' ? 'Breathe in' : 'Breathe out';
+          cueWord.style.color = st.phase==='in' ? '#e8d9b8' : '#e6c0b0';
+          cueSub.textContent = st.phase==='in' ? 'in' : 'out';
+          const fade = Math.min(1, st.pos/0.14, (1-st.pos)/0.14);
+          cueEl.style.opacity = 0.34 + 0.66*Math.max(0, fade);
+          if (label && cbMode === 'full') {
+            label.textContent = LABELS[1] + ' · ' + Math.min(st.cycle+1, CB_FULL_CYCLES) + ' / ' + CB_FULL_CYCLES;
+          }
+        }
+        cbRAF = requestAnimationFrame(cbFrame);
+      }
+      function cbFinish() {
+        drawOrb(CB_FULL_CYCLES*CB_CYCLE - 0.001, skyAt(1), 0, 'out');
+        cueWord.textContent = 'Complete'; cueWord.style.color = '#f0ece4'; cueSub.textContent = '';
+        cueEl.style.opacity = 1;
+        if (label) label.textContent = LABELS[1] + ' · ' + CB_FULL_CYCLES + ' / ' + CB_FULL_CYCLES;
+        cbMode = 'demo';
+        cbRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(2), 5000);
+      }
+      function cbStop() { if (cbRAF) cancelAnimationFrame(cbRAF); cbRAF = null; }
+
+      // ═══ Bells (WebAudio) — hi bell opens each inhale, lo bell each exhale;
+      //     both demo breaths carry the airy layer, like the source's first two. ═══
+      const CB_AUDIO = {
+        hi: 'audio/coherence/bell-hi.m4a',
+        lo: 'audio/coherence/bell-lo.m4a',
+        bHi: 'audio/coherence/breath-hi.m4a',
+        bLo: 'audio/coherence/breath-lo.m4a',
+      };
+      const BREATH_GAIN = 0.5; // source value — airy layer at half bell volume
+      // WebAudio for precise scheduling; falls back to <audio> tags on file://
+      // (fetch of local files is CORS-blocked there, tags are not).
+      let actx = null, cbBuf = null, cbLoading = null, liveSources = [];
+      let tagMode = false, tagTimers = [], tagAudios = [];
+      function ensureAudio() {
+        if (cbLoading) return cbLoading;
+        try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; }
+        if (!actx || location.protocol === 'file:') {
+          tagMode = true;
+          cbLoading = Promise.resolve();
+          return cbLoading;
+        }
+        const load = async (url) => { const r = await fetch(url); return actx.decodeAudioData(await r.arrayBuffer()); };
+        cbLoading = Promise.all([CB_AUDIO.hi, CB_AUDIO.lo, CB_AUDIO.bHi, CB_AUDIO.bLo].map(load))
+          .then(([hi, lo, bHi, bLo]) => { cbBuf = {hi, lo, bHi, bLo}; })
+          .catch(() => { cbBuf = null; tagMode = true; });
+        return cbLoading;
+      }
+      function playBuf(b, when, gain) {
+        if (!b) return;
+        const s = actx.createBufferSource(); s.buffer = b;
+        const g = actx.createGain(); g.gain.value = gain;
+        s.connect(g); g.connect(actx.destination);
+        s.start(Math.max(when, actx.currentTime));
+        liveSources.push(s);
+      }
+      function tagPlay(url, delayMs, vol) {
+        const tm = setTimeout(() => {
+          const a = new Audio(url); a.volume = Math.min(1, vol);
+          tagAudios.push(a);
+          a.play().catch(() => {});
+        }, Math.max(0, delayMs));
+        tagTimers.push(tm);
+      }
+      function stopBells() {
+        liveSources.forEach(s => { try { s.stop(); } catch (e) {} }); liveSources = [];
+        tagTimers.forEach(clearTimeout); tagTimers = [];
+        tagAudios.forEach(a => { try { a.pause(); } catch (e) {} }); tagAudios = [];
+      }
+      function scheduleBells() {
+        if (current !== 1 || (!cbBuf && !tagMode)) return;
+        stopBells();
+        const tNow = (performance.now() - cbStart)/1000 - CB_LEAD; // breath-clock now
+        for (let i = 0; i < cbCycles(); i++) {
+          const air = i < CB_AIR_CYCLES; // airy layer rides the first two breaths only (source behavior)
+          const inT = i*CB_CYCLE, outT = inT + CB_INHALE;
+          if (inT > tNow - 0.05) {
+            if (tagMode) { tagPlay(CB_AUDIO.hi, (inT-tNow)*1000, 0.9); if (air) tagPlay(CB_AUDIO.bHi, (inT-tNow)*1000, 0.9*BREATH_GAIN); }
+            else { const w = actx.currentTime + (inT - tNow);
+              playBuf(cbBuf.hi, w, 0.9); if (air) playBuf(cbBuf.bHi, w, 0.9*BREATH_GAIN); }
+          }
+          if (outT > tNow - 0.05) {
+            if (tagMode) { tagPlay(CB_AUDIO.lo, (outT-tNow)*1000, 0.9); if (air) tagPlay(CB_AUDIO.bLo, (outT-tNow)*1000, 0.9*BREATH_GAIN); }
+            else { const w = actx.currentTime + (outT - tNow);
+              playBuf(cbBuf.lo, w, 0.9); if (air) playBuf(cbBuf.bLo, w, 0.9*BREATH_GAIN); }
+          }
+        }
+      }
+
+      // ═══ Stage 2: The First Practice — faithful port of the app's opening
+      //     exercise (OpeningExerciseScreen.swift + OrbSpeaksKit.swift):
+      //     ember backdrop, gold audio-reactive orb (#e7c98f), and the REAL
+      //     2:43 figure-eight audio the app ships. Muted demo = orb speaking
+      //     to a synthetic envelope + rotating script quotes; tap sound = the
+      //     full exercise, orb driven by pre-analyzed per-frame levels
+      //     (audio/first-practice/primer-levels.js, app-identical metering). ═══
+      const FP_ACCENT = [231, 201, 143]; // #e7c98f
+      const FP_TITLE = 'let your eyes stay open, or close them'; // app caption, verbatim
+      const FP_QUOTES = [
+        '“Raise your hand and slowly trace a figure eight in the air in front of you.”',
+        '“You might see a faint trail where your finger has been. That’s your mind’s eye, already working.”',
+        '“In Daydream, we’ll use this same skill for something much bigger: visualizing you.”',
+      ];
+      const fpCanvas = document.getElementById('fp-canvas');
+      const fpCtx = fpCanvas.getContext('2d');
+      const fpQuote = document.getElementById('fp-quote');
+      let fpW = 0, fpH = 0;
+      function fpResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        fpW = fpCanvas.clientWidth; fpH = fpCanvas.clientHeight;
+        fpCanvas.width = fpW*dpr; fpCanvas.height = fpH*dpr;
+        fpCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', fpResize);
+
+      const fpRGBA = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+      const osc = (t, D) => (1 - Math.cos(Math.PI * t / D)) / 2; // SwiftUI easeInOut+autoreverse
+
+      // Ghost figure-8 — the "after-image" the narration describes. Fades in
+      // whenever the voice goes quiet (the long tracing pauses), traced by a
+      // soft gold light; fades out when the voice returns.
+      let fpGhost = 0;
+      // Lemniscate (handwritten-8) path — one continuous stroke that flows
+      // diagonally THROUGH the center crossing, like tracing an 8 in the air.
+      function ghostEightPoint(u, cx, cy, r) {
+        const T = u * Math.PI * 2 + Math.PI / 2; // start at the center crossing
+        const d = 1 + Math.sin(T) * Math.sin(T);
+        return [
+          cx + (Math.sin(T) * Math.cos(T) / d) * r * 2.828, // lobes r wide each side
+          cy - (Math.cos(T) / d) * r * 2,                   // 4r tall overall
+        ];
+      }
+      function drawGhostEight(ctx, t, cx, cy, W, H) {
+        if (fpGhost < 0.02) return;
+        const r = Math.min(W, H) * 0.155;
+        ctx.save();
+        ctx.strokeStyle = fpRGBA(FP_ACCENT, 0.11 * fpGhost);
+        ctx.lineWidth = 1.4;
+        ctx.setLineDash([4, 9]);
+        ctx.beginPath();
+        for (let i = 0; i <= 120; i++) {
+          const [tx, ty] = ghostEightPoint(i / 120, cx, cy, r);
+          i === 0 ? ctx.moveTo(tx, ty) : ctx.lineTo(tx, ty);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const [px, py] = ghostEightPoint((t % 7) / 7, cx, cy, r);
+        const dg = ctx.createRadialGradient(px, py, 0, px, py, 10);
+        dg.addColorStop(0, fpRGBA(FP_ACCENT, 0.8 * fpGhost));
+        dg.addColorStop(1, fpRGBA(FP_ACCENT, 0));
+        ctx.fillStyle = dg; ctx.beginPath(); ctx.arc(px, py, 10, 0, 7); ctx.fill();
+        ctx.restore();
+      }
+
+      function drawFP(t, level) {
+        const ctx = fpCtx, W = fpW, H = fpH;
+        if (!W || !H) return;
+        // Ember backdrop — OpeningExerciseBackdrop(.ember)
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, '#33223b'); bg.addColorStop(0.4, '#4a2f47');
+        bg.addColorStop(0.72, '#5f3c49'); bg.addColorStop(1, '#6f4a49');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'screen';
+        const d1 = osc(t, 12), d2 = osc(t, 6.5);
+        const g1x = W*(0.25 + 0.1*d1), g1y = H*(0.3 - 0.06*d1);
+        const g1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, W*0.42);
+        g1.addColorStop(0, 'rgba(240,176,112,0.32)'); g1.addColorStop(1, 'rgba(240,176,112,0)');
+        ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+        const g2x = W*(0.78 - 0.08*d2), g2y = H*(0.62 + 0.05*d2);
+        const g2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, W*0.34);
+        g2.addColorStop(0, 'rgba(231,138,94,0.26)'); g2.addColorStop(1, 'rgba(231,138,94,0)');
+        ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+        // legibility scrim
+        const sc = ctx.createLinearGradient(0, 0, 0, H);
+        sc.addColorStop(0, 'rgba(0,0,0,0.32)'); sc.addColorStop(0.4, 'rgba(0,0,0,0.08)');
+        sc.addColorStop(0.7, 'rgba(0,0,0,0.05)'); sc.addColorStop(1, 'rgba(0,0,0,0.26)');
+        ctx.fillStyle = sc; ctx.fillRect(0, 0, W, H);
+
+        const S = W / 393; // SwiftUI points → px
+        const cx = W/2, cy = H*0.44;
+        const breathe = osc(t, 4.2);
+        drawGhostEight(ctx, t, cx, cy, W, H);
+
+        // ── RippleOrbView port ──
+        const fieldAlpha = 0.12 + 0.88*level;
+        ctx.save();
+        for (let i = 0; i < 3; i++) {          // ripple field: base 45pt, 3.2s easeOut
+          const p = ((t + i*(3.2/3)) % 3.2) / 3.2;
+          const e = 1 - Math.pow(1 - p, 3);
+          ctx.strokeStyle = fpRGBA(FP_ACCENT, 0.55 * 0.8*(1-e) * fieldAlpha);
+          ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.arc(cx, cy, 45*S*(0.9 + 2.0*e), 0, 7); ctx.stroke();
+        }
+        const hr = 84*S*(0.9 + level*0.35 + breathe*0.06);   // halo
+        const hg = ctx.createRadialGradient(cx, cy, 0, cx, cy, hr);
+        hg.addColorStop(0, fpRGBA(FP_ACCENT, 0.32)); hg.addColorStop(0.5, fpRGBA(FP_ACCENT, 0.08)); hg.addColorStop(1, fpRGBA(FP_ACCENT, 0));
+        ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(cx, cy, hr, 0, 7); ctx.fill();
+        const cr = 17*S*((0.94 + breathe*0.14) + level*0.3); // core + glow
+        ctx.shadowColor = fpRGBA(FP_ACCENT, 0.45 + 0.4*level);
+        ctx.shadowBlur = (12 + level*22)*S;
+        const cg = ctx.createRadialGradient(cx, cy - cr*0.16, 0, cx, cy, cr*1.3);
+        cg.addColorStop(0, 'rgba(255,255,255,0.98)'); cg.addColorStop(1, fpRGBA(FP_ACCENT, 0.95));
+        ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 7); ctx.fill();
+        ctx.restore();
+      }
+
+      // Synthetic "speaking" envelope for the muted demo — with a deliberate
+      // quiet window so the ghost-8 gets its moment.
+      function fpFakeLevel(t) {
+        if (t > 6.5 && t < 11) return 0.02;
+        const burst = Math.max(0, Math.sin(t*0.9 + 1.2)) > 0.25 ? 1 : 0.12;
+        const syll = (Math.sin(t*7.3)*0.5 + 0.5) * (Math.sin(t*3.1 + 0.7)*0.5 + 0.5);
+        return Math.min(0.9, burst * (0.18 + syll*0.6));
+      }
+
+      let fpMode = 'demo', fpStart = 0, fpRAF = null, fpLevel = 0, fpQuoteIdx = -1;
+      let fpVoice = null, fpBed = null, fpBedFade = null;
+      function fpFrame() {
+        const t = (performance.now() - fpStart)/1000;
+        let target = 0;
+        if (fpMode === 'full' && fpVoice) {
+          const L = window.PRIMER_LEVELS;
+          const el = fpVoice.currentTime;
+          target = (L && L.levels[Math.floor(el * L.fps)]) || 0;
+          if (label) {
+            const left = Math.max(0, (L ? L.duration : 163.5) - el);
+            const m = Math.floor(left/60), s = String(Math.floor(left%60)).padStart(2, '0');
+            label.textContent = LABELS[0] + ' · ' + m + ':' + s + ' left';
+          }
+          fpQuote.textContent = fpVoice.paused ? 'paused' : FP_TITLE;
+          fpQuote.classList.add('show');
+          if (fpVoice.ended) { fpFinishFull(); return; }
+        } else {
+          target = fpFakeLevel(t);
+          const qi = Math.min(FP_QUOTES.length - 1, Math.floor(t / 4.5));
+          if (qi !== fpQuoteIdx) {
+            fpQuoteIdx = qi;
+            fpQuote.classList.remove('show');
+            setTimeout(() => { fpQuote.textContent = FP_QUOTES[qi]; fpQuote.classList.add('show'); }, 350);
+          }
+        }
+        fpGhost += ((target < 0.07 ? 1 : 0) - fpGhost) * 0.02;
+        fpLevel = fpLevel*0.85 + target*0.15;
+        drawFP(t, fpLevel);
+        fpRAF = requestAnimationFrame(fpFrame);
+      }
+      function fpStop() { if (fpRAF) cancelAnimationFrame(fpRAF); fpRAF = null; }
+      function fpStopAudio() {
+        if (fpBedFade) { clearInterval(fpBedFade); fpBedFade = null; }
+        if (fpVoice) { try { fpVoice.pause(); } catch (e) {} }
+        if (fpBed) { try { fpBed.pause(); } catch (e) {} }
+        fpMode = 'demo';
+      }
+      function fpEnterFull() {
+        clearTimeout(advanceTimer);
+        fpMode = 'full';
+        fpStart = performance.now();
+        if (!fpVoice) {
+          fpVoice = new Audio('audio/first-practice/primer.mp3');
+          fpBed = new Audio('audio/first-practice/bed.m4a');
+          fpBed.loop = true;
+        }
+        fpVoice.currentTime = 0;
+        fpBed.currentTime = 0;
+        fpBed.volume = 0;
+        fpVoice.play().catch(() => {});
+        fpBed.play().catch(() => {});
+        // bed fades in to 0.35 over 2s — same as OrbNarrationPlayer
+        const fadeT0 = performance.now();
+        fpBedFade = setInterval(() => {
+          const k = Math.min(1, (performance.now() - fadeT0)/2000);
+          fpBed.volume = 0.35*k;
+          if (k >= 1) { clearInterval(fpBedFade); fpBedFade = null; }
+        }, 50);
+        if (label) label.textContent = LABELS[0];
+      }
+      function fpFinishFull() {
+        fpStopAudio();
+        fpQuote.textContent = 'Complete';
+        fpRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(1), 2500);
+      }
+      // ═══ Stage 3: Manifestation Meditation — Karthik's real morning viz
+      //     ("Steady Ground, Growing Roots"), warm-up cut at 223.5s so only the
+      //     manifestation plays, ambient bed intact (it's baked into the mix).
+      //     Captions sync from the record's own word timestamps. ═══
+      const mfCueEl = document.getElementById('mf-cue');
+      // Voice-reactive rising embers behind the meditation — motes brighten and
+      // quicken with the narrator, drift calm in the silences.
+      const mfCanvas = document.getElementById('mf-canvas');
+      const mfCtx = mfCanvas.getContext('2d');
+      let mfW = 0, mfH = 0;
+      function mfResize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        mfW = mfCanvas.clientWidth; mfH = mfCanvas.clientHeight;
+        mfCanvas.width = mfW*dpr; mfCanvas.height = mfH*dpr;
+        mfCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', mfResize);
+      const mfMotes = [];
+      for (let i = 0; i < 64; i++) mfMotes.push({
+        x: Math.random(), y: Math.random(), s: 0.6 + Math.random()*1.8,
+        v: 0.008 + Math.random()*0.02, ph: Math.random()*7, spark: i%6 === 0,
+      });
+      function drawMF(t, lvl) {
+        const ctx = mfCtx, W = mfW, H = mfH;
+        if (!W || !H) return;
+        // Fire-dark sibling of the First Practice backdrop — same gradient
+        // structure, drifting screen-blend glows, and scrim, but in burning
+        // reds: deep char at the top down to smoldering rust at the base.
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, '#1c0d12'); bg.addColorStop(0.4, '#301216');
+        bg.addColorStop(0.72, '#471b18'); bg.addColorStop(1, '#5c281a');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'screen';
+        const d1 = osc(t, 12), d2 = osc(t, 6.5);
+        const g1x = W*(0.25 + 0.1*d1), g1y = H*(0.3 - 0.06*d1);
+        const g1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, W*0.42);
+        g1.addColorStop(0, 'rgba(255,140,70,0.15)'); g1.addColorStop(1, 'rgba(255,140,70,0)');
+        ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+        const g2x = W*(0.78 - 0.08*d2), g2y = H*(0.62 + 0.05*d2);
+        const g2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, W*0.34);
+        g2.addColorStop(0, 'rgba(235,90,50,0.14)'); g2.addColorStop(1, 'rgba(235,90,50,0)');
+        ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+        const sc = ctx.createLinearGradient(0, 0, 0, H);
+        sc.addColorStop(0, 'rgba(0,0,0,0.32)'); sc.addColorStop(0.4, 'rgba(0,0,0,0.08)');
+        sc.addColorStop(0.7, 'rgba(0,0,0,0.05)'); sc.addColorStop(1, 'rgba(0,0,0,0.26)');
+        ctx.fillStyle = sc; ctx.fillRect(0, 0, W, H);
+        // smoldering heart — warms toward fire-orange as the voice rises
+        const cg = ctx.createRadialGradient(W/2, H*0.62, 0, W/2, H*0.62, W*0.4);
+        cg.addColorStop(0, fpRGBA([255, 150, 80], 0.11 + 0.17*lvl)); cg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (const m of mfMotes) {
+          m.y -= m.v*(0.5 + lvl*1.6)*0.016;
+          if (m.y < -0.05) { m.y = 1.05; m.x = Math.random(); }
+          const x = (m.x + Math.sin(t*0.4 + m.ph)*0.02)*W, y = m.y*H;
+          const tw = 0.6 + 0.4*Math.sin(t*(1 + m.s) + m.ph);
+          const a = (0.10 + 0.5*lvl)*tw*(m.spark ? 1.5 : 0.8);
+          const r = m.s*(m.spark ? 2.6 : 1.8);
+          const g2 = ctx.createRadialGradient(x, y, 0, x, y, r*3);
+          g2.addColorStop(0, fpRGBA(m.spark ? [255,225,170] : GOLD, Math.min(0.8, a)));
+          g2.addColorStop(1, fpRGBA(GOLD, 0));
+          ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(x, y, r*3, 0, 7); ctx.fill();
+        }
+        ctx.restore();
+      }
+      let mfMode = 'demo', mfAudio = null, mfRAF = null, mfCueIdx = -1, mfLevel = 0, mfStart = 0;
+      let mfWordEls = [], mfCueWords = [];
+      function mfFrame() {
+        const t = (performance.now() - mfStart)/1000;
+        let target = 0;
+        if (mfMode === 'full' && mfAudio) {
+          const M = window.MANIFEST_CUES, L = window.MANIFEST_LEVELS;
+          const el = mfAudio.currentTime;
+          target = (L && L.levels[Math.floor(el * L.fps)]) || 0;
+          if (label) {
+            const left = Math.max(0, (M ? M.duration : 406) - el);
+            const m = Math.floor(left/60), s = String(Math.floor(left%60)).padStart(2, '0');
+            label.textContent = LABELS[2] + ' · ' + m + ':' + s + ' left';
+          }
+          if (mfAudio.paused && !mfAudio.ended) {
+            if (mfCueEl.textContent !== 'paused') { mfCueEl.textContent = 'paused'; mfCueEl.classList.add('show'); mfCueIdx = -1; mfWordEls = []; }
+          } else if (M) {
+            let idx = mfCueIdx;
+            while (idx + 1 < M.cues.length && M.cues[idx + 1].t <= el) idx++;
+            if (idx !== mfCueIdx && idx >= 0) {
+              mfCueIdx = idx;
+              const cue = M.cues[idx];
+              mfCueEl.classList.remove('show');
+              mfWordEls = [];
+              setTimeout(() => {
+                // word-for-word karaoke, like the iOS viz screen: each word is a
+                // span that brightens exactly when it's spoken
+                mfCueEl.innerHTML = cue.words
+                  .map(w => '<span>' + w.w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
+                  .join(' ');
+                mfWordEls = Array.from(mfCueEl.children);
+                mfCueWords = cue.words;
+                mfCueEl.classList.add('show');
+              }, 280);
+            }
+            for (let k = 0; k < mfWordEls.length; k++) {
+              mfWordEls[k].classList.toggle('sung', mfCueWords[k].t <= el);
+            }
+          }
+          if (mfAudio.ended) { mfFinishFull(); return; }
+        } else {
+          target = fpFakeLevel(t); // muted demo: embers breathe to a synthetic voice
+        }
+        mfLevel = mfLevel*0.88 + target*0.12;
+        drawMF(t, mfLevel);
+        mfRAF = requestAnimationFrame(mfFrame);
+      }
+      function mfStop() { if (mfRAF) cancelAnimationFrame(mfRAF); mfRAF = null; }
+      function mfStopAudio() {
+        if (mfAudio) { try { mfAudio.pause(); } catch (e) {} }
+        mfMode = 'demo';
+        mfCueIdx = -1;
+      }
+      function mfEnterFull() {
+        clearTimeout(advanceTimer);
+        mfMode = 'full';
+        mfCueIdx = -1;
+        vizStage.classList.remove('play'); // demo drip lines fade out; cues take over
+        vizStage.classList.add('karaoke'); // karaoke text moves center-screen
+        if (!mfAudio) mfAudio = new Audio('audio/manifestation/manifest.m4a');
+        mfAudio.currentTime = 0;
+        mfAudio.play().catch(() => {});
+        if (label) label.textContent = LABELS[2];
+      }
+      function mfFinishFull() {
+        mfStopAudio();
+        mfCueEl.classList.remove('show');
+        setTimeout(() => { mfCueEl.textContent = 'Complete'; mfCueEl.classList.add('show'); }, 300);
+        mfRAF = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => setStage(0), 5000);
+      }
+
+      // App parity: tap the display to pause/resume during a full exercise
+      phone.addEventListener('click', () => {
+        if (current === 0 && fpMode === 'full' && fpVoice) {
+          if (fpVoice.paused) { fpVoice.play().catch(() => {}); if (fpBed) fpBed.play().catch(() => {}); }
+          else { fpVoice.pause(); if (fpBed) fpBed.pause(); }
+        }
+        if (current === 2 && mfMode === 'full' && mfAudio) {
+          if (mfAudio.paused) { mfAudio.play().catch(() => {}); }
+          else { mfAudio.pause(); }
+        }
+      });
+
+      // ═══ Sound toggle — stage 1 uses the WebAudio bells above;
+      //     stages 2–3 use plain files (PLACEHOLDER, still empty). ═══
+      const AUDIO_SRC = ['', '', '']; // [unused for stage 1, eight-drill audio, example-viz audio]
+      const audioEl = new Audio();
+      audioEl.preload = 'auto';
+      let soundOn = false;
+      const soundBtn = document.getElementById('demo-sound');
+      function syncAudio() {
+        stopBells();
+        audioEl.pause();
+        if (!soundOn) return;
+        if (current === 1) {
+          ensureAudio().then(() => {
+            if (soundOn && current === 1) {
+              if (actx && actx.state === 'suspended') actx.resume();
+              scheduleBells();
+            }
+          });
+          return;
+        }
+        const src = AUDIO_SRC[current];
+        if (!src) return;
+        if (!audioEl.src.endsWith(src)) audioEl.src = src;
+        audioEl.currentTime = 0;
+        audioEl.play().catch(() => {});
+      }
+
+      let current = -1;
+      let advanceTimer = null;
+      function setStage(i) {
+        current = i;
+        cbMode = 'demo'; // any stage change exits a full breath session
+        stages.forEach((s, k) => s.classList.toggle('active', k === i));
+        dots.forEach((d, k) => d.classList.toggle('active', k === i));
+        if (label) label.textContent = LABELS[i];
+        cbStop();
+        fpStop();
+        fpStopAudio();
+        mfStop();
+        mfStopAudio();
+        fpQuote.classList.remove('show');
+        mfCueEl.classList.remove('show');
+        vizStage.classList.remove('play');
+        vizStage.classList.remove('karaoke');
+        if (i === 0) {
+          fpResize();
+          fpStart = performance.now();
+          fpQuoteIdx = -1;
+          fpGhost = 0;
+          if (!reduced) fpFrame();
+          else { // static frame: mid-speech orb + first quote
+            drawFP(2, 0.45);
+            fpQuote.textContent = FP_QUOTES[0];
+            fpQuote.classList.add('show');
+          }
+        }
+        if (i === 1) {
+          cbResize();
+          cbStart = performance.now();
+          if (!reduced) cbFrame();
+          else { // static mid-inhale frame
+            drawOrb(3, skyAt(0.3), 0.5, 'in');
+            cueWord.textContent = 'Breathe in'; cueSub.textContent = 'in';
+            cueEl.style.opacity = 1;
+          }
+        }
+        if (i === 2) {
+          mfResize();
+          mfStart = performance.now();
+          requestAnimationFrame(() => vizStage.classList.add('play'));
+          if (!reduced) mfFrame();
+          else drawMF(2, 0.4);
+        }
+        syncAudio();
+        clearTimeout(advanceTimer);
+        if (!reduced) {
+          advanceTimer = setTimeout(() => setStage((current + 1) % stages.length), DURATIONS[i]);
+        }
+      }
+      if (soundBtn) soundBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // strip sits inside the display — don't trigger tap-to-pause
+        soundOn = !soundOn;
+        soundBtn.classList.toggle('on', soundOn);
+        soundBtn.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on to hear the guided audio');
+        const lbl = soundBtn.querySelector('.demo-sound-label');
+        if (lbl) lbl.textContent = soundOn ? 'Sound on' : 'Tap for sound';
+        // Tapping sound ON during a stage = opting into that stage's FULL
+        // exercise (30-breath session / the real 2:43 First Practice audio),
+        // with no auto-advance until it completes. Tapping OFF returns to the
+        // short muted demo cycle.
+        if (soundOn && current === 0 && !reduced) {
+          fpEnterFull();
+        } else if (soundOn && current === 1 && !reduced) {
+          cbMode = 'full';
+          clearTimeout(advanceTimer);
+          cbStop();
+          cbStart = performance.now();
+          if (label) label.textContent = LABELS[1];
+          cbFrame();
+        } else if (soundOn && current === 2 && !reduced) {
+          mfEnterFull();
+          return; // syncAudio would pause nothing relevant; cues already running
+        } else if (!soundOn && fpMode === 'full') {
+          setStage(0); // exits full mode, resumes the demo cycle
+          return;      // setStage already ran syncAudio
+        } else if (!soundOn && cbMode === 'full') {
+          setStage(1);
+          return;
+        } else if (!soundOn && mfMode === 'full') {
+          setStage(2);
+          return;
+        }
+        syncAudio();
+      });
+      dots.forEach((d, k) => d.addEventListener('click', () => setStage(k)));
+      // Pause the muted demo cycle while the display is scrolled offscreen OR the
+      // tab is backgrounded — no frames or stage-advance timers nobody sees.
+      // Full (sound-on) sessions keep running: their frames drive audio caption
+      // sync and end detection.
+      const demoEl = document.getElementById('hero-demo');
+      if (demoEl && !reduced) {
+        let demoOnScreen = true, demoWasPaused = false;
+        const syncDemoRun = () => {
+          const shouldRun = demoOnScreen && !document.hidden;
+          const muted = !soundOn && fpMode !== 'full' && cbMode !== 'full' && mfMode !== 'full';
+          if (!shouldRun && muted && !demoWasPaused) {
+            demoWasPaused = true;
+            clearTimeout(advanceTimer);
+            cbStop(); fpStop(); mfStop();
+          } else if (shouldRun && demoWasPaused) {
+            demoWasPaused = false;
+            setStage(current);
+          }
+        };
+        new IntersectionObserver((entries) => {
+          demoOnScreen = entries[0].isIntersecting;
+          syncDemoRun();
+        }, { threshold: 0.05 }).observe(demoEl);
+        document.addEventListener('visibilitychange', syncDemoRun);
+      }
+      cbResize();
+      setStage(0);
+    })();
+  </script>
+
+  <!-- ─── Science diagrams: frequency ladder / rehearsal orbs / reconsolidation retrace.
+       One rAF loop, paused offscreen; reduced-motion gets static end states. ─── -->
+  <script>
+    (() => {
+      const section = document.getElementById('science');
+      if (!section) return;
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      const wave = (len, midY, wavelength, amp, phase, warp) => {
+        let d = '';
+        for (let x = 0; x <= len; x += 1.5) {
+          let y = midY + Math.sin(phase + (2 * Math.PI * x) / wavelength) * amp;
+          if (warp) y += warp(x);
+          d += (x ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+        }
+        return d;
+      };
+
+      // Frequency ladder — same params as the iOS gate: beta jitters, alpha rolls.
+      const ladder = [...document.querySelectorAll('#sciLadder path')];
+      const ladderRows = [
+        { wavelength: 7,  speed: 7.5 },
+        { wavelength: 14, speed: 4.0 },
+        { wavelength: 30, speed: 1.8 },
+      ];
+      const drawLadder = (t) => ladder.forEach((p, i) => {
+        const r = ladderRows[i];
+        p.setAttribute('d', wave(132, 10, r.wavelength, 6, -t * r.speed));
+      });
+
+      // Rehearsal network — the pulse lights an 8-node pathway for DOING; IMAGINING
+      // re-runs it with one substituted node and CREATES its final node + edge live
+      // (new pathways). Nodes/edges built into the svg here.
+      const net = document.getElementById('sciNet');
+      const SVGNS = 'http://www.w3.org/2000/svg';
+      const mk = (name, attrs) => {
+        const e = document.createElementNS(SVGNS, name);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        net.appendChild(e);
+        return e;
+      };
+      const NODES = [
+        [22, 74], [52, 46], [58, 98], [92, 68], [124, 40], [126, 102], [158, 70],
+        [190, 44], [194, 106], [222, 74], [252, 48], [256, 100], [284, 76],
+      ];
+      const NEW_NODE = [286, 40]; // exists only once IMAGINING creates it
+      const EDGES = [
+        [0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [3, 5], [4, 6], [5, 6], [6, 7],
+        [6, 8], [7, 9], [8, 9], [7, 10], [8, 11], [9, 12], [10, 12], [11, 12],
+      ];
+      const PATH_DO = [0, 2, 3, 4, 6, 7, 9, 12];
+      const PATH_IM = [0, 2, 3, 5, 6, 7, 9, -1]; // -1 = the created node
+      const edgeKey = (a, b) => Math.min(a, b) + '-' + Math.max(a, b);
+      const edgeEls = {};
+      EDGES.forEach(([a, b]) => {
+        edgeEls[edgeKey(a, b)] = mk('line', {
+          x1: NODES[a][0], y1: NODES[a][1], x2: NODES[b][0], y2: NODES[b][1],
+          stroke: '#8b7355', 'stroke-width': 1, opacity: 0.2,
+        });
+      });
+      const newEdge = mk('line', {
+        x1: NODES[9][0], y1: NODES[9][1], x2: NODES[9][0], y2: NODES[9][1],
+        stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0, 'stroke-linecap': 'round',
+      });
+      const glowEls = NODES.map(([x, y]) => mk('circle', { cx: x, cy: y, r: 10, fill: '#c4a87c', opacity: 0 }));
+      const nodeEls = NODES.map(([x, y]) => mk('circle', { cx: x, cy: y, r: 4.5, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2, opacity: 0.7 }));
+      const newGlow = mk('circle', { cx: NEW_NODE[0], cy: NEW_NODE[1], r: 11, fill: '#c4a87c', opacity: 0 });
+      const newNodeEl = mk('circle', { cx: NEW_NODE[0], cy: NEW_NODE[1], r: 0, fill: '#cfb98a', stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0 });
+      const netLabel = mk('text', { x: 150, y: 16, 'text-anchor': 'middle' });
+      const clamp01 = (u) => Math.min(1, Math.max(0, u));
+      const drawNet = (t) => {
+        const TRAVEL = 2.2, NHOLD = 0.9, NFADE = 0.5, HALF = TRAVEL + NHOLD + NFADE;
+        const c = t % (HALF * 2);
+        const second = c >= HALF;
+        const lc = second ? c - HALF : c;
+        const path = second ? PATH_IM : PATH_DO;
+        netLabel.textContent = second ? 'IMAGINING' : 'DOING';
+        netLabel.setAttribute('opacity', lc < NFADE ? (lc / NFADE).toFixed(2) : lc > TRAVEL + NHOLD ? (1 - (lc - TRAVEL - NHOLD) / NFADE).toFixed(2) : '1');
+        const prog = clamp01(lc / TRAVEL) * (path.length - 1);
+        const dim = lc > TRAVEL + NHOLD ? 1 - (lc - TRAVEL - NHOLD) / NFADE : 1;
+        // reset to base
+        glowEls.forEach((g) => g.setAttribute('opacity', '0'));
+        nodeEls.forEach((n) => n.setAttribute('fill', '#ECEEE5'));
+        for (const k in edgeEls) { edgeEls[k].setAttribute('opacity', '0.2'); edgeEls[k].setAttribute('stroke', '#8b7355'); }
+        // light the pathway
+        path.forEach((n, i) => {
+          const lit = clamp01((prog - i) * 2 + 1) * dim;
+          if (n === -1) return; // created node handled below
+          glowEls[n].setAttribute('opacity', (lit * 0.45).toFixed(2));
+          nodeEls[n].setAttribute('fill', lit > 0.4 ? '#cfb98a' : '#ECEEE5');
+          if (i > 0 && path[i - 1] !== -1 && n !== -1) {
+            const e = edgeEls[edgeKey(path[i - 1], n)];
+            if (e) {
+              const le = clamp01((prog - i) * 2 + 1) * dim;
+              e.setAttribute('opacity', (0.2 + le * 0.55).toFixed(2));
+              if (le > 0.3) e.setAttribute('stroke', '#a8834f');
+            }
+          }
+        });
+        // IMAGINING's final hop: the edge draws itself and the node comes into being
+        if (second) {
+          const dp = clamp01(prog - 6);
+          newEdge.setAttribute('x2', (NODES[9][0] + (NEW_NODE[0] - NODES[9][0]) * dp).toFixed(1));
+          newEdge.setAttribute('y2', (NODES[9][1] + (NEW_NODE[1] - NODES[9][1]) * dp).toFixed(1));
+          newEdge.setAttribute('opacity', (dp > 0 ? 0.75 * dim : 0).toFixed(2));
+          const pop = clamp01((prog - 6.5) * 2.5);
+          newNodeEl.setAttribute('r', (4.5 * pop).toFixed(2));
+          newNodeEl.setAttribute('opacity', (pop * dim).toFixed(2));
+          newGlow.setAttribute('opacity', (pop * 0.5 * dim).toFixed(2));
+        } else {
+          newEdge.setAttribute('opacity', '0');
+          newNodeEl.setAttribute('opacity', '0');
+          newGlow.setAttribute('opacity', '0');
+        }
+      };
+
+      // Belief cascade — a belief feeds the thoughts⇄feelings loop (a state of
+      // being), which pours down a staircase: actions → habits → lifestyle.
+      // Four acts: it runs rose (belief barely visible) → traced BACK up to the
+      // source → belief seen + rewritten gold → everything below changes.
+      const csSvg = document.getElementById('sciCascade');
+      const mkC = (name, attrs) => {
+        const e = document.createElementNS(SVGNS, name);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        csSvg.appendChild(e);
+        return e;
+      };
+      const lerp3 = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
+      const blend = (a, b, u) => 'rgb(' + lerp3(a, b, u).map(Math.round).join(',') + ')';
+      const ROSE = [181, 128, 108], GOLD = [168, 131, 79];
+      const CREAM = [236, 238, 229], ROSEF = [195, 152, 133], GOLDF = [207, 185, 138];
+      const mix = (u) => blend(ROSE, GOLD, u);
+      const ease = (u) => u <= 0 ? 0 : u >= 1 ? 1 : u * u * (3 - 2 * u);
+      const polyAt = (pts, u) => {
+        const segs = []; let L = 0;
+        for (let i = 0; i < pts.length - 1; i++) { const l = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]); segs.push(l); L += l; }
+        let d = Math.max(0, Math.min(1, u)) * L;
+        for (let i = 0; i < segs.length; i++) {
+          if (d <= segs[i]) { const r = segs[i] ? d / segs[i] : 0; return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * r, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * r]; }
+          d -= segs[i];
+        }
+        return pts[pts.length - 1];
+      };
+      const csText = (x, y, s, soft) => {
+        const txt = mkC('text', { x, y, 'text-anchor': 'middle', ...(soft ? { class: 'soft' } : {}) });
+        txt.textContent = s;
+        return txt;
+      };
+      // connectors: belief → loop, then the staircase
+      mkC('path', { d: 'M33 30 C50 40 58 50 66 62', fill: 'none', stroke: '#8b7355', 'stroke-width': 1, opacity: 0.3 });
+      [[106, 92, 155, 95], [168, 99, 204, 109], [219, 115, 254, 124]].forEach(([x1, y1, x2, y2]) =>
+        mkC('line', { x1, y1, x2, y2, stroke: '#8b7355', 'stroke-width': 1, opacity: 0.3 }));
+      // the loop: two dots cycling on a ring; its halo is the state of being
+      const loopHalo = mkC('circle', { cx: 88, cy: 86, r: 26, fill: '#b5806c', opacity: 0.1 });
+      const loopRing = mkC('circle', { cx: 88, cy: 86, r: 20, fill: 'none', stroke: 'rgba(139,115,85,0.45)', 'stroke-width': 1 });
+      const loopDots = [mkC('circle', { r: 3.2, fill: '#8b7355' }), mkC('circle', { r: 3.2, fill: '#8b7355' })];
+      let loopAng = 0, loopPrevT = 0;
+      // the staircase: actions → habits → lifestyle, each step lower and larger
+      const CS_DOWN = [[162, 96, 6, 'ACTIONS'], [212, 112, 7, 'HABITS'], [264, 128, 9, 'LIFESTYLE']];
+      const csHalos = CS_DOWN.map(([x, y, r]) => mkC('circle', { cx: x, cy: y, r: r + 7, fill: '#c4a87c', opacity: 0 }));
+      const csNodes = CS_DOWN.map(([x, y, r]) => mkC('circle', { cx: x, cy: y, r, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2 }));
+      // the belief, dashed and faint until it is seen
+      const bHalo = mkC('circle', { cx: 30, cy: 26, r: 11, fill: '#c4a87c', opacity: 0 });
+      const bNode = mkC('circle', { cx: 30, cy: 26, r: 4.5, fill: '#ECEEE5', stroke: '#8b7355', 'stroke-width': 1.2, 'stroke-dasharray': '2 3', opacity: 0.5 });
+      const bRipple = mkC('circle', { cx: 30, cy: 26, r: 8, fill: 'none', stroke: '#a8834f', 'stroke-width': 1.2, opacity: 0 });
+      const bLabel = csText(30, 12, 'BELIEF');
+      csText(88, 56, 'THOUGHTS'); csText(88, 120, 'FEELINGS');
+      csText(88, 136, 'STATE OF BEING', true);
+      CS_DOWN.forEach(([x, y, , lbl]) => csText(x, y - 16, lbl));
+      const csPulse = mkC('circle', { r: 3, opacity: 0 });
+      const CS_FWD = [[30, 26], [66, 62], [88, 86], [108, 90], [162, 96], [212, 112], [264, 128]];
+      const drawCascade = (t) => {
+        const cyc = t % 11;
+        const back = 1 - clamp01((cyc - 9.8) / 1.2); // everything eases home at the end
+        const seen = clamp01((cyc - 4.4) / 0.5) * back;
+        const beliefGold = clamp01((cyc - 5.1) / 0.5) * back;
+        csPulse.setAttribute('opacity', '0');
+        csHalos.forEach((h) => h.setAttribute('opacity', '0'));
+        bHalo.setAttribute('opacity', '0');
+        let pt = null, pc = mix(0);
+        // act I: the state pours down the staircase, rose
+        for (let k = 0; k < 2; k++) {
+          const p = (cyc - k * 1.6) / 1.6;
+          if (cyc < 3.2 && p > 0 && p < 1) pt = polyAt(CS_FWD.slice(2), ease(p));
+        }
+        // act II: the trace climbs BACK up the staircase to the source
+        const bp = clamp01((cyc - 3.2) / 1.2);
+        if (bp > 0 && bp < 1) { pt = polyAt([...CS_FWD].reverse(), ease(bp)); pc = '#8b7355'; }
+        // act IV: the gold pulse runs the whole way down
+        const gp = clamp01((cyc - 5.1) / 1.9);
+        if (gp > 0 && gp < 1) { pt = polyAt(CS_FWD, ease(gp)); pc = mix(1); }
+        const loopG = (cyc > 5.1 ? clamp01((ease(gp) - 0.3) * 4) : 0) * back;
+        csNodes.forEach((n, i) => {
+          const gi = (cyc > 5.1 ? clamp01((ease(gp) - [0.62, 0.78, 0.95][i]) * 14) : 0) * back;
+          n.setAttribute('fill', blend(CREAM, GOLDF, gi));
+          n.setAttribute('stroke', gi > 0.3 ? mix(1) : '#8b7355');
+        });
+        // act III: the belief is seen (dashed → solid, rose) then rewritten (gold)
+        bNode.setAttribute('fill', blend(lerp3(CREAM, ROSEF, seen), GOLDF, beliefGold));
+        bNode.setAttribute('stroke', beliefGold > 0.2 ? mix(beliefGold) : '#8b7355');
+        bNode.setAttribute('opacity', (0.5 + 0.5 * seen).toFixed(2));
+        if (seen > 0.5) bNode.removeAttribute('stroke-dasharray');
+        else bNode.setAttribute('stroke-dasharray', '2 3');
+        bLabel.setAttribute('opacity', (0.45 + 0.55 * seen).toFixed(2));
+        const rp = clamp01((cyc - 5.1) / 0.7);
+        bRipple.setAttribute('r', (8 + rp * 15).toFixed(1));
+        bRipple.setAttribute('opacity', (rp > 0 && rp < 1 ? (1 - rp) * 0.7 : 0).toFixed(2));
+        // the loop: agitated and rose while the old belief runs, slow and gold after
+        const dt = Math.min(0.05, Math.max(0, t - loopPrevT)); loopPrevT = t;
+        loopAng += dt * (3.6 - 2.1 * loopG);
+        const wob = (1 - loopG) * 2;
+        loopDots.forEach((d, k) => {
+          const a = loopAng + k * Math.PI;
+          const r = 20 + wob * Math.sin(t * 7 + k * 3);
+          d.setAttribute('cx', (88 + Math.cos(a) * r).toFixed(1));
+          d.setAttribute('cy', (86 + Math.sin(a) * r * 0.9).toFixed(1));
+          d.setAttribute('fill', mix(loopG));
+        });
+        loopRing.setAttribute('stroke', loopG > 0.15 ? mix(loopG) : 'rgba(139,115,85,0.45)');
+        loopHalo.setAttribute('fill', mix(loopG));
+        loopHalo.setAttribute('opacity', (0.08 + 0.04 * (0.5 + 0.5 * Math.sin(t * 2.3))).toFixed(3));
+        if (pt) {
+          csPulse.setAttribute('opacity', '0.9');
+          csPulse.setAttribute('cx', pt[0].toFixed(1)); csPulse.setAttribute('cy', pt[1].toFixed(1));
+          csPulse.setAttribute('fill', pc);
+          CS_DOWN.forEach(([x, y], i) => { if (Math.hypot(pt[0] - x, pt[1] - y) < 14) csHalos[i].setAttribute('opacity', '0.35'); });
+          if (Math.hypot(pt[0] - 30, pt[1] - 26) < 14) bHalo.setAttribute('opacity', '0.35');
+        }
+        // quiet glow while the rewritten cascade holds
+        if (cyc > 7.2 && cyc < 9.8) {
+          const s = 0.1 + 0.05 * Math.sin(t * 2);
+          csHalos.forEach((h) => h.setAttribute('opacity', s.toFixed(2)));
+        }
+      };
+
+      const drawAll = (t) => { drawLadder(t); drawNet(t); drawCascade(t); };
+      // static: net shows IMAGINING mid-hold (created node visible); cascade shows
+      // the rewritten state (belief seen + staircase gold)
+      const drawStatic = () => { drawLadder(0); drawNet(3.6 + 2.2 + 0.3); drawCascade(8); };
+
+      let visible = false, rafId = null;
+      const t0 = performance.now();
+      const frame = (now) => {
+        if (!visible || still.matches) { rafId = null; return; }
+        drawAll((now - t0) / 1000);
+        rafId = requestAnimationFrame(frame);
+      };
+      const start = () => {
+        if (still.matches) { drawStatic(); return; }
+        if (!rafId) rafId = requestAnimationFrame(frame);
+      };
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        if (visible) start();
+      }, { threshold: 0.1 }).observe(section);
+      still.addEventListener('change', () => { if (still.matches) drawStatic(); else if (visible) start(); });
+      drawStatic();
+    })();
+  </script>
+</body>
+</html>
