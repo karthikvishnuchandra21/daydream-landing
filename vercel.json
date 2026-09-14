@@ -9,11 +9,6 @@
       "source": "/i",
       "destination": "https://exp.daydreamers.app/?utm_source=instagram&utm_medium=social",
       "permanent": false
-    },
-    {
-      "source": "/liz",
-      "destination": "https://apps.apple.com/app/apple-store/id6763168108?pt=128232174&ct=liz&mt=8",
-      "permanent": false
     }
   ],
   "headers": [
