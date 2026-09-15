@@ -163,6 +163,9 @@ button, a, [role="button"], input, textarea, select {
    Animated sky — canvas-rendered time-of-day gradient
    Constrained to the top of the page (hero region only).
    ============================================================ */
+/* Mobile: pull-down at the top drives the sky (pull-to-advance), not a bounce */
+@media (max-width: 900px) { html { overscroll-behavior-y: none; } }
+
 /* Canvas is fixed to the viewport — matches LandingPage.css behavior.
    The gradient stays behind everything; opaque sections below the hero cover it,
    so the "transition" is a section bg change, not a hard canvas edge. */
@@ -171,6 +174,7 @@ button, a, [role="button"], input, textarea, select {
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100lvh; /* large viewport: no re-layout when the mobile URL bar collapses */
   z-index: 0;
   pointer-events: none;
   display: block;
@@ -2541,10 +2545,18 @@ footer {
       const reducedMotion = { current: window.matchMedia('(prefers-reduced-motion: reduce)').matches };
       window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => { reducedMotion.current = e.matches; });
 
+      // Measure the large viewport (100lvh) so the collapsing mobile URL bar never
+      // counts as a resize — that used to regenerate every cloud, star and hill
+      // mid-gesture, which read as the sky "glitching" on pull-down.
+      const lvhProbe = document.createElement('div');
+      lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none;';
+      document.body.appendChild(lvhProbe);
+      function largeViewportHeight() { return lvhProbe.offsetHeight || window.innerHeight; }
       function resize() {
         const dpr = window.devicePixelRatio || 1;
         const cssW = window.innerWidth;
-        const cssH = window.innerHeight;
+        const cssH = largeViewportHeight();
+        if (state && cssW === size.w && Math.abs(cssH - size.h) < 2) return;
         canvas.width = cssW*dpr;
         canvas.height = cssH*dpr;
         canvas.style.width = cssW + 'px';
@@ -2561,6 +2573,37 @@ footer {
           terrainLayers: createTerrain(cssW, cssH),
         };
       }
+      // ── Pull-to-advance (Sep 15 2026) ──
+      // Pulling down at the top of the page eases the sky forward from its base
+      // minute (6:50am dawn) toward the afternoon: the sun climbs, the palette
+      // warms, clouds drift a little faster. Letting go drifts it slowly back.
+      // No native rubber-band (overscroll-behavior on <html>), so the page holds
+      // still and only the sky moves. MOBILE ONLY (≤900px); desktop is untouched.
+      const PULL_MAX_MINUTES = 330;   // asymptotic ceiling of the gesture (minutes of day)
+      const PULL_SCALE_PX = 380;      // px of pull for ~63% of the range
+      // The sun climbs at 60% of the advance and the sky palette shifts at 35%, so the
+      // cream hero text stays legible: it reads as the day moving on, not a scene change.
+      const PULL_SUN_FACTOR = 0.6, PULL_SKY_FACTOR = 0.35;
+      let pullTarget = 0, pullPx = 0, pulling = false, pullMinutes = 0;
+      let pullTouchY = null, pullActive = false;
+      function pullMinutesFor(px) { return PULL_MAX_MINUTES * (1 - Math.exp(-px / PULL_SCALE_PX)); }
+      function beginPull() { pullActive = true; if (!skyOn) { skyOn = true; prevTime = 0; } queueDraw(); }
+      const pullEnabled = () => window.matchMedia('(max-width: 900px)').matches && !reducedMotion.current;
+      window.addEventListener('touchstart', (e) => {
+        pullTouchY = (pullEnabled() && window.scrollY <= 0) ? e.touches[0].clientY : null;
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (pullTouchY == null) return;
+        const dy = e.touches[0].clientY - pullTouchY;
+        if (dy > 0 && window.scrollY <= 0) { pulling = true; pullTarget = dy; beginPull(); }
+        else if (pulling) { pullTarget = Math.max(0, dy); }
+      }, { passive: true });
+      const endPull = () => { pullTouchY = null; pulling = false; pullTarget = 0; };
+      window.addEventListener('touchend', endPull, { passive: true });
+      window.addEventListener('touchcancel', endPull, { passive: true });
+      // Dev hook for previews: window.__skyPull(px) holds a pull, __skyPull(0) releases.
+      window.__skyPull = (px) => { pulling = px > 0; pullTarget = px; beginPull(); };
+
       function draw(time) {
         skyQueued = false;
         const ctx = canvas.getContext('2d');
@@ -2569,7 +2612,14 @@ footer {
         const deltaMs = prevTime ? Math.min(time - prevTime, 100) : 16.67;
         const dt = deltaMs/16.67;
         prevTime = time;
-        const minute = getPSTMinute();
+        // Follow the finger closely while pulling; drift back slowly once released.
+        const follow = pulling ? 0.16 : 0.022;
+        pullPx += (pullTarget - pullPx) * Math.min(1, follow * dt);
+        if (!pulling && pullPx < 0.5) { pullPx = 0; if (pullActive) { pullActive = false; } }
+        pullMinutes = pullMinutesFor(pullPx);
+        const baseMinute = getPSTMinute();
+        const minute = Math.min(1439, baseMinute + pullMinutes * PULL_SKY_FACTOR);
+        const sunMinute = Math.min(1439, baseMinute + pullMinutes * PULL_SUN_FACTOR);
         const p = getPalette(minute);
         const isReduced = reducedMotion.current;
         const grad = ctx.createLinearGradient(0, 0, 0, H);
@@ -2583,8 +2633,8 @@ footer {
         horizonGlow.addColorStop(1, rgba(p.horizon, 0));
         ctx.fillStyle = horizonGlow; ctx.fillRect(0, 0, W, H);
         drawStars(ctx, state.stars, time, p.stars, isReduced);
-        drawCelestialBody(ctx, p, minute, W, H, time);
-        drawClouds(ctx, state.clouds, time, W, H, isReduced, dt);
+        drawCelestialBody(ctx, p, sunMinute, W, H, time);
+        drawClouds(ctx, state.clouds, time, W, H, isReduced, dt * (1 + pullMinutes / 90));
         drawTerrainLayers(ctx, state.terrainLayers, state.fogWisps, p, time, W, H, isReduced, dt);
         drawFireflies(ctx, state.fireflies, time, p.stars, W, H, isReduced);
         drawButterflies(ctx, state.butterflies, time, p.stars, W, H, isReduced, dt);
@@ -2612,7 +2662,9 @@ footer {
       const skyMirror = document.querySelector('.lp-mirror');
       if (skyMirror) skyIO.observe(skyMirror);
       resize();
-      window.addEventListener('resize', resize);
+      let resizeT;
+      window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(resize, 120); });
+      window.addEventListener('orientationchange', () => setTimeout(resize, 300));
       queueDraw();
     })();
 
