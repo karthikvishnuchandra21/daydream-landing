@@ -1749,6 +1749,87 @@ footer {
   .sky-debug input[type="range"] { width: 110px; }
   .sky-time { min-width: 92px; }
 }
+/* ============================================================
+   Sep 15 2026: hero copy link, rating line, 4:5 screenshots,
+   mobile mirror panel + sticky download bar. Desktop layout untouched.
+   ============================================================ */
+.lp-hero-sub-link {
+  color: inherit; font-style: italic;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: currentColor;
+}
+.lp-hero-sub-link:hover { text-decoration-thickness: 1.5px; }
+.lp-hero .hero-free-trial { line-height: 1.55; }
+.lp-hero .hero-free-trial .m-stars { letter-spacing: 0.06em; color: #e7c98f; }
+
+/* Screenshots are now the 4:5 exports */
+.showcase-card { aspect-ratio: 1080 / 1350; border-radius: 22px; }
+
+/* Mobile-only / desktop-only sections */
+.m-only-section { display: none; }
+@media (max-width: 900px) {
+  .d-only-section { display: none !important; }
+  .m-only-section { display: block; }
+  .demo-unit { display: none; }
+  .lp-hero { padding-bottom: 0 !important; min-height: auto; }
+  .lp-hero .hero-free-trial { text-align: center; }
+}
+
+/* Mirror panel (mobile) */
+.lp-mirror {
+  position: relative; z-index: 2; max-width: none;
+  padding-top: 1.75rem !important; padding-bottom: 3.5rem !important;
+  background: linear-gradient(180deg, rgba(247,246,240,0) 0%, rgba(247,246,240,0) 55%, rgba(247,246,240,0.55) 85%, var(--bg-soft, #ECEEE5) 100%);
+}
+.hero-showcase {
+  width: 100%; max-width: 600px; margin: 0 auto; text-align: center;
+  background: rgba(24, 20, 30, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1.2rem 0.75rem 1.1rem;
+  box-shadow: 0 18px 40px -20px rgba(0,0,0,0.5);
+}
+.hero-showcase-head { margin: 0 auto 1rem; padding: 0 0.5rem; max-width: 520px; }
+.hero-showcase .lp-eyebrow { color: var(--sky-accent, var(--accent)); margin-bottom: 0.8rem; }
+.hero-showcase-copy {
+  font-family: var(--sans); font-size: 1rem; line-height: 1.55; font-weight: 300;
+  color: var(--sky-text, var(--text-secondary)); max-width: 480px; margin: 0 auto;
+}
+.hero-showcase-copy + .hero-showcase-copy { margin-top: 0.75rem; }
+.hero-showcase .card-showcase { padding: 0 2.6rem; max-width: 420px; margin: 0 auto; }
+.hero-showcase .showcase-card { max-width: none; }
+.hero-showcase .card-btn { width: 38px; height: 38px; }
+.hero-showcase .card-btn svg { width: 15px; height: 15px; }
+.hero-showcase .card-dots { margin-top: 0.85rem; }
+@media (max-width: 480px) {
+  .hero-showcase .card-showcase { padding: 0 2.5rem; max-width: 360px; }
+  .hero-showcase-copy { font-size: 0.95rem; }
+}
+
+/* Sticky bottom download bar (mobile) */
+@media (max-width: 768px) {
+  #m-cta-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(247, 246, 240, 0.94);
+    border-top: 1px solid rgba(45, 42, 38, 0.08);
+    box-shadow: 0 -8px 24px -12px rgba(0,0,0,0.25);
+    transform: translateY(110%);
+    transition: transform 0.35s cubic-bezier(.2,.7,.2,1);
+    display: flex; align-items: center; gap: 12px;
+  }
+  #m-cta-bar.show { transform: translateY(0); }
+  #m-cta-bar .m-bar-copy { flex: 1 1 auto; min-width: 0; }
+  #m-cta-bar .m-bar-title { font-family: var(--serif); font-size: 1.05rem; line-height: 1.15; color: var(--text-primary); }
+  #m-cta-bar .m-bar-sub { font-family: var(--sans); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; }
+  #m-cta-bar .appstore-badge { flex: 0 0 auto; padding: 10px 16px 10px 13px; gap: 9px; }
+  #m-cta-bar .appstore-badge svg { width: 20px; height: 20px; }
+  #m-cta-bar .appstore-badge .badge-text .top { font-size: 0.6rem; }
+  #m-cta-bar .appstore-badge .badge-text .bottom { font-size: 1rem; }
+  body.m-bar-visible footer { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) { #m-cta-bar { transition: none; } }
+@media (min-width: 769px) { #m-cta-bar { display: none !important; } }
+
 </style>
 </head>
 <body>
@@ -1800,9 +1881,9 @@ footer {
   <!-- ─── Hero ─── -->
   <section class="lp-hero">
     <div class="lp-hero-text">
-      <h1 class="lp-h1">Embodiment <span class="accent">through visualization.</span></h1>
+      <h1 class="lp-h1">Manifestation <span class="accent">through visualization.</span></h1>
       <p class="lp-hero-sub">
-        Guided visualization and breathing practice for embodying the greatest self.
+        Leveraging clinically tested visualization <a class="lp-hero-sub-link" href="https://woopmylife.org/" target="_blank" rel="noopener">techniques</a> to improve performance in pursuits requiring high confidence and belief.
       </p>
       <div class="hero-cta-row">
         <div class="hero-cta-stack">
@@ -1813,7 +1894,7 @@ footer {
             <span class="bottom">App Store</span>
           </div>
         </a>
-        <span class="hero-free-trial">Free daily practice and exercises</span>
+        <span class="hero-free-trial"><span class="rating-line"><span class="m-stars">★★★★★</span> 5.0 on the App Store</span><br>Free daily practice</span>
       </div>
       </div>
     </div>
@@ -1880,8 +1961,50 @@ footer {
     </div>
   </section>
 
+  <!-- ─── Mirror (MOBILE ONLY, ≤900px): copy + App Store screenshots in one glass panel over
+       the sky, directly under the hero CTA. Replaces the demo, the bridge and the showcase
+       section on phones; desktop keeps all three and never shows this. ─── -->
+  <section class="lp-mirror m-only-section">
+    <div class="hero-showcase">
+      <div class="hero-showcase-head">
+        <p class="lp-eyebrow">Daydream is a mirror</p>
+        <p class="hero-showcase-copy">Who you believe you are is the greatest predictor of the life you create.</p>
+        <p class="hero-showcase-copy">Daydream is the daily practice to embody your truest self, the one who already has everything you desire.</p>
+      </div>
+      <div class="card-showcase" data-carousel>
+        <button class="card-btn prev" type="button" aria-label="Previous screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="card-stack" role="group" aria-label="Daydream app screens">
+          <div class="showcase-card active" data-idx="0">
+            <img src="screenshots/opt/ig-v3-2.webp" alt="From a survival state to a creator state, a breath and an intention each morning" loading="eager" fetchpriority="high" />
+          </div>
+          <div class="showcase-card behind" data-idx="1">
+            <img src="screenshots/opt/ig-v3-1.webp" alt="Stop wishing, dreaming works better: the practices tab" loading="eager" />
+          </div>
+          <div class="showcase-card hidden" data-idx="2">
+            <img src="screenshots/opt/ig-v3-5.webp" alt="Every morning adds a light, your mornings kept" loading="lazy" />
+          </div>
+          <div class="showcase-card hidden" data-idx="3">
+            <img src="screenshots/opt/ig-v3-4.webp" alt="Both sides of the same self, your inner landscape of beliefs" loading="lazy" />
+          </div>
+          <div class="showcase-card hidden" data-idx="4">
+            <img src="screenshots/opt/ig-v3-3.webp" alt="A question that knows your story, the nightly journal" loading="lazy" />
+          </div>
+          <div class="showcase-card hidden" data-idx="5">
+            <img src="screenshots/opt/ig-v3-6.webp" alt="Daydream, visualize and become" loading="lazy" />
+          </div>
+        </div>
+        <button class="card-btn next" type="button" aria-label="Next screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="card-dots" role="tablist" aria-label="Jump to a specific page"></div>
+    </div>
+  </section>
+
   <!-- ─── Proof: champions rehearse it first (sits in the hero-to-paper transition zone) ─── -->
-  <section id="proof" class="lp-quotes">
+  <section id="proof" class="lp-quotes d-only-section">
     <div class="champ-story">
       <p class="lp-eyebrow">The not so secret, secret</p>
       <h2 class="lp-h2">The inner becoming occurs <span class="accent">before the outer having.</span></h2>
@@ -1950,45 +2073,45 @@ footer {
   </section>
 
   <!-- ─── Showcase: single hand-crafted card with prev/next controls ─── -->
-  <section id="how" class="lp-showcase">
+  <section id="how" class="lp-showcase d-only-section">
     <div class="lp-section-head">
       <p class="lp-eyebrow">What it looks like</p>
       <h2 class="lp-h2">One purpose. <span class="accent">Embodiment.</span></h2>
       <p class="lp-h2-sub">Every card, every story, every conversation points at the same thing: feeling like the version of you that's already becoming.</p>
     </div>
 
-    <div class="card-showcase">
-      <button class="card-btn prev" id="card-prev" aria-label="Previous screen">
+    <div class="card-showcase" data-carousel>
+      <button class="card-btn prev" aria-label="Previous screen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
 
-      <div class="card-stack" id="card-stack" role="group" aria-label="Daydream app screens">
+      <div class="card-stack" role="group" aria-label="Daydream app screens">
         <div class="showcase-card active" data-idx="0">
-          <img src="screenshots/opt/screenshot-1.webp" alt="The You tab, your becoming identity" loading="eager" fetchpriority="high" />
+          <img src="screenshots/opt/ig-v3-2.webp" alt="From a survival state to a creator state, a breath and an intention each morning" loading="eager" fetchpriority="high" />
         </div>
         <div class="showcase-card behind" data-idx="1">
-          <img src="screenshots/opt/screenshot-3.webp" alt="Beliefs you can see, your identity terrain" loading="eager" />
+          <img src="screenshots/opt/ig-v3-1.webp" alt="Stop wishing, dreaming works better: the practices tab" loading="eager" />
         </div>
         <div class="showcase-card hidden" data-idx="2">
-          <img src="screenshots/opt/screenshot-6.webp" alt="Stories that map your becoming" loading="lazy" />
+          <img src="screenshots/opt/ig-v3-5.webp" alt="Every morning adds a light, your mornings kept" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="3">
-          <img src="screenshots/opt/screenshot-2.webp" alt="Identity shifting cards every morning" loading="lazy" />
+          <img src="screenshots/opt/ig-v3-4.webp" alt="Both sides of the same self, your inner landscape of beliefs" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="4">
-          <img src="screenshots/opt/screenshot-4.webp" alt="Conversations rooted in belief data" loading="lazy" />
+          <img src="screenshots/opt/ig-v3-3.webp" alt="A question that knows your story, the nightly journal" loading="lazy" />
         </div>
         <div class="showcase-card hidden" data-idx="5">
-          <img src="screenshots/opt/screenshot-5.webp" alt="Visualizations that make aligned action easier" loading="lazy" />
+          <img src="screenshots/opt/ig-v3-6.webp" alt="Daydream, visualize and become" loading="lazy" />
         </div>
       </div>
 
-      <button class="card-btn next" id="card-next" aria-label="Next screen">
+      <button class="card-btn next" aria-label="Next screen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
 
-    <div class="card-dots" id="card-dots" role="tablist" aria-label="Jump to a specific page"></div>
+    <div class="card-dots" role="tablist" aria-label="Jump to a specific page"></div>
 
     <div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:3.5rem;">
       <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
@@ -1998,7 +2121,7 @@ footer {
           <span class="bottom">App Store</span>
         </div>
       </a>
-      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5;">Free daily practice and exercises</span>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5;">Free daily practice</span>
     </div>
   </section>
 
@@ -2025,7 +2148,7 @@ footer {
           <span class="bottom">App Store</span>
         </div>
       </a>
-      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5; margin-top:0.5rem;">Free daily practice and exercises</span>
+      <span style="font-size:0.82rem; letter-spacing:0.04em; opacity:0.5; margin-top:0.5rem;">Free daily practice</span>
     </div>
   </section>
 
@@ -2580,6 +2703,8 @@ footer {
       const skyProof = document.getElementById('proof');
       if (skyHero) skyIO.observe(skyHero);
       if (skyProof) skyIO.observe(skyProof);
+      const skyMirror = document.querySelector('.lp-mirror');
+      if (skyMirror) skyIO.observe(skyMirror);
       resize();
       window.addEventListener('resize', resize);
       queueDraw();
@@ -2668,17 +2793,18 @@ footer {
       setTimeout(tick, 1500);
     })();
 
-    // Card showcase — paginated. Desktop shows 3 cards per page; mobile shows 1.
-    (function () {
-      const stack = document.getElementById('card-stack');
-      const prevBtn = document.getElementById('card-prev');
-      const nextBtn = document.getElementById('card-next');
-      const dotsContainer = document.getElementById('card-dots');
+    // Card showcases — paginated. Each [data-carousel] wrapper owns its stack, arrows and dots.
+    // Desktop shows 3 cards per page (or data-per-page-desktop); mobile shows 1.
+    document.querySelectorAll('[data-carousel]').forEach((root) => {
+      const stack = root.querySelector('.card-stack');
+      const prevBtn = root.querySelector('.card-btn.prev');
+      const nextBtn = root.querySelector('.card-btn.next');
+      const dotsContainer = root.parentElement.querySelector('.card-dots');
       if (!stack || !prevBtn || !nextBtn || !dotsContainer) return;
       const cards = Array.from(stack.querySelectorAll('.showcase-card'));
       if (!cards.length) return;
       let current = 0;
-      const getCardsPerPage = () => (window.innerWidth >= 768 ? 3 : 1);
+      const getCardsPerPage = () => (window.innerWidth >= 768 ? (Number(root.dataset.perPageDesktop) || 3) : 1);
       const getPageCount = () => Math.ceil(cards.length / getCardsPerPage());
       function renderDots() {
         const pages = getPageCount();
@@ -2702,23 +2828,12 @@ footer {
         });
         renderDots();
       }
-      prevBtn.addEventListener('click', () => {
-        const pages = getPageCount();
-        current = (current - 1 + pages) % pages;
-        render();
-      });
-      nextBtn.addEventListener('click', () => {
-        const pages = getPageCount();
-        current = (current + 1) % pages;
-        render();
-      });
+      prevBtn.addEventListener('click', () => { const pages = getPageCount(); current = (current - 1 + pages) % pages; render(); });
+      nextBtn.addEventListener('click', () => { const pages = getPageCount(); current = (current + 1) % pages; render(); });
       let resizeT;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeT);
-        resizeT = setTimeout(render, 150);
-      });
+      window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(render, 150); });
       render();
-    })();
+    });
 
     // Scroll-aware nav
     (function () {
@@ -2793,7 +2908,7 @@ footer {
     // ───────────────────────────────────────────────────────────
     (function () {
       const phone = document.getElementById('hero-demo');
-      if (!phone) return;
+      if (!phone || window.matchMedia('(max-width: 900px)').matches) return; // desktop only (Sep 15 2026): mobile shows the mirror panel instead
       const stages = Array.from(phone.querySelectorAll('.demo-stage'));
       const dots = Array.from(document.querySelectorAll('#demo-strip .demo-dot'));
       const label = document.getElementById('demo-stage-label');
@@ -3765,6 +3880,36 @@ footer {
       still.addEventListener('change', () => { if (still.matches) drawStatic(); else if (visible) start(); });
       drawStatic();
     })();
+  </script>
+
+  <!-- MOBILE STICKY DOWNLOAD BAR (≤768px only): shows once the hero badge scrolls away, hides at the final CTA -->
+  <div id="m-cta-bar" aria-hidden="true">
+    <div class="m-bar-copy">
+      <div class="m-bar-title">Daydream</div>
+      <div class="m-bar-sub">Free on iPhone</div>
+    </div>
+    <a class="appstore-badge" href="https://apps.apple.com/us/app/daydream-visualize-become/id6763168108" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.66 2.17-3.94 2.27-4-1.24-1.81-3.17-2.06-3.85-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.12-.95-3.49-.92-1.8.03-3.46 1.05-4.38 2.65-1.87 3.24-.48 8.04 1.34 10.69.89 1.29 1.95 2.74 3.34 2.69 1.34-.05 1.85-.86 3.47-.86s2.08.86 3.5.84c1.45-.03 2.36-1.31 3.24-2.61 1.02-1.5 1.44-2.95 1.46-3.03-.03-.01-2.8-1.07-2.83-4.25zM14.6 4.3c.73-.89 1.22-2.12 1.09-3.36-1.05.04-2.32.7-3.07 1.59-.67.79-1.27 2.05-1.11 3.25 1.17.09 2.36-.6 3.09-1.48z"/></svg>
+      <div class="badge-text"><span class="top">Download on the</span><span class="bottom">App Store</span></div>
+    </a>
+  </div>
+  <script>
+  (function () {
+    const bar = document.getElementById('m-cta-bar');
+    const heroBadge = document.querySelector('.lp-hero .appstore-badge');
+    const finalSec = document.querySelector('.lp-final');
+    if (!bar || !heroBadge || !finalSec) return;
+    let heroOut = false, finalIn = false;
+    function sync() {
+      const show = heroOut && !finalIn && window.innerWidth <= 768;
+      bar.classList.toggle('show', show);
+      bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+      document.body.classList.toggle('m-bar-visible', show);
+    }
+    new IntersectionObserver(([e]) => { heroOut = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(heroBadge);
+    new IntersectionObserver(([e]) => { finalIn = e.isIntersecting; sync(); }, { rootMargin: '0px 0px -40% 0px' }).observe(finalSec);
+    window.addEventListener('resize', sync);
+  })();
   </script>
 </body>
 </html>
