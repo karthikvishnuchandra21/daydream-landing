@@ -1741,6 +1741,7 @@ footer {
 /* Mirror panel (mobile) */
 .lp-mirror {
   position: relative; z-index: 2; max-width: none;
+  scroll-margin-top: 4.5rem; /* clear the fixed nav when the menu link jumps here */
   padding-top: 1.75rem !important; padding-bottom: 3.5rem !important;
   background: linear-gradient(180deg, rgba(247,246,240,0) 0%, rgba(247,246,240,0) 55%, rgba(247,246,240,0.55) 85%, var(--bg-soft, #ECEEE5) 100%);
 }
@@ -1769,8 +1770,9 @@ footer {
   .hero-showcase-copy { font-size: 0.95rem; }
 }
 
-/* Sticky bottom download bar (mobile) */
-@media (max-width: 768px) {
+/* Sticky bottom download bar. 900px matches the mobile layout switch above, so
+   tablets get the bar too instead of landing in a half-mobile state. */
+@media (max-width: 900px) {
   #m-cta-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
@@ -1791,8 +1793,8 @@ footer {
   #m-cta-bar .appstore-badge .badge-text .bottom { font-size: 1rem; }
   body.m-bar-visible footer { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
 }
-@media (max-width: 768px) and (prefers-reduced-motion: reduce) { #m-cta-bar { transition: none; } }
-@media (min-width: 769px) { #m-cta-bar { display: none !important; } }
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) { #m-cta-bar { transition: none; } }
+@media (min-width: 901px) { #m-cta-bar { display: none !important; } }
 
 </style>
 </head>
@@ -1828,7 +1830,7 @@ footer {
     </div>
     <ul class="hamburger-nav-list">
       <li><a href="#science">Science</a></li>
-      <li><a href="#how">How It Works</a></li>
+      <li><a href="#mirror">How It Works</a></li>
       <li><a href="#mission">Mission</a></li>
       <li><a class="blog" href="https://daydreamers.app/blog" target="_blank" rel="noopener">Blog</a></li>
     </ul>
@@ -1920,7 +1922,7 @@ footer {
   <!-- ─── Mirror (MOBILE ONLY, ≤900px): copy + App Store screenshots in one glass panel over
        the sky, directly under the hero CTA. Replaces the demo, the bridge and the showcase
        section on phones; desktop keeps all three and never shows this. ─── -->
-  <section class="lp-mirror m-only-section">
+  <section id="mirror" class="lp-mirror m-only-section">
     <div class="hero-showcase">
       <div class="hero-showcase-head">
         <p class="lp-eyebrow">Daydream is a mirror</p>
@@ -2762,7 +2764,9 @@ footer {
       const cards = Array.from(stack.querySelectorAll('.showcase-card'));
       if (!cards.length) return;
       let current = 0;
-      const getCardsPerPage = () => (window.innerWidth >= 768 ? (Number(root.dataset.perPageDesktop) || 3) : 1);
+      // >900 keeps this in step with the mobile layout switch: at 769-900 the mirror
+      // panel is what's on screen and it only has room for one card.
+      const getCardsPerPage = () => (window.innerWidth > 900 ? (Number(root.dataset.perPageDesktop) || 3) : 1);
       const getPageCount = () => Math.ceil(cards.length / getCardsPerPage());
       function renderDots() {
         const pages = getPageCount();
@@ -3859,7 +3863,7 @@ footer {
     if (!bar || !heroBadge || !finalSec) return;
     let heroOut = false, finalIn = false;
     function sync() {
-      const show = heroOut && !finalIn && window.innerWidth <= 768;
+      const show = heroOut && !finalIn && window.innerWidth <= 900;
       bar.classList.toggle('show', show);
       bar.setAttribute('aria-hidden', show ? 'false' : 'true');
       document.body.classList.toggle('m-bar-visible', show);
